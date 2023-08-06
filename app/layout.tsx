@@ -4,6 +4,9 @@ import localFont from "next/font/local"
 
 import "@/styles/globals.css"
 
+import { Analytics } from "@/components/analytics"
+import { ThemeProvider } from "@/components/theme-provider"
+
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -28,7 +31,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className={fontSans.className}>{children}</body>
+      <body className={fontSans.className}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+          <Analytics />
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
