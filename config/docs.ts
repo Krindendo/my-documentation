@@ -20,6 +20,13 @@ export const docsConfig: DocsConfig = {
       ],
     },
     {
+      title: "Typescript",
+      items: [
+        { title: "Introduction", href: "/docs/ts", disabled: true },
+        { title: "Introduction", href: "/docs/ts", disabled: true },
+      ],
+    },
+    {
       title: "React",
       items: [
         { title: "Introduction", href: "/docs/react", disabled: true },
@@ -37,7 +44,7 @@ export const docsConfig: DocsConfig = {
       title: "Vue",
       items: [
         { title: "Introduction", href: "/docs/vue", disabled: true },
-        { title: "Introduction", href: "/docs/vue", disabled: true },
+        { title: "Introduction", href: "/docs/vue/", disabled: true },
       ],
     },
   ],

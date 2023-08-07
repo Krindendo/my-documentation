@@ -1,7 +1,7 @@
 import { SiteConfig } from "types"
 
 export const siteConfig: SiteConfig = {
-  name: "Documentation",
+  name: "My Wiki",
   description: "Documentation for Krindendo's purpose",
   url: "",
   ogImage: "",
