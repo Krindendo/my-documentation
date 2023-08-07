@@ -1,3 +1,5 @@
+import { Icons } from "@/components/icons"
+
 export type NavItem = {
   title: string
   href: string
@@ -10,7 +12,7 @@ export type SidebarNavItem = {
   title: string
   disabled?: boolean
   external?: boolean
-  //icon?: keyof typeof Icons
+  icon?: keyof typeof Icons
 } & (
   | {
       href: string
@@ -21,6 +23,16 @@ export type SidebarNavItem = {
       items: NavLink[]
     }
 )
+
+export type SiteConfig = {
+  name: string
+  description: string
+  url: string
+  ogImage: string
+  links: {
+    github: string
+  }
+}
 
 export type DocsConfig = {
   mainNav: MainNavItem[]
