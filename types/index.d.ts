@@ -6,7 +6,7 @@ export type NavItem = {
   disabled?: boolean
 }
 
-export type MainNavItem = NavItem
+export type DocsNavItem = NavItem
 
 export type SidebarNavItem = {
   title: string
