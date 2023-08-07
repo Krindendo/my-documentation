@@ -3,5 +3,5 @@ interface DocsLayoutProps {
 }
 
 export default function DocsLayout({ children }: DocsLayoutProps) {
-  return { children }
+  return <>{children}</>
 }
