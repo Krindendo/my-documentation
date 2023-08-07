@@ -7,6 +7,7 @@ import "@/styles/globals.css"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { Analytics } from "@/components/analytics"
+import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
 
 const fontSans = FontSans({
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           <Analytics />
+          <TailwindIndicator />
         </ThemeProvider>
       </body>
     </html>
