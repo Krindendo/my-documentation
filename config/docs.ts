@@ -21,10 +21,7 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "Typescript",
-      items: [
-        { title: "Introduction", href: "/docs/ts" },
-        { title: "Introduction", href: "/docs/ts", disabled: true },
-      ],
+      items: [{ title: "Introduction", href: "/docs/ts" }],
     },
     {
       title: "React",
@@ -40,17 +37,11 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "Next.js",
-      items: [
-        { title: "Introduction", href: "/docs/next" },
-        { title: "Introduction", href: "/docs/next", disabled: true },
-      ],
+      items: [{ title: "Introduction", href: "/docs/next" }],
     },
     {
       title: "Vue",
-      items: [
-        { title: "Introduction", href: "/docs/vue" },
-        { title: "Introduction", href: "/docs/vue/", disabled: true },
-      ],
+      items: [{ title: "Introduction", href: "/docs/vue" }],
     },
   ],
 }
