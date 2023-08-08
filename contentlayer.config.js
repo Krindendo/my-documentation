@@ -55,6 +55,7 @@ export default makeSource({
             }
           },
           onVisitHighlightedLine(node) {
+            node.properties.className ??= []
             node.properties.className.push("line--highlighted")
           },
           onVisitHighlightedWord(node) {
