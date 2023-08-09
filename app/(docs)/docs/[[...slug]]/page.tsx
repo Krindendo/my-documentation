@@ -1,3 +1,5 @@
+import "@/styles/mdx.css"
+
 import { notFound } from "next/navigation"
 import { allDocs } from "contentlayer/generated"
 

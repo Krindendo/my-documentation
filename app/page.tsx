@@ -1,6 +1,7 @@
 import Link from "next/link"
 
 import { Icons } from "@/components/icons"
+import { SiteFooter } from "@/components/site-footer"
 
 export default async function IndexPage() {
   return (
@@ -11,12 +12,18 @@ export default async function IndexPage() {
             Build Aplications with Confidence
           </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
-            Lorem ipsum dolor sit a<span className="text-blue-600">m</span>et
-            consectetur <span className="text-blue-600">a</span>dipisicing elit.
-            Officiis animi, recu<span className="text-blue-600">s</span>andae a
-            <span className="text-blue-600">t</span>que vero quod magni imp
-            <span className="text-blue-600">e</span>dit tempore ipsa. Ratione
-            dicta? Ape<span className="text-blue-600">r</span>iam, dolores.
+            Lorem ipsum dolor sit a
+            <span className="text-orange-500 dark:text-orange-600">m</span>et
+            consectetur{" "}
+            <span className="text-orange-500 dark:text-orange-600">a</span>
+            dipisicing elit. Officiis animi, recu
+            <span className="text-orange-500 dark:text-orange-600">s</span>andae
+            a<span className="text-orange-500 dark:text-orange-600">t</span>que
+            vero quod magni imp
+            <span className="text-orange-500 dark:text-orange-600">e</span>dit
+            tempore ipsa. Ratione dicta? Ape
+            <span className="text-orange-500 dark:text-orange-600">r</span>iam,
+            dolores.
           </p>
         </div>
       </section>
@@ -159,6 +166,7 @@ export default async function IndexPage() {
           </Link>
         </div>
       </section>
+      <SiteFooter />
     </>
   )
 }
