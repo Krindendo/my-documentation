@@ -8,12 +8,15 @@ export default async function IndexPage() {
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
         <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
           <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+            Build Aplications with Confidence
           </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis
-            animi, recusandae atque vero quod magni impedit tempore ipsa.
-            Ratione dicta? Aperiam, dolores.
+            Lorem ipsum dolor sit a<span className="text-blue-600">m</span>et
+            consectetur <span className="text-blue-600">a</span>dipisicing elit.
+            Officiis animi, recu<span className="text-blue-600">s</span>andae a
+            <span className="text-blue-600">t</span>que vero quod magni imp
+            <span className="text-blue-600">e</span>dit tempore ipsa. Ratione
+            dicta? Ape<span className="text-blue-600">r</span>iam, dolores.
           </p>
         </div>
       </section>
@@ -36,7 +39,8 @@ export default async function IndexPage() {
               <div className="space-y-2">
                 <h3 className="font-bold">JavaScript</h3>
                 <p className="text-sm text-muted-foreground">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Scripting language for web development, but it is used
+                  everywhere
                 </p>
               </div>
             </div>
@@ -50,7 +54,8 @@ export default async function IndexPage() {
               <div className="space-y-2">
                 <h3 className="font-bold">TypeScript</h3>
                 <p className="text-sm text-muted-foreground">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Statically typed superset of JavaScript that enhances code
+                  quality.
                 </p>
               </div>
             </div>
@@ -64,7 +69,7 @@ export default async function IndexPage() {
               <div className="space-y-2">
                 <h3 className="font-bold">React</h3>
                 <p className="text-sm text-muted-foreground">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Library for building web and native user interfaces.
                 </p>
               </div>
             </div>
@@ -78,7 +83,8 @@ export default async function IndexPage() {
               <div className="space-y-2">
                 <h3 className="font-bold">Next.js</h3>
                 <p className="text-sm text-muted-foreground">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  The React framework for building <br /> full-stack web
+                  applications.
                 </p>
               </div>
             </div>
@@ -92,7 +98,7 @@ export default async function IndexPage() {
               <div className="space-y-2">
                 <h3 className="font-bold">Vue</h3>
                 <p className="text-sm text-muted-foreground">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  JavaScript framework for building user interfaces.
                 </p>
               </div>
             </div>
@@ -118,7 +124,8 @@ export default async function IndexPage() {
               <div className="space-y-2">
                 <h3 className="font-bold">Node.js</h3>
                 <p className="text-sm text-muted-foreground">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Runtime environment that allows executing JavaScript code
+                  outside web browsers.
                 </p>
               </div>
             </div>
@@ -144,7 +151,8 @@ export default async function IndexPage() {
               <div className="space-y-2">
                 <h3 className="font-bold">MySql</h3>
                 <p className="text-sm text-muted-foreground">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Relational database management system, known for its speed,
+                  reliability.
                 </p>
               </div>
             </div>
