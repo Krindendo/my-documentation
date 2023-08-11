@@ -41,63 +41,74 @@ function Counter() {
 
 ```ts showLineNumbers /appDir: true/
 
-  function changeDraft(newDraft: string){
-    type: "CHANGE_DRAFT" as const,
-    payload: { newDraft }
-  }
+const changeDraft = (newDraft: string) => ({
+  type: "CHANGE_DRAFT" as const,
+  payload: { newDraft }
+})
 
-  function addTodo(){
-    type: "ADD_TODO" as const
-  }
+const addTodo = () => ({
+  type: "ADD_TODO" as const
+})
 
-  type Action = ReturnType<typeof changeDraft> | ReturnType<typeof addTodo>
-  type State = {
-    draft: string;
-    todos: { id: number; text: string }[]
-  }
+type Action = ReturnType<typeof changeDraft> | ReturnType<typeof addTodo>
+type State = {
+  draft: string;
+  todos: { id: number; text: string }[]
+}
 
-  const initialState: State = {
-    draft: "",
-    todos: [],
-  }
+const initialState: State = {
+  draft: "",
+  todos: [],
+}
 
-  function reducer (state: State, action: Action) {
-    switch(action.type){
-      case "CHANGE_DRAFT": {
-        return {
-          ...state,
-          draft: action.payload.newDraft
-        }
-      }
-    case "ADD_TODO": {
+function reducer (state: State, action: Action) {
+  switch(action.type){
+    case "CHANGE_DRAFT": {
       return {
-        todos:[
-          { id: state.todos.length, text: state.draft },
-          ...state.todos
-        ]
-        draft: "",
+        ...state,
+        draft: action.payload.newDraft
       }
     }
+  case "ADD_TODO": {
+    return {
+      todos:[
+        { id: state.todos.length, text: state.draft },
+        ...state.todos
+      ]
+      draft: "",
     }
   }
-
-  function ToDo(){
-    const [state, dispatch] = useReducer<Reducer<State, Action>>(reducer, initialState);
-
-    return (
-      <div>
-        <input
-          type="text"
-          value={state.draft}
-          onChange={(e) => dispatch({type: "CHANGE_DRAFT", payload: {newDraft: e.target.value}})}
-        />
-        <button onClick={() => {dispatch({type: "ADD_TODO"})}}>Add todo</button>
-        {state.todos.map((todo) => (
-          <div key={todo.id}>
-            {todo.text}
-          </div>
-        ))}
-      </div>
-    )
   }
+}
+
+function ToDo() {
+  const [state, dispatch] = useReducer<Reducer<State, Action>>(
+    reducer,
+    initialState
+  )
+  return (
+    <div>
+      <input
+        type="text"
+        value={state.draft}
+        onChange={(e) =>
+          dispatch({
+            type: "CHANGE_DRAFT",
+            payload: { newDraft: e.target.value },
+          })
+        }
+      />
+      <button
+        onClick={() => {
+          dispatch({ type: "ADD_TODO" })
+        }}
+      >
+        Add todo
+      </button>
+      {state.todos.map((todo) => (
+        <div key={todo.id}>{todo.text}</div>
+      ))}
+    </div>
+  )
+}
 ```
