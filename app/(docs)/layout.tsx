@@ -3,6 +3,7 @@ import Link from "next/link"
 import { docsConfig } from "@/config/docs"
 import { siteConfig } from "@/config/site"
 import { DocsNav } from "@/components/docs-nav"
+import { DocsSearch } from "@/components/docs-search"
 import { DocsSidebarNav } from "@/components/docs-sidebar-nav"
 import { Icons } from "@/components/icons"
 import { SiteFooter } from "@/components/site-footer"
@@ -21,7 +22,7 @@ export default function DocsLayout({ children }: DocsLayoutProps) {
           </DocsNav>
           <div className="flex flex-1 items-center space-x-4 sm:justify-end">
             <div className="flex-1 sm:grow-0">
-              <p>Search</p>
+              <DocsSearch />
             </div>
             <nav className="flex space-x-4">
               <Link
