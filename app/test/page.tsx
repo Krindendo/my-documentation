@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import { Reducer, useReducer } from "react"
 
@@ -45,22 +47,31 @@ function reducer(state: State, action: Action) {
     }
     case "ADD_TODO": {
       return {
-        todos: [{ id: state.todos.length, text: state.draft }, ...state.todos],
+        todos: [...state.todos, { id: state.todos.length, text: state.draft }],
         draft: "",
       }
     }
     case "UPDATE_TODO": {
       return {
-        todos: [{ id: state.todos.length, text: state.draft }, ...state.todos],
+        todos: state.todos.map((t) => {
+          if (t.id === action.payload.id) {
+            return { ...t, text: state.draft }
+          } else {
+            return t
+          }
+        }),
         draft: "",
       }
     }
     case "DELETE_TODO": {
       return {
-        todos: [{ id: state.todos.length, text: state.draft }, ...state.todos],
+        todos: state.todos.filter((t) => t.id !== action.payload.id),
         draft: "",
       }
     }
+    // default: {
+    //   throw Error("Unknown action: " + action.type)
+    // }
   }
 }
 
@@ -69,40 +80,46 @@ export default function ToDo() {
     reducer,
     initialState
   )
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      type: "CHANGE_TEXT",
+      payload: { newText: e.target.value },
+    })
+  }
+  const handleAddTodo = () => {
+    dispatch({ type: "ADD_TODO" })
+  }
+  const handleUpdateTodo = (id: number) => {
+    dispatch({ type: "UPDATE_TODO", payload: { id } })
+  }
+
+  const handleDeleteTodo = (id: number) => {
+    dispatch({ type: "DELETE_TODO", payload: { id } })
+  }
+
   return (
     <div>
       <input
         type="text"
+        className="border-2"
         value={state.draft}
-        onChange={(e) =>
-          dispatch({
-            type: "CHANGE_TEXT",
-            payload: { newText: e.target.value },
-          })
-        }
+        onChange={handleInputChange}
       />
-      <button
-        onClick={() => {
-          dispatch({ type: "ADD_TODO" })
-        }}
-      >
-        Add todo
-      </button>
+      <button onClick={handleAddTodo}>Add todo</button>
 
       {state.todos.map((todo) => (
-        <div key={todo.id}>
-          {todo.text}
+        <div key={todo.id} className="flex gap-2">
+          <p>{todo.text}</p>
           <button
-            onClick={() => {
-              dispatch({ type: "UPDATE_TODO", payload: { id: todo.id } })
-            }}
+            className="bg-yellow-500"
+            onClick={() => handleUpdateTodo(todo.id)}
           >
             Update todo
           </button>
           <button
-            onClick={() => {
-              dispatch({ type: "DELETE_TODO", payload: { id: todo.id } })
-            }}
+            className="bg-red-500"
+            onClick={() => handleDeleteTodo(todo.id)}
           >
             Delete todo
           </button>

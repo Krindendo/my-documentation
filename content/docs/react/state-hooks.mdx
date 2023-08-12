@@ -10,7 +10,7 @@ For storing information in component use one of these Hooks:
 
 ## useState
 
-```ts
+```tsx
 function Calculator() {
   const [sum, setSum] = useState(0)
   // ...
@@ -21,7 +21,7 @@ function Calculator() {
 
 This hook is similar to useState, but it is used when you have complext state logic.
 
-```ts /appDir: true/
+```tsx /appDir: true/
 function Counter() {
   const [counter, setCounter] = useReducer<Reducer<number, number>>(
     (prev, next) => {
@@ -39,20 +39,33 @@ function Counter() {
 }
 ```
 
-```ts showLineNumbers /appDir: true/
-
-const changeDraft = (newDraft: string) => ({
-  type: "CHANGE_DRAFT" as const,
-  payload: { newDraft }
+```tsx showLineNumbers /appDir: true/
+const changeText = (newText: string) => ({
+  type: "CHANGE_TEXT" as const,
+  payload: { newText },
 })
 
 const addTodo = () => ({
-  type: "ADD_TODO" as const
+  type: "ADD_TODO" as const,
 })
 
-type Action = ReturnType<typeof changeDraft> | ReturnType<typeof addTodo>
+const changeTodo = (id: number) => ({
+  type: "UPDATE_TODO" as const,
+  payload: { id },
+})
+
+const deleteTodo = (id: number) => ({
+  type: "DELETE_TODO" as const,
+  payload: { id },
+})
+
+type Action =
+  | ReturnType<typeof changeText>
+  | ReturnType<typeof addTodo>
+  | ReturnType<typeof changeTodo>
+  | ReturnType<typeof deleteTodo>
 type State = {
-  draft: string;
+  draft: string
   todos: { id: number; text: string }[]
 }
 
@@ -61,52 +74,93 @@ const initialState: State = {
   todos: [],
 }
 
-function reducer (state: State, action: Action) {
-  switch(action.type){
-    case "CHANGE_DRAFT": {
+function reducer(state: State, action: Action) {
+  switch (action.type) {
+    case "CHANGE_TEXT": {
       return {
         ...state,
-        draft: action.payload.newDraft
+        draft: action.payload.newText,
       }
     }
-  case "ADD_TODO": {
-    return {
-      todos:[
-        { id: state.todos.length, text: state.draft },
-        ...state.todos
-      ]
-      draft: "",
+    case "ADD_TODO": {
+      return {
+        todos: [...state.todos, { id: state.todos.length, text: state.draft }],
+        draft: "",
+      }
     }
-  }
+    case "UPDATE_TODO": {
+      return {
+        todos: state.todos.map((t) => {
+          if (t.id === action.payload.id) {
+            return { ...t, text: state.draft }
+          } else {
+            return t
+          }
+        }),
+        draft: "",
+      }
+    }
+    case "DELETE_TODO": {
+      return {
+        todos: state.todos.filter((t) => t.id !== action.payload.id),
+        draft: "",
+      }
+    }
+    // default: {
+    //   throw Error("Unknown action: " + action.type)
+    // }
   }
 }
 
-function ToDo() {
+export default function ToDo() {
   const [state, dispatch] = useReducer<Reducer<State, Action>>(
     reducer,
     initialState
   )
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      type: "CHANGE_TEXT",
+      payload: { newText: e.target.value },
+    })
+  }
+  const handleAddTodo = () => {
+    dispatch({ type: "ADD_TODO" })
+  }
+  const handleUpdateTodo = (id: number) => {
+    dispatch({ type: "UPDATE_TODO", payload: { id } })
+  }
+
+  const handleDeleteTodo = (id: number) => {
+    dispatch({ type: "DELETE_TODO", payload: { id } })
+  }
+
   return (
     <div>
       <input
         type="text"
+        className="border-2"
         value={state.draft}
-        onChange={(e) =>
-          dispatch({
-            type: "CHANGE_DRAFT",
-            payload: { newDraft: e.target.value },
-          })
-        }
+        onChange={handleInputChange}
       />
-      <button
-        onClick={() => {
-          dispatch({ type: "ADD_TODO" })
-        }}
-      >
-        Add todo
-      </button>
+      <button onClick={handleAddTodo}>Add todo</button>
+
       {state.todos.map((todo) => (
-        <div key={todo.id}>{todo.text}</div>
+        <div key={todo.id} className="flex gap-2">
+          <p>{todo.text}</p>
+          <button
+            className="bg-yellow-500"
+            onClick={() => handleUpdateTodo(todo.id)}
+          >
+            Update todo
+          </button>
+          <button
+            className="bg-red-500"
+            onClick={() => handleDeleteTodo(todo.id)}
+          >
+            Delete todo
+          </button>
+        </div>
       ))}
     </div>
   )
