@@ -1,48 +1,108 @@
+//TODO: Change icon ⌘ for mac
+
 "use client"
 
-import { useEffect, useRef } from "react"
+import * as React from "react"
+import { useRouter } from "next/navigation"
+import { DialogProps } from "@radix-ui/react-dialog"
+import { CircleIcon, FileIcon } from "lucide-react"
 
+import { docsConfig } from "@/config/docs"
 import { cn } from "@/lib/utils"
 
-import { Input } from "./ui/input"
+import { Button } from "./ui/button"
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "./ui/command"
 
-interface DocsSearchProps extends React.HTMLAttributes<HTMLFormElement> {}
+interface DocsSearchProps extends DialogProps {}
 
-export function DocsSearch({ className, ...props }: DocsSearchProps) {
-  const searchRef = useRef<HTMLInputElement>(null)
+export function DocsSearch({ ...props }: DocsSearchProps) {
+  const router = useRouter()
+  const [open, setOpen] = React.useState(false)
 
-  useEffect(() => {
-    const focusOnInput = (event: KeyboardEvent) => {
-      if (event.altKey && event.key === "k") {
-        searchRef.current?.focus()
+  React.useEffect(() => {
+    const openSearch = (event: KeyboardEvent) => {
+      if (event.key === "k" && (event.metaKey || event.altKey)) {
+        event.preventDefault()
+        setOpen((open) => !open)
       }
     }
-    document.addEventListener("keydown", focusOnInput)
-    return () => {
-      document.removeEventListener("keydown", focusOnInput)
-    }
+    document.addEventListener("keydown", openSearch)
+    return () => document.removeEventListener("keydown", openSearch)
   }, [])
 
-  function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault()
+  const runCommand = React.useCallback((command: () => unknown) => {
+    setOpen(false)
+    command()
+  }, [])
 
-    console.log("searched:" + searchRef.current?.value)
-  }
   return (
-    <form
-      onSubmit={onSubmit}
-      className={cn("relative w-full", className)}
-      {...props}
-    >
-      <Input
-        ref={searchRef}
-        type="search"
-        placeholder="Search documentation..."
-        className="h-8 w-full sm:w-64 sm:pr-20"
-      />
-      <kbd className="pointer-events-none absolute right-1.5 top-1.5 hidden h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 sm:flex">
-        <span className="text-xs">Alt + K</span>
-      </kbd>
-    </form>
+    <>
+      <Button
+        variant="outline"
+        className={cn(
+          "relative w-full h-8 justify-start text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64"
+        )}
+        onClick={() => {
+          setOpen(true)
+        }}
+        {...props}
+      >
+        <span className="hidden lg:inline-flex">Search documentation...</span>
+        <span className="inline-flex lg:hidden">Search...</span>
+        <kbd className="pointer-events-none text-xs absolute right-1.5 top-1.5 hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+          AltK
+          {/* ⌘K */}
+        </kbd>
+      </Button>
+      <CommandDialog open={open} onOpenChange={setOpen}>
+        <CommandInput placeholder="Type a command or search..." />
+        <CommandList>
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup heading="Links">
+            {docsConfig.mainNav
+              .filter((navitem) => !navitem.external)
+              .map((navItem) => (
+                <CommandItem
+                  key={navItem.href}
+                  value={navItem.title}
+                  onSelect={() => {
+                    runCommand(() => router.push(navItem.href as string))
+                  }}
+                >
+                  <FileIcon className="mr-2 h-4 w-4" />
+                  {navItem.title}
+                </CommandItem>
+              ))}
+          </CommandGroup>
+          {docsConfig.sidebarNav.map((group) => (
+            <CommandGroup key={group.title} heading={group.title}>
+              {group.items?.map((navItem) => (
+                <CommandItem
+                  key={navItem.href}
+                  value={navItem.title}
+                  onSelect={() => {
+                    runCommand(() => router.push(navItem.href as string))
+                  }}
+                >
+                  <div className="mr-2 flex h-4 w-4 items-center justify-center">
+                    <CircleIcon className="h-3 w-3" />
+                  </div>
+                  {navItem.title}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          ))}
+          <CommandSeparator />
+        </CommandList>
+      </CommandDialog>
+    </>
   )
 }
