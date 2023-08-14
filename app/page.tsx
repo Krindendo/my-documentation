@@ -1,7 +1,6 @@
 import Link from "next/link"
 
 import { Icons } from "@/components/icons"
-import { SiteFooter } from "@/components/site-footer"
 
 export default async function IndexPage() {
   return (
@@ -166,7 +165,6 @@ export default async function IndexPage() {
           </Link>
         </div>
       </section>
-      <SiteFooter />
     </>
   )
 }

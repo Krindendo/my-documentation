@@ -1,12 +1,6 @@
-import Link from "next/link"
-
 import { docsConfig } from "@/config/docs"
-import { siteConfig } from "@/config/site"
-import { DocsNav } from "@/components/docs-nav"
-import { DocsSearch } from "@/components/docs-search"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { DocsSidebarNav } from "@/components/docs-sidebar-nav"
-import { Icons } from "@/components/icons"
-import { SiteFooter } from "@/components/site-footer"
 
 interface DocsLayoutProps {
   children: React.ReactNode
@@ -14,30 +8,15 @@ interface DocsLayoutProps {
 
 export default function DocsLayout({ children }: DocsLayoutProps) {
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-40 w-full border-b bg-background">
-        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-          <DocsNav items={docsConfig.mainNav}>
+    <div className="border-b">
+      <div className="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">
+        <aside className="fixed top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 md:sticky md:block">
+          <ScrollArea className="h-full py-6 pl-8 pr-6 lg:py-8">
             <DocsSidebarNav items={docsConfig.sidebarNav} />
-          </DocsNav>
-          <div className="flex flex-1 items-center space-x-4 sm:justify-end">
-            <div className="flex-1 sm:grow-0">
-              <DocsSearch />
-            </div>
-            <nav className="flex space-x-4">
-              <Link
-                href={siteConfig.links.github}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Icons.gitHub className="h-7 w-7" />
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-      <div className="container flex-1">{children}</div>
-      <SiteFooter className="border-t" />
+          </ScrollArea>
+        </aside>
+        {children}
+      </div>
     </div>
   )
 }

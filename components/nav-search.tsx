@@ -21,9 +21,9 @@ import {
   CommandSeparator,
 } from "./ui/command"
 
-interface DocsSearchProps extends DialogProps {}
+interface NavSearchProps extends DialogProps {}
 
-export function DocsSearch({ ...props }: DocsSearchProps) {
+export function NavSearch({ ...props }: NavSearchProps) {
   const router = useRouter()
   const [open, setOpen] = React.useState(false)
 
