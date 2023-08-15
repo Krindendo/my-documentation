@@ -28,7 +28,7 @@ export default async function IndexPage() {
       </section>
       <section
         id="frontend"
-        className="container space-y-6 bg-slate-50 py-8 dark:bg-transparent md:py-10 lg:py-16"
+        className="container space-y-6  py-8 dark:bg-transparent md:py-10 lg:py-16"
       >
         <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
           <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
@@ -96,6 +96,20 @@ export default async function IndexPage() {
             </div>
           </Link>
           <Link
+            href="/docs/react-native"
+            className="relative overflow-hidden rounded-lg border bg-background p-2 hover:bg-accent hover:text-accent-foreground"
+          >
+            <div className="flex h-[180px] flex-col justify-between rounded-md p-6">
+              <Icons.react />
+              <div className="space-y-2">
+                <h3 className="font-bold">React Native</h3>
+                <p className="text-sm text-muted-foreground">
+                  Native apps with React
+                </p>
+              </div>
+            </div>
+          </Link>
+          <Link
             href="/docs/vue"
             className="relative overflow-hidden rounded-lg border bg-background p-2 hover:bg-accent hover:text-accent-foreground"
           >
@@ -140,7 +154,7 @@ export default async function IndexPage() {
       </section>
       <section
         id="database"
-        className="container space-y-6 bg-slate-50 py-8 dark:bg-transparent md:py-10 lg:py-16"
+        className="container space-y-6  py-8 dark:bg-transparent md:py-10 lg:py-16"
       >
         <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
           <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl">

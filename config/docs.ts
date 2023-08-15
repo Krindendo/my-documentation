@@ -42,6 +42,10 @@ export const docsConfig: DocsConfig = {
       ],
     },
     {
+      title: "React Native",
+      items: [{ title: "Introduction", href: "/docs/react-native" }],
+    },
+    {
       title: "Next.js",
       items: [
         { title: "Introduction", href: "/docs/next" },
