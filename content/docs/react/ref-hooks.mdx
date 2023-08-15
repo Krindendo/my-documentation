@@ -2,3 +2,24 @@
 title: Ref Hooks
 description: Description test
 ---
+
+Refs let a component hold some information that isnt used for rendering.
+
+Used for saving DOM node and timeout ID.
+
+Ref does not re-render your component.
+
+- `useRef` You can hold any value in it, but most often its used to hold DOM node.
+- `useImperativeHandle` lets you customize the ref exposed by your component.
+
+## useRef
+
+```tsx
+function Calculator() {
+  const [sum, setSum] = useState(0)
+  // ...
+}
+```
+
+## useImperativeHandle
+
