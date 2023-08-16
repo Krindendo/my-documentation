@@ -106,14 +106,14 @@ function reducer(state: State, action: Action) {
         draft: "",
       }
     }
-    // default: {
-    //   throw Error("Unknown action: " + action.type)
-    // }
+    default: {
+      throw Error("Unknown action:")
+    }
   }
 }
 
 export default function ToDo() {
-  const [state, dispatch] = useReducer<Reducer<State, Action>>(
+  const [state, dispatch] = React.useReducer<React.Reducer<State, Action>>(
     reducer,
     initialState
   )
