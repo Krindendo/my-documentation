@@ -4,6 +4,7 @@ import { compareDesc } from "date-fns"
 
 import { formatDate } from "@/lib/utils"
 import { DocsPageHeader } from "@/components/docs-page-header"
+import { GuidesSearch } from "@/components/guides-search"
 
 export default function GuidesPage() {
   const guides = allGuides
@@ -18,7 +19,7 @@ export default function GuidesPage() {
         heading="Guides"
         text="This section includes end-to-end guides"
       />
-      <p>Search</p>
+      <GuidesSearch className="my-2" />
       {guides?.length ? (
         <div className="grid gap-4 md:grid-cols-2 md:gap-6">
           {guides.map((guide) => (
