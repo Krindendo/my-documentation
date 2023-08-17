@@ -107,7 +107,7 @@ function reducer(state: State, action: Action) {
       }
     }
     default: {
-      throw Error("Unknown action:")
+      throw Error("Unknown action: " + action["type"])
     }
   }
 }
