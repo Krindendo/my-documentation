@@ -28,7 +28,7 @@ export default async function IndexPage() {
       </section>
       <section
         id="frontend"
-        className="container space-y-6  py-8 dark:bg-transparent md:py-10 lg:py-16"
+        className="container space-y-6 py-8 dark:bg-transparent md:py-10 lg:py-16"
       >
         <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
           <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
@@ -182,3 +182,11 @@ export default async function IndexPage() {
     </>
   )
 }
+
+/*
+Add this two text in className for fade-up animation:
+animate-fade-up opacity-0
+and add this class with increment animationDelay
+style={{ animationDelay: "0.15s", animationFillMode: "forwards" }}
+style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
+*/
