@@ -6,7 +6,7 @@ export const siteConfig: SiteConfig = {
   description:
     "The site is made to serve as documentation that will facilitate programming. It contains examples and definitions of the various functions that are used.",
   url: absoluteUrl(""),
-  ogImage: "",
+  ogImage: absoluteUrl("/og.jpg"),
   links: {
     github: "https://github.com/Krindendo/my-documentation",
   },

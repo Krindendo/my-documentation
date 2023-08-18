@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "short_name": "",
+  "name": "My Documentation",
+  "short_name": "My Wiki",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
