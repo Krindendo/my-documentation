@@ -1,6 +1,26 @@
 import Link from "next/link"
 
+import { siteConfig } from "@/config/site"
 import { Icons } from "@/components/icons"
+
+export const metadata = {
+  title: siteConfig.name,
+  description: siteConfig.description,
+  openGraph: {
+    title: siteConfig.name,
+    description: siteConfig.description,
+    type: "article",
+    url: siteConfig.url,
+    images: [
+      {
+        url: siteConfig.ogImage.toString(),
+        width: 1200,
+        height: 630,
+        alt: siteConfig.name,
+      },
+    ],
+  },
+}
 
 export default async function IndexPage() {
   return (

@@ -6,6 +6,11 @@ import { formatDate } from "@/lib/utils"
 import { DocsPageHeader } from "@/components/docs-page-header"
 import { GuidesSearch } from "@/components/guides-search"
 
+export const metadata = {
+  title: "Guides",
+  description: "This section includes how to do stuff properly.",
+}
+
 export default function GuidesPage() {
   const guides = allGuides
     .filter((guide) => guide.published)
@@ -17,7 +22,7 @@ export default function GuidesPage() {
     <div className="py-6 lg:py-10">
       <DocsPageHeader
         heading="Guides"
-        text="This section includes end-to-end guides"
+        text="This section includes how to do stuff properly"
       />
       <GuidesSearch className="my-2" />
       {guides?.length ? (
