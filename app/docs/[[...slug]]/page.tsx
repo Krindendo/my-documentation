@@ -37,12 +37,12 @@ export async function generateMetadata({
     return {}
   }
 
-  const url = env.NEXT_PUBLIC_VERCEL_URL
+  // const url = env.NEXT_PUBLIC_VERCEL_URL
 
-  const ogUrl = new URL(`${url}/api/og`)
-  ogUrl.searchParams.set("heading", doc.description ?? doc.title)
-  ogUrl.searchParams.set("type", "Documentation")
-  ogUrl.searchParams.set("mode", "dark")
+  // const ogUrl = new URL(`${url}/api/og`)
+  // ogUrl.searchParams.set("heading", doc.description ?? doc.title)
+  // ogUrl.searchParams.set("type", "Documentation")
+  // ogUrl.searchParams.set("mode", "dark")
 
   return {
     title: doc.title,
