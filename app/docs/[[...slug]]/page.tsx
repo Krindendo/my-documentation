@@ -39,10 +39,10 @@ export async function generateMetadata({
 
   const url = env.NEXT_PUBLIC_VERCEL_URL
 
-  const ogUrl = new URL(`${url}/og`)
-  // ogUrl.searchParams.set("heading", doc.description ?? doc.title)
-  // ogUrl.searchParams.set("type", "Documentation")
-  // ogUrl.searchParams.set("mode", "dark")
+  const ogUrl = new URL(`${url}/api/og`)
+  ogUrl.searchParams.set("heading", doc.description ?? doc.title)
+  ogUrl.searchParams.set("type", "Documentation")
+  ogUrl.searchParams.set("mode", "dark")
 
   return {
     title: doc.title,
@@ -54,7 +54,7 @@ export async function generateMetadata({
       url: absoluteUrl(doc.slug),
       images: [
         {
-          url: ogUrl.toString(),
+          url: "/og.jpg",
           width: 1200,
           height: 630,
           alt: doc.title,
@@ -65,7 +65,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: doc.title,
       description: doc.description,
-      images: [ogUrl.toString()],
+      images: ["/og.jpg"],
     },
   }
 }

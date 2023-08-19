@@ -1,3 +1,4 @@
+import { Metadata } from "next"
 import Link from "next/link"
 import { allGuides } from "@/.contentlayer/generated"
 import { compareDesc } from "date-fns"
@@ -6,7 +7,7 @@ import { formatDate } from "@/lib/utils"
 import { DocsPageHeader } from "@/components/docs-page-header"
 import { GuidesSearch } from "@/components/guides-search"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Guides",
   description: "This section includes how to do stuff properly.",
 }

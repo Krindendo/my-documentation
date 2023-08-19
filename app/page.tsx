@@ -1,9 +1,10 @@
+import { Metadata } from "next"
 import Link from "next/link"
 
 import { siteConfig } from "@/config/site"
 import { Icons } from "@/components/icons"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: siteConfig.name,
   description: siteConfig.description,
   openGraph: {
