@@ -43,19 +43,10 @@ export async function generateMetadata({
 
   const url = env.NEXT_PUBLIC_VERCEL_URL
 
-  const ogUrl = new URL(`${url}/api/og`)
+  const ogUrl = new URL(absoluteUrl("/api/og"))
   ogUrl.searchParams.set("heading", guide.title)
   ogUrl.searchParams.set("type", "Guide")
   ogUrl.searchParams.set("mode", "dark")
-
-  console.log("ogUrl.toString()", ogUrl.toString())
-  console.log("ogUrl", ogUrl)
-
-  const og = await fetch(ogUrl)
-    .then((res) => console.log("og", res))
-    .catch((error) => console.log("error", error))
-
-  //console.log("og", og)
 
   return {
     title: guide.title,
@@ -65,6 +56,7 @@ export async function generateMetadata({
       description: guide.description,
       type: "article",
       url: absoluteUrl(guide.slug),
+      images: [{ url: ogUrl.toString() }],
     },
     twitter: {
       card: "summary_large_image",
