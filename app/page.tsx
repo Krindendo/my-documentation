@@ -16,7 +16,7 @@ export const metadata: Metadata = {
       {
         url: siteConfig.ogImage.toString(),
         width: 1200,
-        height: 630,
+        height: 530,
         alt: siteConfig.name,
       },
     ],

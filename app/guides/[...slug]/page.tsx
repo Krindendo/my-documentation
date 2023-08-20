@@ -1,5 +1,6 @@
 import "@/styles/mdx.css"
 
+import * as React from "react"
 import { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -40,12 +41,14 @@ export async function generateMetadata({
     return {}
   }
 
-  // const url = env.NEXT_PUBLIC_VERCEL_URL
+  const url = env.NEXT_PUBLIC_VERCEL_URL
 
-  // const ogUrl = new URL(`${url}/api/og`)
-  // ogUrl.searchParams.set("heading", guide.title)
-  // ogUrl.searchParams.set("type", "Guide")
-  // ogUrl.searchParams.set("mode", "dark")
+  const ogUrl = new URL(`${url}/api/og`)
+  ogUrl.searchParams.set("heading", guide.title)
+  ogUrl.searchParams.set("type", "Guide")
+  ogUrl.searchParams.set("mode", "dark")
+
+  const og = await fetch(ogUrl).then((res) => res.json())
 
   return {
     title: guide.title,
@@ -55,7 +58,14 @@ export async function generateMetadata({
       description: guide.description,
       type: "article",
       url: absoluteUrl(guide.slug),
-      images: [{ url: "/og.jpg", width: 1200, height: 630, alt: guide.title }],
+      images: [
+        {
+          url: absoluteUrl(ogUrl.toString()),
+          width: 1200,
+          height: 630,
+          alt: guide.title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
