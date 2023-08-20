@@ -48,7 +48,7 @@ export async function generateMetadata({
   ogUrl.searchParams.set("type", "Guide")
   ogUrl.searchParams.set("mode", "dark")
 
-  const og = await fetch(ogUrl).then((res) => res.json())
+  //const og = await fetch(ogUrl).then((res) => res.json())
 
   return {
     title: guide.title,
@@ -58,14 +58,6 @@ export async function generateMetadata({
       description: guide.description,
       type: "article",
       url: absoluteUrl(guide.slug),
-      images: [
-        {
-          url: absoluteUrl(ogUrl.toString()),
-          width: 1200,
-          height: 630,
-          alt: guide.title,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
