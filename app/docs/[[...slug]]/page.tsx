@@ -4,7 +4,6 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { allDocs } from "contentlayer/generated"
 
-import { env } from "@/env.mjs"
 import { getTableOfContents } from "@/lib/toc"
 import { absoluteUrl } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"

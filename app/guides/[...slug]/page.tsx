@@ -6,7 +6,6 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { allGuides } from "@/.contentlayer/generated"
 
-import { env } from "@/env.mjs"
 import { getTableOfContents } from "@/lib/toc"
 import { absoluteUrl, cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
