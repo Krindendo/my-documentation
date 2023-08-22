@@ -7,6 +7,9 @@ import { formatDate } from "@/lib/utils"
 import { DocsPageHeader } from "@/components/docs-page-header"
 import { GuidesSearch } from "@/components/guides-search"
 
+//TODO: Napraviti tako da se na stranici ucita posljednjih 20 artikla
+//TODO: Napraviti filter za artikle, napraviti nesto slicno kao sto je na stranici https://vercel.com/templates
+
 export const metadata: Metadata = {
   title: "Guides",
   description: "This section includes how to do stuff properly.",
@@ -25,7 +28,7 @@ export default function GuidesPage() {
         heading="Guides"
         text="This section includes how to do stuff properly"
       />
-      <GuidesSearch className="my-2" />
+      {/* <GuidesSearch className="my-2" /> */}
       {guides?.length ? (
         <div className="grid gap-4 md:grid-cols-2 md:gap-6">
           {guides.map((guide) => (
