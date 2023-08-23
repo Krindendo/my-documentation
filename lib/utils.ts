@@ -3,6 +3,8 @@ import { twMerge } from "tailwind-merge"
 
 import { env } from "@/env.mjs"
 
+//TODO: Make test for this utils
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -24,4 +26,22 @@ export function absoluteUrl(path: string) {
   }
 
   return `${protocol}://${env.NEXT_PUBLIC_VERCEL_URL}${path}`
+}
+
+export function safeStringToInteger(input: any) {
+  const convertedInput = parseInt(input)
+  if (isNaN(convertedInput)) {
+    return 0
+  } else {
+    return convertedInput
+  }
+}
+
+export function safeStringToFloat(input: any) {
+  const convertedInput = parseFloat(input)
+  if (isNaN(convertedInput)) {
+    return 0
+  } else {
+    return convertedInput
+  }
 }
