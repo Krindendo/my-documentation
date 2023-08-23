@@ -1,10 +1,13 @@
-import { ImageResponse } from "next/server"
+import { ImageResponse, NextRequest } from "next/server"
 
 import { siteConfig } from "@/config/site"
 import { ogImageSchema } from "@/lib/validations/og"
-import { Icons } from "@/components/icons"
 
 export const runtime = "edge"
+
+export const config = {
+  regions: ["fra1", "cdg1"],
+}
 
 const interRegular = fetch(
   new URL("../../../assets/fonts/Inter-Regular.ttf", import.meta.url)
@@ -14,7 +17,7 @@ const interBold = fetch(
   new URL("../../../assets/fonts/CalSans-SemiBold.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer())
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     const fontRegular = await interRegular
     const fontBold = await interBold
