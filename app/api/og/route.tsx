@@ -5,9 +5,7 @@ import { ogImageSchema } from "@/lib/validations/og"
 
 export const runtime = "edge"
 
-export const config = {
-  regions: ["fra1", "cdg1"],
-}
+export const preferredRegion = ["fra1", "cdg1"]
 
 const interRegular = fetch(
   new URL("../../../assets/fonts/Inter-Regular.ttf", import.meta.url)

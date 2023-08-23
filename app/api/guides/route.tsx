@@ -8,9 +8,7 @@ import { safeStringToInteger } from "@/lib/utils"
 
 export const runtime = "edge"
 
-export const config = {
-  regions: ["fra1", "cdg1"],
-}
+export const preferredRegion = ["fra1", "cdg1"]
 
 const PER_PAGE = 20
 
