@@ -18,14 +18,57 @@ export function formatDate(input: string | number): string {
   })
 }
 
-export function absoluteUrl(path: string) {
-  let protocol = "http"
+export const IS_SERVER = typeof window === "undefined"
 
-  if (process.env.NODE_ENV === "production") {
-    protocol = "https"
+export function getProtocol() {
+  if (process.env.NEXT_PUBLIC_VERCEL_ENV === "production") {
+    return "https"
+  }
+  return "http"
+}
+
+export function getBaseUrl() {
+  if (!IS_SERVER) {
+    return location.origin
   }
 
-  return `${protocol}://${env.NEXT_PUBLIC_VERCEL_URL}${path}`
+  const protocol = getProtocol()
+  return `${protocol}://${env.NEXT_PUBLIC_VERCEL_URL}`
+}
+
+export function getAbsoluteUrl(path: string) {
+  const baseUrl = getBaseUrl()
+  return `${baseUrl}${path}`
+}
+
+type State<T> = { data: T; error: undefined } | { error: Error; da }
+
+export async function fetcher<T>(url: RequestInfo, options?: RequestInit) {
+  if (!url) return { error: new Error("url is missing") }
+
+  try {
+    const res = await fetch(url, options)
+
+    if (!res.ok) {
+      // const json = (await res.json()) as T
+      // if (json.error) {
+      //   const error = new Error(json.error) as Error & {
+      //     status: number
+      //   }
+      //   error.status = res.status
+      //   throw error
+      // } else {
+      //   throw new Error("An unexpected error occurred")
+      // }
+      console.log("error", res)
+      throw new Error(res.statusText)
+    }
+
+    return { data: (await res.json()) as T }
+  } catch (error) {
+    console.log("error", error)
+    return { error }
+  }
 }
 
 export function safeStringToInteger(input: any) {

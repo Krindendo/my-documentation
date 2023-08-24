@@ -5,7 +5,7 @@ import { notFound } from "next/navigation"
 import { allDocs } from "contentlayer/generated"
 
 import { getTableOfContents } from "@/lib/toc"
-import { absoluteUrl } from "@/lib/utils"
+import { getAbsoluteUrl, getBaseUrl } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { DashboardTableOfContents } from "@/components/dashboard-table-of-contents"
 import { DocsPageHeader } from "@/components/docs-page-header"
@@ -36,7 +36,8 @@ export async function generateMetadata({
     return {}
   }
 
-  const ogUrl = new URL(absoluteUrl("/api/og"))
+  console.log("getBaseUrl()", getBaseUrl())
+  const ogUrl = new URL("/api/og", getBaseUrl())
   ogUrl.searchParams.set("heading", doc.description ?? doc.title)
   ogUrl.searchParams.set("type", "Documentation")
   ogUrl.searchParams.set("mode", "dark")
@@ -48,7 +49,7 @@ export async function generateMetadata({
       title: doc.title,
       description: doc.description,
       type: "article",
-      url: absoluteUrl(doc.slug),
+      url: getAbsoluteUrl(doc.slug),
       images: [
         {
           url: ogUrl.toString(),

@@ -7,7 +7,7 @@ import { notFound } from "next/navigation"
 import { allGuides } from "@/.contentlayer/generated"
 
 import { getTableOfContents } from "@/lib/toc"
-import { absoluteUrl, cn } from "@/lib/utils"
+import { cn, getAbsoluteUrl, getBaseUrl } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { DashboardTableOfContents } from "@/components/dashboard-table-of-contents"
 import { DocsPageHeader } from "@/components/docs-page-header"
@@ -40,7 +40,7 @@ export async function generateMetadata({
     return {}
   }
 
-  const ogUrl = new URL(absoluteUrl("/api/og"))
+  const ogUrl = new URL("/api/og", getBaseUrl())
   ogUrl.searchParams.set("heading", guide.title)
   ogUrl.searchParams.set("type", "Guide")
   ogUrl.searchParams.set("mode", "dark")
@@ -52,7 +52,7 @@ export async function generateMetadata({
       title: guide.title,
       description: guide.description,
       type: "article",
-      url: absoluteUrl(guide.slug),
+      url: getAbsoluteUrl(guide.slug),
       images: [
         {
           url: ogUrl.toString(),
