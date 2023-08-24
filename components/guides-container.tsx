@@ -12,13 +12,13 @@ import { GuidesSearch } from "./guides-search"
 //TODO: Napraviti filter za artikle, napraviti nesto slicno kao sto je na stranici https://vercel.com/templates
 
 interface GuidesContainerProps {
-  initGuides: Guides
+  initGuides?: Guides
 }
 
 export function GuidesContainer({ initGuides }: GuidesContainerProps) {
   const [search, setSearch] = React.useState("")
   const [isSearching, setIsSearching] = React.useState(false)
-  const [guides, setGuides] = React.useState<Guide[]>(initGuides.guides)
+  const [guides, setGuides] = React.useState<Guide[]>([])
 
   const debouncedSearch = useDebounce(search)
 

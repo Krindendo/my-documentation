@@ -10,7 +10,7 @@ export interface Guides {
 }
 
 export const guidesPreload = async () => {
-  return await getGuides(0, "")
+  void (await getGuides(0, ""))
 }
 
 export async function getGuides(selectedPage: number, keywords: string) {
