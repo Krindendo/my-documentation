@@ -10,6 +10,14 @@ export interface Guides {
   guides: Guide[]
 }
 
+export const initGuides = {
+  currentPage: 0,
+  maximumPages: 0,
+  guidesPerPage: 0,
+  guidesLength: 0,
+  guides: [],
+} as Guides
+
 export const guidesPreload = async () => {
   void (await getGuides(0, ""))
 }
@@ -32,20 +40,8 @@ export async function getGuides(selectedPage: number, keywords: string) {
       return data.data
     }
 
-    return {
-      currentPage: 0,
-      maximumPages: 0,
-      guidesPerPage: 0,
-      guidesLength: 0,
-      guides: [],
-    } as Guides
+    return initGuides
   } catch (error) {
-    return {
-      currentPage: 0,
-      maximumPages: 0,
-      guidesPerPage: 0,
-      guidesLength: 0,
-      guides: [],
-    } as Guides
+    return initGuides
   }
 }

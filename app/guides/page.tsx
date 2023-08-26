@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 }
 
 export default async function GuidesPage() {
-  await guidesPreload()
+  //await guidesPreload()
   return (
     <div className="py-6 lg:py-10">
       <DocsPageHeader

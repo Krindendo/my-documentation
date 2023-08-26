@@ -10,7 +10,7 @@ export const runtime = "edge"
 
 export const preferredRegion = ["fra1", "cdg1"]
 
-const PER_PAGE = 20
+const PER_PAGE = 1
 
 export async function GET(req: NextRequest) {
   try {
