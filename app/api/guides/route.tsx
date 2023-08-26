@@ -40,6 +40,7 @@ export async function GET(req: NextRequest) {
       currentPage: page,
       maximumPages: maxPages,
       guidesPerPage: PER_PAGE,
+      guidesLength: guides.length,
       guides,
     }
 

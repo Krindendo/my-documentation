@@ -6,6 +6,7 @@ export interface Guides {
   currentPage: number
   maximumPages: number
   guidesPerPage: number
+  guidesLength: number
   guides: Guide[]
 }
 
@@ -35,6 +36,7 @@ export async function getGuides(selectedPage: number, keywords: string) {
       currentPage: 0,
       maximumPages: 0,
       guidesPerPage: 0,
+      guidesLength: 0,
       guides: [],
     } as Guides
   } catch (error) {
@@ -42,6 +44,7 @@ export async function getGuides(selectedPage: number, keywords: string) {
       currentPage: 0,
       maximumPages: 0,
       guidesPerPage: 0,
+      guidesLength: 0,
       guides: [],
     } as Guides
   }

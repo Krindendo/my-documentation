@@ -1,12 +1,62 @@
+import * as React from "react"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
 interface PaginationProps {
+  currentPage: number
+  maximumPages: number
+  perPage: number
+  maximumLength: number
   className?: string
 }
 
-export function Pagination({ className }: PaginationProps) {
+function listOfPagesNumber() {
+  // [1,2,3,...,6,7,8]
+
+  return ["1", "2", "3", "...", "6", "7", "8"]
+}
+
+function howManyArticlesAreShown({
+  currentPage,
+  maximumPages,
+  perPage,
+  maximumLength,
+}: {
+  currentPage: number
+  maximumPages: number
+  perPage: number
+  maximumLength: number
+}) {
+  // [10 or 97]
+
+  if (currentPage === maximumPages) {
+    return maximumLength
+  }
+
+  return currentPage * perPage
+}
+
+export function Pagination({
+  currentPage,
+  maximumPages,
+  perPage,
+  maximumLength,
+  className,
+}: PaginationProps) {
+  const howManyArticles = React.useMemo(
+    () =>
+      howManyArticlesAreShown({
+        currentPage,
+        maximumPages,
+        perPage,
+        maximumLength,
+      }),
+    [currentPage, maximumPages, perPage, maximumLength]
+  )
+
+  const listOfArticles = React.useMemo(() => listOfPagesNumber(), [])
+
   return (
     <div
       className={cn(
@@ -31,9 +81,9 @@ export function Pagination({ className }: PaginationProps) {
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm ">
-            Showing <span className="font-medium">1</span> to{" "}
-            <span className="font-medium">10</span> of{" "}
-            <span className="font-medium">97</span> results
+            Showing <span className="font-medium">{currentPage}</span> to{" "}
+            <span className="font-medium">{howManyArticles}</span> of{" "}
+            <span className="font-medium">{maximumLength}</span> results
           </p>
         </div>
         <div>
@@ -45,56 +95,32 @@ export function Pagination({ className }: PaginationProps) {
               href="#"
               className="relative inline-flex items-center rounded-l-md p-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 dark:border-gray-500"
             >
-              <span className="sr-only">Previous</span>
               <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+              <span className="sr-only">Previous</span>
             </a>
-            {/* Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
-            <a
-              href="#"
-              aria-current="page"
-              className="relative z-10 inline-flex items-center bg-orange-500 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 dark:bg-orange-600"
-            >
-              1
-            </a>
-            <a
-              href="#"
-              className="relative inline-flex items-center px-4 py-2 text-sm font-semibold  ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-            >
-              2
-            </a>
-            <a
-              href="#"
-              className="relative hidden items-center px-4 py-2 text-sm font-semibold  ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex"
-            >
-              3
-            </a>
-            <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
-              ...
-            </span>
-            <a
-              href="#"
-              className="relative hidden items-center px-4 py-2 text-sm font-semibold  ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex"
-            >
-              8
-            </a>
-            <a
-              href="#"
-              className="relative inline-flex items-center px-4 py-2 text-sm font-semibold  ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-            >
-              9
-            </a>
-            <a
-              href="#"
-              className="relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-            >
-              10
-            </a>
+
+            {listOfArticles.map((item) => (
+              <a
+                href="#"
+                aria-current="page"
+                className={cn(
+                  "relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline",
+                  currentPage.toString() === item
+                    ? "bg-orange-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 dark:bg-orange-600"
+                    : "hidden text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0 md:inline-flex",
+                  item === "..." && "text-gray-700 ring-gray-300"
+                )}
+              >
+                {item}
+              </a>
+            ))}
+
             <a
               href="#"
               className="relative inline-flex items-center rounded-r-md p-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
             >
-              <span className="sr-only">Next</span>
               <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+              <span className="sr-only">Next</span>
             </a>
           </nav>
         </div>
