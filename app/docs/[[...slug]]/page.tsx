@@ -36,7 +36,6 @@ export async function generateMetadata({
     return {}
   }
 
-  console.log("getBaseUrl()", getBaseUrl())
   const ogUrl = new URL("/api/og", getBaseUrl())
   ogUrl.searchParams.set("heading", doc.description ?? doc.title)
   ogUrl.searchParams.set("type", "Documentation")

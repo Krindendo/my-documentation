@@ -54,7 +54,8 @@ export function GuidesContainer({}: GuidesContainerProps) {
     }
 
     searchGuide()
-  }, [createQueryString, currentPage, debouncedSearch])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, debouncedSearch])
 
   return (
     <>
