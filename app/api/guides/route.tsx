@@ -10,7 +10,7 @@ export const runtime = "edge"
 
 export const preferredRegion = ["fra1", "cdg1"]
 
-const PER_PAGE = 1
+const PER_PAGE = 20
 
 export async function GET(req: NextRequest) {
   try {
@@ -24,13 +24,14 @@ export async function GET(req: NextRequest) {
       .filter((guide) => guide.published)
       .sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)))
 
-    const maxPages = Math.ceil(guides.length / PER_PAGE)
-
     if (keywords) {
       guides = guides.filter((guide) =>
         guide.title.toLowerCase().includes(keywords.toLowerCase())
       )
     }
+
+    const guidesLength = guides.length
+    const maxPages = Math.ceil(guidesLength / PER_PAGE)
 
     const startIndex = (page - 1) * PER_PAGE
     const endIndex = startIndex + PER_PAGE
@@ -40,7 +41,7 @@ export async function GET(req: NextRequest) {
       currentPage: page,
       maximumPages: maxPages,
       guidesPerPage: PER_PAGE,
-      guidesLength: guides.length,
+      guidesLength,
       guides,
     }
 

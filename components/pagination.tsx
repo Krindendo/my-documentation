@@ -29,26 +29,6 @@ function listOfPagesNumber({ maximumPages }: { maximumPages: number }) {
   return pageNumber
 }
 
-function howManyArticlesAreShown({
-  currentPage,
-  maximumPages,
-  perPage,
-  maximumLength,
-}: {
-  currentPage: number
-  maximumPages: number
-  perPage: number
-  maximumLength: number
-}) {
-  // [10 or 97]
-
-  if (currentPage === maximumPages) {
-    return maximumLength
-  }
-
-  return currentPage * perPage
-}
-
 export function Pagination({
   currentPage,
   maximumPages,
@@ -56,16 +36,18 @@ export function Pagination({
   maximumLength,
   className,
 }: PaginationProps) {
-  const howManyArticles = React.useMemo(
-    () =>
-      howManyArticlesAreShown({
-        currentPage,
-        maximumPages,
-        perPage,
-        maximumLength,
-      }),
-    [currentPage, maximumPages, perPage, maximumLength]
+  const minimumArtiklesOnPage = React.useMemo(
+    () => (currentPage - 1) * perPage + 1,
+    [currentPage, perPage]
   )
+
+  const maximumArtiklesOnPage = React.useMemo(() => {
+    const probablyMaximumLength = (currentPage - 1) * perPage + perPage
+
+    return probablyMaximumLength > maximumLength
+      ? maximumLength
+      : probablyMaximumLength
+  }, [maximumLength, currentPage, perPage])
 
   const listOfArticles = React.useMemo(
     () => listOfPagesNumber({ maximumPages }),
@@ -100,8 +82,8 @@ export function Pagination({
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm">
-            Showing <span className="font-medium">{currentPage}</span> to{" "}
-            <span className="font-medium">{howManyArticles}</span> of{" "}
+            Showing <span className="font-medium">{minimumArtiklesOnPage}</span>{" "}
+            to <span className="font-medium">{maximumArtiklesOnPage}</span> of{" "}
             <span className="font-medium">{maximumLength}</span> results
           </p>
         </div>
