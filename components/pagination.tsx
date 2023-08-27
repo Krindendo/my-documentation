@@ -114,13 +114,17 @@ export function Pagination({
             {listOfArticles.map((item) => {
               if (item === "...") {
                 return (
-                  <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
+                  <span
+                    key={`pagination_${item}`}
+                    className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0"
+                  >
                     ...
                   </span>
                 )
               }
               return (
                 <Link
+                  key={`pagination_${item}`}
                   href={{ pathname: "guides", query: { page: item } }}
                   aria-current="page"
                   className={cn(
