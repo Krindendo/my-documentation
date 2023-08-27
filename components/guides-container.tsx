@@ -11,6 +11,7 @@ import { GuidesList } from "./guides-list"
 import { GuidesSearch } from "./guides-search"
 import { Pagination } from "./pagination"
 
+//TODO: Na prvom pristupu aplikaciji potrebno je da odmah budu prikazani vodici, a da ne pise da nema vodice
 //TODO: Napraviti filter za artikle, napraviti nesto slicno kao sto je na stranici https://vercel.com/templates
 
 interface GuidesContainerProps {}
