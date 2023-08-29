@@ -37,6 +37,8 @@ export async function GET(req: NextRequest) {
     const endIndex = startIndex + PER_PAGE
     guides = guides.slice(startIndex, endIndex)
 
+    await new Promise((resolve) => setTimeout(resolve, 5000))
+
     const response = {
       currentPage: page,
       maximumPages: maxPages,
