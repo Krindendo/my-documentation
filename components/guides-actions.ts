@@ -39,9 +39,8 @@ export async function getGuides(selectedPage: number, keywords: string) {
     if (data.data) {
       return data.data
     }
-
-    return initGuides
+    return null
   } catch (error) {
-    return initGuides
+    return null
   }
 }

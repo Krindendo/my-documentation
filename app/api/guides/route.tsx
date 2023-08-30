@@ -5,6 +5,7 @@ import { compareDesc } from "date-fns"
 import { safeStringToInteger } from "@/lib/utils"
 
 //TODO: Make test for this request
+//await new Promise((resolve) => setTimeout(resolve, 5000))
 
 export const runtime = "edge"
 

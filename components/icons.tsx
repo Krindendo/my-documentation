@@ -1,27 +1,13 @@
 import {
-  AlertTriangle,
-  ArrowRight,
   Check,
   ChevronLeft,
   ChevronRight,
-  CreditCard,
-  File,
-  FileText,
   Globe2,
-  HelpCircle,
-  Image,
   Laptop,
   Loader2,
   LucideProps,
   Moon,
-  MoreVertical,
-  Pizza,
-  Plus,
-  Settings,
   SunMedium,
-  Trash,
-  Twitter,
-  User,
   X,
 } from "lucide-react"
 
@@ -31,22 +17,10 @@ export const Icons = {
   spinner: Loader2,
   chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
-  trash: Trash,
-  post: FileText,
-  page: File,
-  media: Image,
-  settings: Settings,
-  billing: CreditCard,
-  ellipsis: MoreVertical,
-  add: Plus,
-  warning: AlertTriangle,
-  user: User,
-  arrowRight: ArrowRight,
-  help: HelpCircle,
-  pizza: Pizza,
   sun: SunMedium,
   moon: Moon,
   laptop: Laptop,
+  check: Check,
   gitHub: ({ ...props }: LucideProps) => (
     <>
       <svg
@@ -79,6 +53,7 @@ export const Icons = {
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="xMinYMin meet"
         className="h-12 w-12 fill-current"
+        {...props}
       >
         <path
           d="M0 0h256v256H0V0z M67.312 213.932l19.59-11.856c3.78 6.701 7.218 12.371 15.465 12.371 7.905 0 12.89-3.092 12.89-15.12v-81.798h24.057v82.138c0 24.917-14.606 36.259-35.916 36.259-19.245 0-30.416-9.967-36.087-21.996M152.381 211.354l19.588-11.341c5.157 8.421 11.859 14.607 23.715 14.607 9.969 0 16.325-4.984 16.325-11.858 0-8.248-6.53-11.17-17.528-15.98l-6.013-2.58c-17.357-7.387-28.87-16.667-28.87-36.257 0-18.044 13.747-31.792 35.228-31.792 15.294 0 26.292 5.328 34.196 19.247L210.29 147.43c-4.125-7.389-8.591-10.31-15.465-10.31-7.046 0-11.514 4.468-11.514 10.31 0 7.217 4.468 10.14 14.778 14.608l6.014 2.577c20.45 8.765 31.963 17.7 31.963 37.804 0 21.654-17.012 33.51-39.867 33.51-22.339 0-36.774-10.654-43.819-24.574"
@@ -201,12 +176,10 @@ export const Icons = {
   ),
   planetScale: ({ ...props }: LucideProps) => (
     <>
-      <svg viewBox="0 0 24 24" className="h-12 w-12 fill-current">
+      <svg viewBox="0 0 24 24" className="h-12 w-12 fill-current" {...props}>
         <path d="M0 12C0 5.373 5.373 0 12 0c4.873 0 9.067 2.904 10.947 7.077l-15.87 15.87a11.981 11.981 0 0 1-1.935-1.099L14.99 12H12l-8.485 8.485A11.962 11.962 0 0 1 0 12Zm12.004 12L24 12.004C23.998 18.628 18.628 23.998 12.004 24Z"></path>
       </svg>
       <span className="sr-only">Github</span>
     </>
   ),
-  twitter: Twitter,
-  check: Check,
 }

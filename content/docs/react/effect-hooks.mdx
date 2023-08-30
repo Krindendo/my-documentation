@@ -9,6 +9,24 @@ description: Effect includes dealing with network, browser DOM, animations, widg
 
 ## useEffect
 
+### useEffect dependency array
+
+The useEffect controls an array containing state variables or functions that are monitored for changes. These changes then trigger the callback function.
+
+#### Empty array
+
+When the page is rendered, the callback function is only called once.
+
+#### Array with state
+
+The callback function is triggered when the page is first rendered and whenever any of the included states gets updated.
+
+```tsx
+useEffect(() => {
+  console.log(`${name}: ${age}`)
+}, [name, age])
+```
+
 ## useLayoutEffect
 
 ## useInsertionEffect
