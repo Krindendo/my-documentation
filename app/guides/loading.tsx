@@ -1,4 +1,5 @@
+import { GuidesListSkeleton } from "../../components/guides-list"
+
 export default function Loading() {
-  // Or a custom loading skeleton component
-  return <p>Loading...</p>
+  return <GuidesListSkeleton />
 }
