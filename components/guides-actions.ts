@@ -34,8 +34,7 @@ export async function getGuides(selectedPage: number, keywords: string) {
       url.searchParams.set("keywords", keywords)
     }
 
-    // obrisati { cache: "no-cache" }
-    const data = await fetcher<Guides>(url.toString(), { cache: "no-cache" })
+    const data = await fetcher<Guides>(url.toString())
 
     if (data.data) {
       return data.data
