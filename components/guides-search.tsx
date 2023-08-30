@@ -1,54 +1,31 @@
 "use client"
 
 import * as React from "react"
-import { useRouter, useSearchParams } from "next/navigation"
 
-import { cn, createUrl } from "@/lib/utils"
-import { useDebounce } from "@/hooks/use-debounce"
+import { cn } from "@/lib/utils"
 
+import { Icons } from "./icons"
 import { Input, InputProps } from "./ui/input"
 
-interface GuidesSearch extends InputProps {}
+interface GuidesSearch extends InputProps {
+  isPending: boolean
+}
 
-export function GuidesSearch({ className, ...props }: GuidesSearch) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [searchValue, setSearchValue] = React.useState(
-    searchParams?.get("search") || ""
-  )
-
-  // React.useEffect(() => {
-  //   setSearchValue(searchParams?.get("search") || "")
-  // }, [searchParams, setSearchValue])
-
-  const debouncedSearch = useDebounce(searchValue)
-
-  React.useEffect(() => {
-    const newParams = new URLSearchParams(searchParams.toString())
-
-    if (debouncedSearch) {
-      newParams.set("search", debouncedSearch)
-    } else {
-      newParams.delete("search")
-    }
-
-    router.push(createUrl("/guides", newParams))
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch])
-
+export function GuidesSearch({ className, isPending, ...props }: GuidesSearch) {
   return (
-    <div className={cn(className)}>
+    <div className="relative">
       <Input
         type="text"
         name="search"
         placeholder="Search for guides"
-        className=""
-        autoComplete="off"
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
+        className={cn(className)}
         {...props}
       />
+      {isPending && (
+        <div className="absolute inset-y-0 right-0 flex items-center justify-center">
+          <Icons.spinner className="-ml-1 mr-3 h-6 w-6 animate-spin text-orange-500 dark:text-orange-600" />
+        </div>
+      )}
     </div>
   )
 }

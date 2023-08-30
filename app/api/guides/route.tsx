@@ -5,6 +5,7 @@ import { compareDesc } from "date-fns"
 import { safeStringToInteger } from "@/lib/utils"
 
 //TODO: Make test for this request
+//await new Promise((resolve) => setTimeout(resolve, 5000))
 
 export const runtime = "edge"
 
@@ -36,8 +37,6 @@ export async function GET(req: NextRequest) {
     const startIndex = (page - 1) * PER_PAGE
     const endIndex = startIndex + PER_PAGE
     guides = guides.slice(startIndex, endIndex)
-
-    await new Promise((resolve) => setTimeout(resolve, 5000))
 
     const response = {
       currentPage: page,

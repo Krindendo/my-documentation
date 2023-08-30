@@ -4,8 +4,8 @@ import { Metadata } from "next"
 import { safeStringToInteger } from "@/lib/utils"
 import { DocsPageHeader } from "@/components/docs-page-header"
 import { getGuides } from "@/components/guides-actions"
-import { GuidesList, GuidesListSkeleton } from "@/components/guides-list"
-import { GuidesSearch } from "@/components/guides-search"
+import { GuidesComponent } from "@/components/guides-component"
+import { GuidesList } from "@/components/guides-list"
 import { Pagination } from "@/components/pagination"
 
 export const metadata: Metadata = {
@@ -27,21 +27,21 @@ export default async function GuidesPage({
         heading="Guides"
         text="This section includes how to do stuff properly"
       />
-      <GuidesSearch className="mb-4 mt-2" />
-
-      {!guides?.guides.length ? (
-        <p>No guides published.</p>
-      ) : (
-        <>
-          <GuidesList guides={guides.guides} />
-          <Pagination
-            currentPage={guides.currentPage}
-            maximumLength={guides.guidesLength}
-            maximumPages={guides.maximumPages}
-            perPage={guides.guidesPerPage}
-          />
-        </>
-      )}
+      <GuidesComponent>
+        {!guides?.guides.length ? (
+          <p>No guides published.</p>
+        ) : (
+          <>
+            <GuidesList guides={guides.guides} />
+            <Pagination
+              currentPage={guides.currentPage}
+              maximumLength={guides.guidesLength}
+              maximumPages={guides.maximumPages}
+              perPage={guides.guidesPerPage}
+            />
+          </>
+        )}
+      </GuidesComponent>
     </div>
   )
 }

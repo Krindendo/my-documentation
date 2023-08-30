@@ -19,7 +19,7 @@ export async function GuidesList({ guides }: GuidesListProps) {
 export function GuidesListSkeleton() {
   return (
     <div className="grid gap-4 md:grid-cols-2 md:gap-6">
-      {Array(6)
+      {Array(4)
         .fill(0)
         .map((_, index) => (
           <GuidesCardSkeleton key={index} />
