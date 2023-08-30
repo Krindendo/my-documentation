@@ -4,7 +4,7 @@ description: Make the dialog behave like a page
 date: 2023-08-15
 ---
 
-## history
+### history
 
 history.back(), history.forward()
 
@@ -20,15 +20,15 @@ const url = "page3.html" // this is optional
 history.pushState(state, unused, url)
 ```
 
-## popstate
+### popstate
 
 A popstate event is dispatched to the window every time the active history entry changes between two history entries for the same document. If the history entry being activated was created by a call to history.pushState() or was affected by a call to history.replaceState(), the popstate event's state property contains a copy of the history entry's state object.
 
 https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event
 
-# Examples
+## Examples
 
-## Close dialog with back button
+### Close dialog with back button
 
 ```tsx showLineNumbers
 export default function Dialog() {
