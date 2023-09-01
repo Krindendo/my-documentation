@@ -32,3 +32,20 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+````mdx showLineNumbers{23}
+```ts title="path/to/file.ts" showLineNumbers{23}
+// Code here
+```
+````
+
+````mdx {1,3-6}
+```ts {1,3-6}
+// Highlight line 1 and line 3 to 6
+// Highlight line 1 and line 3 to 6
+// Highlight line 1 and line 3 to 6
+// Highlight line 1 and line 3 to 6
+// Highlight line 1 and line 3 to 6
+// Highlight line 1 and line 3 to 6
+```
+````

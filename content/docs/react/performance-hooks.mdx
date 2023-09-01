@@ -12,7 +12,46 @@ This hooks can tell React to reuse a cached calculation or to skip a re-render i
 
 ## useMemo
 
+[useMemo](https://react.dev/reference/react/useMemo) is used to cache a calculation between re-renders. It have two parameters:
+
+- calculateValue: The function calculating the value that you want to cache.
+- dependencies: The list of all reactive values referenced inside of the calculateValue code.
+
+During renders, useMemo will return a stored value if the dependencies haven't changed, but if they have, then
+callback function, calculateValue, will be calculated again and store a new value from calculateValue.
+
+```tsx
+import { useMemo } from "react"
+
+function TodoList({ todos, tab }) {
+  const visibleTodos = useMemo(() => filterTodos(todos, tab), [todos, tab])
+  // ...
+}
+```
+
 ## useCallback
+
+[useCallback](https://react.dev/reference/react/useCallback) is used to cache a function between re-renders. It have two parameters:
+
+- fn: The function value that you want to cache. It can take any arguments and return any values. React will return (not call!) your function
+  back to you during the inital render.On next renders, React will give you the same function again if the dependencies have not changed
+  since the last render. Otherwise, it will give you the function that you have passed during the current render, and store it in case
+  it can be reused later. React will not call your function. The function is returned to you so you can decide when and whether to call it.
+- dependencies: The list of all reactive values referenced inside of the fn code.
+
+During subsequent renders, it will either return an already stored fn function from the last render (if the dependencies haven’t changed), or return the fn function you have passed during this render.
+
+```tsx
+import { useCallback } from 'react';
+
+export default function ProductPage({ productId, referrer, theme }) {
+  const handleSubmit = useCallback((orderDetails) => {
+    post('/product/' + productId + '/buy', {
+      referrer,
+      orderDetails,
+    });
+  }, [productId, referrer]);
+```
 
 ## useTransition
 
