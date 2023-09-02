@@ -41,6 +41,10 @@ function TodoList({ todos, tab }) {
 
 During subsequent renders, it will either return an already stored fn function from the last render (if the dependencies haven’t changed), or return the fn function you have passed during this render.
 
+Why you need to use useCallback?
+
+If you pass a function to children as a prop, and if parent re-renders, then children will also re-render. To prevent that behavior, you need to use React.memo on the component, but it will not work because when parent is re-render, the function that is passed as a prop will be created again. To prevent that, you need to cache the function with useCallback.
+
 ```tsx
 import { useCallback } from 'react';
 
