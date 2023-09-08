@@ -42,7 +42,7 @@ export function getAbsoluteUrl(path: string) {
   return `${baseUrl}${path}`
 }
 
-type State<T> = { data: T; error: undefined } | { error: Error; da }
+type State<T> = { data: T } | { error: Error }
 
 export async function fetcher<T>(url: RequestInfo, options?: RequestInit) {
   if (!url) return { error: new Error("url is missing") }

@@ -13,7 +13,6 @@ interface DashboardTableOfContentsProps {
 export function DashboardTableOfContents({
   toc,
 }: DashboardTableOfContentsProps) {
-  console.log("toc", JSON.stringify(toc))
   const itemsIds = React.useMemo(() => {
     if (toc.items === undefined) return []
 
