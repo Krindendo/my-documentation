@@ -83,7 +83,7 @@ export function Pagination({
           )}
         </div>
       </div>
-      <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+      <div className="hidden gap-4 sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm">
             Showing <span className="font-medium">{minimumArtiklesOnPage}</span>{" "}
