@@ -78,12 +78,14 @@ export const WithIcon: Story = {
 }
 
 export const Large: Story = {
+  render: (args) => <Button {...args}>Button</Button>,
   args: {
     children: "Button",
     size: "lg",
   },
 }
 export const Small: Story = {
+  render: (args) => <Button {...args}>Button</Button>,
   args: {
     children: "Button",
     size: "sm",

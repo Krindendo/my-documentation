@@ -1,4 +1,5 @@
 import * as React from "react"
+import Link, { LinkProps } from "next/link"
 import { cva, VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
@@ -34,21 +35,53 @@ const buttonVariants = cva(
   }
 )
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {}
+interface BaseType extends VariantProps<typeof buttonVariants> {
+  asLink?: boolean
+}
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => {
+interface ButtonType
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    BaseType {}
+
+interface LinkType extends LinkProps, BaseType {
+  className: string
+  asLink?: true
+}
+
+type ButtonProps = ButtonType | LinkType
+
+const Button_old = ({ ...props }: ButtonProps) => {
+  if (props.asLink) {
+    const { className, variant, size, asLink, ...rest } = props as LinkType
     return (
-      <button
+      <Link
         className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
+        {...rest}
       />
     )
   }
-)
-Button.displayName = "Button"
+  const { className, variant, size, asLink, ...rest } = props as ButtonType
 
-export { Button, buttonVariants }
+  return (
+    <button
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...rest}
+    />
+  )
+}
+
+// const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+//   ({ className, variant, size, ...props }, ref) => {
+
+//     return (
+//       <button
+//         className={cn(buttonVariants({ variant, size, className }))}
+//         ref={ref}
+//         {...props}
+//       />
+//     )
+//   }
+// )
+// Button.displayName = "Button"
+
+export { Button_old }
