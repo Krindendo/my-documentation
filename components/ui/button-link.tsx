@@ -1,21 +1,20 @@
 import * as React from "react"
 import Link, { LinkProps } from "next/link"
-import { cva, VariantProps } from "class-variance-authority"
+import { VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
-
-import { buttonVariants } from "./button"
+import { buttonVariants } from "@/components/ui/button"
 
 export interface ButtonLinkProps
-  extends LinkProps,
-    VariantProps<typeof buttonVariants> {
-  className?: string
-}
+  extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps>,
+    LinkProps,
+    VariantProps<typeof buttonVariants> {}
 
 const ButtonLink = ({
   className,
   variant,
   size,
+  target,
   ...props
 }: ButtonLinkProps) => {
   return (

@@ -5,28 +5,28 @@
 @layer base {
   :root {
     --background: 0 0% 100%; /* promenio */
-    --foreground: 222.2 47.4% 11.2%;
+    --foreground: 240 5.2% 33.92%; /* promenio */
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
     --popover: 0 0% 100%; /* promenio */
-    --popover-foreground: 222.2 47.4% 11.2%;
+    --popover-foreground: 240 5.2% 33.92%; /* promenio */
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
 
     --card: 0 0% 100%; /* promenio */
-    --card-foreground: 222.2 47.4% 11.2%;
+    --card-foreground: 240 5.2% 33.92%; /* promenio */
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 240 5.2% 33.92%; /* promenio */
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary-foreground: 240 5.2% 33.92%; /* promenio */
 
     --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent-foreground: 240 5.2% 33.92%; /* promenio */
 
     --destructive: 0 100% 50%;
     --destructive-foreground: 210 40% 98%;
@@ -38,7 +38,7 @@
 
   .dark {
     --background: 240 5.88% 10%; /* promenio */
-    --foreground: 213 31% 91%;
+    --foreground: 240 5.03% 64.9%; /* promenio */
 
     --muted: 223 47% 11%;
     --muted-foreground: 215.4 16.3% 56.9%;
@@ -53,7 +53,7 @@
     --input: 216 34% 17%;
 
     --card: 240 5.88% 10%; /* promenio */
-    --card-foreground: 213 31% 91%;
+    --card-foreground: 240 5.03% 64.9%; /* promenio */
 
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 1.2%;

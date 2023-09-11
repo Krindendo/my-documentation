@@ -4,11 +4,14 @@ import localFont from "next/font/local"
 
 import "@/styles/globals.css"
 
+import Link from "next/link"
+
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { Analytics } from "@/components/analytics"
+import { Icons } from "@/components/icons"
 import { SiteFooter } from "@/components/site-footer"
-import { SiteHeader } from "@/components/site-header"
+import { SiteNavigation } from "@/components/site-navigation"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
 
@@ -62,10 +65,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative flex min-h-screen w-full flex-col">
-            <SiteHeader />
-            <div className="flex-1">{children}</div>
-            <SiteFooter />
+          <div className="lg:ml-72 xl:ml-80">
+            <SiteNavigation />
+            <div className="relative px-4 pt-14 sm:px-6 lg:px-8">
+              <main className="py-16">{children}</main>
+              <SiteFooter />
+            </div>
           </div>
           <TailwindIndicator />
         </ThemeProvider>
@@ -74,3 +79,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
     </html>
   )
 }
+
+/*
+          <div className="relative flex min-h-screen w-full flex-col">
+            <SiteHeader />
+            <div className="flex-1">{children}</div>
+            <SiteFooter />
+          </div>
+
+*/

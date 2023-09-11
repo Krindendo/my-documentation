@@ -5,22 +5,16 @@ import Link from "next/link"
 import { useSelectedLayoutSegment } from "next/navigation"
 
 import { docsConfig } from "@/config/docs"
-import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
-import { Icons } from "./icons"
+import { Logo } from "./logo"
 
 export function NavMain() {
   const segment = useSelectedLayoutSegment()
 
   return (
     <div className="mr-4 hidden md:flex">
-      <Link href="/" className="mr-6 flex items-center space-x-2">
-        <Icons.logo />
-        <span className="hidden font-bold sm:inline-block">
-          {siteConfig.name}
-        </span>
-      </Link>
+      <Logo className="mr-6 flex items-center space-x-2" />
 
       <nav className="flex items-center space-x-6 text-sm font-medium">
         {docsConfig.mainNav?.map((item, index) => (

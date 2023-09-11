@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react"
 
-import { SiteHeader } from "@/components/site-header"
+import { SiteHeader } from "@/components/site-navigation"
 
 const meta = {
   title: "site/Header",
