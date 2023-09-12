@@ -1,25 +1,30 @@
+"use client"
+
 import * as React from "react"
-import { createStore, StoreApi, useStore } from "zustand"
+import { create, StoreApi, useStore } from "zustand"
 
 import { remToPx } from "@/lib/remToPx"
+import { TableOfContents } from "@/lib/toc"
 
-interface SidebarState {
-  sections: any[]
-  visibleSections: string[]
-  setVisibleSections: (visibleSections: any) => void
-  registerHeading: ({
-    id,
-    ref,
-    offsetRem,
-  }: {
-    id: any
-    ref: any
-    offsetRem: any
-  }) => void
+interface SectionItem {
+  id: string
+  label: string
+  tag: string
+  title: string
+  headingRef: React.MutableRefObject<React.ReactElement>
+  ref: React.MutableRefObject<React.ReactElement>
+  offsetRem: number
 }
 
-function createSectionStore(sections) {
-  return createStore<SidebarState>((set) => ({
+interface SidebarState {
+  sections: SectionItem[]
+  visibleSections: string[]
+  setVisibleSections: (visibleSections: string[]) => void
+  registerHeading: ({ id, ref, offsetRem }: SectionItem) => void
+}
+
+function createSectionStore(sections: SectionItem[]) {
+  return create<SidebarState>()((set) => ({
     sections,
     visibleSections: [],
     setVisibleSections: (visibleSections) =>
@@ -29,20 +34,18 @@ function createSectionStore(sections) {
           : { visibleSections }
       ),
     registerHeading: ({ id, ref, offsetRem }) =>
-      set((state) => {
-        return {
-          sections: state.sections.map((section) => {
-            if (section.id === id) {
-              return {
-                ...section,
-                headingRef: ref,
-                offsetRem,
-              }
+      set((state) => ({
+        sections: state.sections.map((section) => {
+          if (section.id === id) {
+            return {
+              ...section,
+              headingRef: ref,
+              offsetRem,
             }
-            return section
-          }),
-        }
-      }),
+          }
+          return section
+        }),
+      })),
   }))
 }
 
@@ -106,14 +109,19 @@ const SectionStoreContext = React.createContext<StoreApi<SidebarState>>(
 const useIsomorphicLayoutEffect =
   typeof window === "undefined" ? React.useEffect : React.useLayoutEffect
 
-export function SectionProvider({ sections, children }) {
-  let [sectionStore] = React.useState(() => createSectionStore(sections))
+interface SectionProviderProps {
+  children: React.ReactNode
+}
+
+export function SectionProvider({ children }: SectionProviderProps) {
+  const [sectionStore] = React.useState(() => createSectionStore([]))
+  const [toc, setToc] = React.useState<TableOfContents>()
 
   useVisibleSections(sectionStore)
 
   useIsomorphicLayoutEffect(() => {
-    sectionStore.setState({ sections })
-  }, [sectionStore, sections])
+    sectionStore.setState({ sections: toc })
+  }, [sectionStore, toc])
 
   return (
     <SectionStoreContext.Provider value={sectionStore}>
@@ -126,3 +134,44 @@ export function useSectionStore(selector) {
   let store = React.useContext(SectionStoreContext)
   return useStore(store, selector)
 }
+
+/*
+  description: 'On this page, we’ll dive into the different message endpoints you can use to manage messages programmatically.',
+  sections: [
+    { title: 'The message model', id: 'the-message-model' },
+    {
+      title: 'List all messages',
+      id: 'list-all-messages',
+      tag: 'GET',
+      label: '/v1/messages'
+    },
+    {
+      title: 'Send a message',
+      id: 'send-a-message',
+      tag: 'POST',
+      label: '/v1/messages'
+    },
+    {
+      title: 'Retrieve a message',
+      id: 'retrieve-a-message',
+      tag: 'GET',
+      label: '/v1/messages/:id'
+    },
+    {
+      title: 'Update a message',
+      id: 'update-a-message',
+      tag: 'PUT',
+      label: '/v1/messages/:id'
+    },
+    {
+      title: 'Delete a message',
+      id: 'delete-a-message',
+      tag: 'DELETE',
+      label: '/v1/messages/:id'
+    }
+  ],
+  title: 'Messages'
+}
+
+
+*/

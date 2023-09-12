@@ -64,7 +64,7 @@ export const SiteHeader = React.forwardRef<HTMLDivElement, SiteHeaderProps>(
           <nav className="hidden md:block">
             <ul role="list" className="flex items-center gap-8">
               {docsConfig.mainNav?.map((item, index) => (
-                <li>
+                <li key={index}>
                   <Link
                     key={index}
                     href={item.disabled ? "#" : item.href}

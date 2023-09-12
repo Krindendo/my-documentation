@@ -4,16 +4,18 @@ import { useRef } from "react"
 import Link from "next/link"
 import { useRouter, useSelectedLayoutSegment } from "next/navigation"
 import { SidebarNavItem } from "@/types"
-import clsx from "clsx"
 import { AnimatePresence, motion, useIsPresent } from "framer-motion"
 
 import { docsConfig } from "@/config/docs"
+import { siteConfig } from "@/config/site"
 import { remToPx } from "@/lib/remToPx"
 import { cn } from "@/lib/utils"
 import { ButtonLink } from "@/components/ui/button-link"
 import { Tag } from "@/components/ui/tag"
 import { useSectionStore } from "@/components/site-provider"
 import { useIsInsideMobileNavigation } from "@/components/site-sidebar-mobile"
+
+import { Icons } from "./icons"
 
 function useInitialValue(value, condition = true) {
   let initialValue = useRef(value).current
@@ -39,7 +41,7 @@ function NavLink({
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className={clsx(
+      className={cn(
         "flex justify-between gap-2 py-1 pr-3 text-sm transition",
         isAnchorLink ? "pl-7" : "pl-4",
         active
@@ -61,6 +63,8 @@ function VisibleSectionHighlight({ group, pathname }) {
     ],
     useIsInsideMobileNavigation()
   )
+
+  console.log("sections", sections)
 
   let isPresent = useIsPresent()
   let firstVisibleSectionIndex = Math.max(
@@ -123,11 +127,15 @@ function NavigationGroup({ group, className }: NavigationGroupProps) {
     isInsideMobileNavigation
   )
 
+  //console.log("router", router.pathname)
+
   let isActiveGroup =
     group.items?.findIndex((link) => link.href === router.pathname) !== -1
 
+  console.log("sections", sections)
+
   return (
-    <li className={clsx("relative mt-6", className)}>
+    <li className={cn("relative mt-6", className)}>
       <motion.h2
         layout="position"
         className="text-xs font-semibold text-zinc-900 dark:text-white"
@@ -135,27 +143,27 @@ function NavigationGroup({ group, className }: NavigationGroupProps) {
         {group.title}
       </motion.h2>
       <div className="relative mt-3 pl-2">
-        <AnimatePresence initial={!isInsideMobileNavigation}>
+        {/* <AnimatePresence initial={!isInsideMobileNavigation}>
           {isActiveGroup && (
             <VisibleSectionHighlight group={group} pathname={router.pathname} />
           )}
-        </AnimatePresence>
+        </AnimatePresence> */}
         <motion.div
           layout
           className="absolute inset-y-0 left-2 w-px bg-zinc-900/10 dark:bg-white/5"
         />
-        <AnimatePresence initial={false}>
+        {/* <AnimatePresence initial={false}>
           {isActiveGroup && (
             <ActivePageMarker group={group} pathname={router.pathname} />
           )}
-        </AnimatePresence>
+        </AnimatePresence> */}
         <ul role="list" className="border-l border-transparent">
           {group.items?.map((link) => (
             <motion.li key={link.href} layout="position" className="relative">
               <NavLink href={link.href} active={link.href === router.pathname}>
                 {link.title}
               </NavLink>
-              <AnimatePresence mode="popLayout" initial={false}>
+              {/* <AnimatePresence mode="popLayout" initial={false}>
                 {link.href === router.pathname && sections.length > 0 && (
                   <motion.ul
                     role="list"
@@ -182,7 +190,7 @@ function NavigationGroup({ group, className }: NavigationGroupProps) {
                     ))}
                   </motion.ul>
                 )}
-              </AnimatePresence>
+              </AnimatePresence> */}
             </motion.li>
           ))}
         </ul>
@@ -190,31 +198,6 @@ function NavigationGroup({ group, className }: NavigationGroupProps) {
     </li>
   )
 }
-
-export const navigation = [
-  {
-    title: "Guides",
-    links: [
-      { title: "Introduction", href: "/" },
-      { title: "Quickstart", href: "/quickstart" },
-      { title: "SDKs", href: "/sdks" },
-      { title: "Authentication", href: "/authentication" },
-      { title: "Pagination", href: "/pagination" },
-      { title: "Errors", href: "/errors" },
-      { title: "Webhooks", href: "/webhooks" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { title: "Contacts", href: "/contacts" },
-      { title: "Conversations", href: "/conversations" },
-      { title: "Messages", href: "/messages" },
-      { title: "Groups", href: "/groups" },
-      { title: "Attachments", href: "/attachments" },
-    ],
-  },
-]
 
 interface SiteSidebarProps {
   className?: string
@@ -226,7 +209,7 @@ export function SiteSidebar({ ...props }: SiteSidebarProps) {
     <nav {...props}>
       <ul role="list">
         {docsConfig.mainNav?.map((item, index) => (
-          <li className="md:hidden">
+          <li key={index} className="md:hidden">
             <Link
               key={index}
               href={item.disabled ? "#" : item.href}
@@ -251,8 +234,15 @@ export function SiteSidebar({ ...props }: SiteSidebarProps) {
           />
         ))}
         <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
-          <ButtonLink href="#" variant="filled" className="w-full">
-            Sign in
+          <ButtonLink
+            variant="filled"
+            size="sm"
+            className="w-full"
+            href={siteConfig.links.github}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Icons.gitHub className="h-6 w-6" />
           </ButtonLink>
         </li>
       </ul>
