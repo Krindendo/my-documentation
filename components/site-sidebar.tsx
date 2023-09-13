@@ -2,7 +2,12 @@
 
 import { useRef } from "react"
 import Link from "next/link"
-import { useRouter, useSelectedLayoutSegment } from "next/navigation"
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSelectedLayoutSegment,
+} from "next/navigation"
 import { SidebarNavItem } from "@/types"
 import { AnimatePresence, motion, useIsPresent } from "framer-motion"
 
@@ -55,31 +60,37 @@ function NavLink({
   )
 }
 
-function VisibleSectionHighlight({ group, pathname }) {
+function VisibleSectionHighlight({
+  group,
+  pathname,
+}: {
+  group: SidebarNavItem
+  pathname: string
+}) {
   let [sections, visibleSections] = useInitialValue(
     [
-      useSectionStore((s) => s.sections),
-      useSectionStore((s) => s.visibleSections),
+      useSectionStore().getState().sections,
+      useSectionStore().getState().visibleSections,
     ],
     useIsInsideMobileNavigation()
   )
 
   console.log("sections", sections)
 
-  let isPresent = useIsPresent()
-  let firstVisibleSectionIndex = Math.max(
+  const isPresent = useIsPresent()
+  const firstVisibleSectionIndex = Math.max(
     0,
     [{ id: "_top" }, ...sections].findIndex(
       (section) => section.id === visibleSections[0]
     )
   )
-  let itemHeight = remToPx(2)
-  let height = isPresent
+  const itemHeight = remToPx(2)
+  const height = isPresent
     ? Math.max(1, visibleSections.length) * itemHeight
     : itemHeight
-  let top =
-    group.links.findIndex((link) => link.href === pathname) * itemHeight +
-    firstVisibleSectionIndex * itemHeight
+
+  const n = group.items?.findIndex((item) => item === pathname) ?? 0
+  let top = n * itemHeight + firstVisibleSectionIndex * itemHeight
 
   return (
     <motion.div
@@ -93,10 +104,17 @@ function VisibleSectionHighlight({ group, pathname }) {
   )
 }
 
-function ActivePageMarker({ group, pathname }) {
+function ActivePageMarker({
+  group,
+  pathname,
+}: {
+  group: SidebarNavItem
+  pathname: string
+}) {
   let itemHeight = remToPx(2)
   let offset = remToPx(0.25)
-  let activePageIndex = group.links.findIndex((link) => link.href === pathname)
+  let activePageIndex =
+    group.items?.findIndex((link) => link.href === pathname) ?? 0
   let top = offset + activePageIndex * itemHeight
 
   return (
@@ -122,17 +140,13 @@ function NavigationGroup({ group, className }: NavigationGroupProps) {
   // The state will still update when we re-open (re-render) the navigation.
   let isInsideMobileNavigation = useIsInsideMobileNavigation()
 
-  let [router, sections] = useInitialValue(
-    [useRouter(), useSectionStore((s) => s.sections)],
+  let [pathname, sections] = useInitialValue(
+    [usePathname(), useSectionStore().getState().sections],
     isInsideMobileNavigation
   )
 
-  //console.log("router", router.pathname)
-
   let isActiveGroup =
-    group.items?.findIndex((link) => link.href === router.pathname) !== -1
-
-  console.log("sections", sections)
+    group.items?.findIndex((link) => link.href === pathname) !== -1
 
   return (
     <li className={cn("relative mt-6", className)}>
@@ -143,28 +157,28 @@ function NavigationGroup({ group, className }: NavigationGroupProps) {
         {group.title}
       </motion.h2>
       <div className="relative mt-3 pl-2">
-        {/* <AnimatePresence initial={!isInsideMobileNavigation}>
+        <AnimatePresence initial={!isInsideMobileNavigation}>
           {isActiveGroup && (
-            <VisibleSectionHighlight group={group} pathname={router.pathname} />
+            <VisibleSectionHighlight group={group} pathname={pathname} />
           )}
-        </AnimatePresence> */}
+        </AnimatePresence>
         <motion.div
           layout
           className="absolute inset-y-0 left-2 w-px bg-zinc-900/10 dark:bg-white/5"
         />
-        {/* <AnimatePresence initial={false}>
+        <AnimatePresence initial={false}>
           {isActiveGroup && (
-            <ActivePageMarker group={group} pathname={router.pathname} />
+            <ActivePageMarker group={group} pathname={pathname} />
           )}
-        </AnimatePresence> */}
+        </AnimatePresence>
         <ul role="list" className="border-l border-transparent">
-          {group.items?.map((link) => (
-            <motion.li key={link.href} layout="position" className="relative">
-              <NavLink href={link.href} active={link.href === router.pathname}>
-                {link.title}
+          {group.items?.map((item) => (
+            <motion.li key={item.href} layout="position" className="relative">
+              <NavLink href={item.href} active={item.href === pathname}>
+                {item.title}
               </NavLink>
-              {/* <AnimatePresence mode="popLayout" initial={false}>
-                {link.href === router.pathname && sections.length > 0 && (
+              <AnimatePresence mode="popLayout" initial={false}>
+                {item.href === pathname && sections.length > 0 && (
                   <motion.ul
                     role="list"
                     initial={{ opacity: 0 }}
@@ -180,7 +194,7 @@ function NavigationGroup({ group, className }: NavigationGroupProps) {
                     {sections.map((section) => (
                       <li key={section.id}>
                         <NavLink
-                          href={`${link.href}#${section.id}`}
+                          href={`${item.href}#${section.id}`}
                           tag={section.tag}
                           isAnchorLink
                         >
@@ -190,7 +204,7 @@ function NavigationGroup({ group, className }: NavigationGroupProps) {
                     ))}
                   </motion.ul>
                 )}
-              </AnimatePresence> */}
+              </AnimatePresence>
             </motion.li>
           ))}
         </ul>
