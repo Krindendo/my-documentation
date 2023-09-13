@@ -109,6 +109,7 @@ function useVisibleSections(sectionStore: StoreApi<SidebarState>) {
 
   React.useEffect(() => {
     sectionStore.setState({ visibleSections: activeIds })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIds])
 }
 

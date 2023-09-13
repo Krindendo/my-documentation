@@ -6,8 +6,8 @@ date: 2023-09-12
 
 The Intersection Observer API provides a way to asynchronously observe changes in the intersection of a target element with an ancestor element or with a top-level document's viewport.
 
-The Intersection Observer API lets code register a callback function that is executed whenever a particular element enters or exits an intersection with another element (or the viewport), 
-or when the intersection between two elements changes by a specified amount. This way, sites no longer need to do anything on the main thread to watch for this kind of element intersection, 
+The Intersection Observer API lets code register a callback function that is executed whenever a particular element enters or exits an intersection with another element (or the viewport),
+or when the intersection between two elements changes by a specified amount. This way, sites no longer need to do anything on the main thread to watch for this kind of element intersection,
 and the browser is free to optimize the management of intersections as it sees fit.
 
 ### When to use Intersection Observer API?
@@ -27,56 +27,56 @@ and the browser is free to optimize the management of intersections as it sees f
 
 ## Examples
 
-```tsx showLineNumbers
-import * as React from "react";
+```tsx showLineNumbers /appDir: true/
+import * as React from "react"
 
-const itemIds: string[] = ["div_1", "div_2", "div_3", "div_4"];
+const itemIds: string[] = ["div_1", "div_2", "div_3", "div_4"]
 
 export default function App() {
-  const [activeIds, setActiveIds] = React.useState<string[]>([]);
+  const [activeIds, setActiveIds] = React.useState<string[]>([])
 
   React.useEffect(() => {
-    console.log("activeIds", activeIds);
-  }, [activeIds]);
+    console.log("activeIds", activeIds)
+  }, [activeIds])
 
   React.useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            console.log("add: ", entry.target.id);
-            setActiveIds((ids) => [...ids, entry.target.id]);
+            console.log("add: ", entry.target.id)
+            setActiveIds((ids) => [...ids, entry.target.id])
           } else {
-            console.log("delete: ", entry.target.id);
-            setActiveIds((ids) => ids.filter((id) => id !== entry.target.id));
+            console.log("delete: ", entry.target.id)
+            setActiveIds((ids) => ids.filter((id) => id !== entry.target.id))
           }
-        });
+        })
       },
       { root: null, rootMargin: "0px 0px -30px 0px", threshold: 0.2 }
-    );
+    )
 
     itemIds?.forEach((id) => {
       if (id === undefined) {
-        return null;
+        return null
       }
-      const element = document.getElementById(id);
+      const element = document.getElementById(id)
       if (element) {
-        observer.observe(element);
+        observer.observe(element)
       }
-    });
+    })
 
     return () => {
       itemIds.forEach((id) => {
         if (id === undefined) {
-          return null;
+          return null
         }
-        const element = document.getElementById(id);
+        const element = document.getElementById(id)
         if (element) {
-          observer.unobserve(element);
+          observer.unobserve(element)
         }
-      });
-    };
-  }, []);
+      })
+    }
+  }, [])
 
   return (
     <main>
@@ -103,8 +103,6 @@ export default function App() {
         }}
       ></div>
     </main>
-  );
+  )
 }
-
-
 ```

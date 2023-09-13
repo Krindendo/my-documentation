@@ -1,20 +1,20 @@
 import type { Meta, StoryObj } from "@storybook/react"
 
-import { SiteHeader } from "@/components/site-navigation"
+import { SiteNavigation } from "@/components/site-navigation"
 
 const meta = {
   title: "site/Header",
-  component: SiteHeader,
+  component: SiteNavigation,
   tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },
-} satisfies Meta<typeof SiteHeader>
+} satisfies Meta<typeof SiteNavigation>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const Main: Story = {
-  render: () => <SiteHeader />,
+  render: () => <SiteNavigation />,
   args: {},
 }

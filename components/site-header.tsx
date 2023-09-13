@@ -43,10 +43,10 @@ export const SiteHeader = React.forwardRef<HTMLDivElement, SiteHeaderProps>(
             ? "bg-white dark:bg-zinc-900"
             : "bg-white/[var(--bg-opacity-light)] dark:bg-zinc-900/[var(--bg-opacity-dark)]"
         )}
-        style={{
-          "--bg-opacity-light": bgOpacityLight,
-          "--bg-opacity-dark": bgOpacityDark,
-        }}
+        // style={{
+        //   "--bg-opacity-light": bgOpacityLight,
+        //   "--bg-opacity-dark": bgOpacityDark,
+        // }}
       >
         <div
           className={cn(
