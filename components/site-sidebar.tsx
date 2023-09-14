@@ -79,9 +79,7 @@ function VisibleSectionHighlight({
     () =>
       Math.max(
         0,
-        [{ id: "_top" }, ...sectionIds].findIndex(
-          (section) => section === visibleSections[0]
-        )
+        sectionIds.findIndex((section) => section === visibleSections[0])
       ),
     [sectionIds, visibleSections]
   )
@@ -94,8 +92,9 @@ function VisibleSectionHighlight({
   )
 
   const top = React.useMemo(() => {
-    const n = group.items?.findIndex((item) => item.href === pathname) ?? 0
-    return n * itemHeight + firstVisibleSectionIndex * itemHeight
+    const firstItemIndex =
+      group.items?.findIndex((item) => item.href === pathname) ?? 0
+    return firstItemIndex * itemHeight + firstVisibleSectionIndex * itemHeight
   }, [group, itemHeight, firstVisibleSectionIndex, pathname])
 
   return (

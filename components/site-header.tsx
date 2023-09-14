@@ -3,7 +3,6 @@
 import * as React from "react"
 import Link from "next/link"
 import { useSelectedLayoutSegment } from "next/navigation"
-import { SidebarNavItem } from "@/types"
 import { motion, useScroll, useTransform } from "framer-motion"
 
 import { docsConfig } from "@/config/docs"
