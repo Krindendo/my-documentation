@@ -226,7 +226,7 @@ interface SiteSidebarProps {
 export function SiteSidebar({ className, ...props }: SiteSidebarProps) {
   const segment = useSelectedLayoutSegment()
   return (
-    <nav className={cn("scrollbar mb-5", className)} {...props}>
+    <nav className={cn("mb-5", className)} {...props}>
       <ul role="list">
         {docsConfig.mainNav?.map((item, index) => (
           <li key={index} className="md:hidden">
