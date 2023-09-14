@@ -72,7 +72,6 @@ function VisibleSectionHighlight({
   // )
 
   const isPresent = useIsPresent()
-  //const itemHeight = React.useMemo(() => remToPx(2), []) //treba da bude 30px
   const itemHeight = 28
 
   const firstVisibleSectionIndex = React.useMemo(
@@ -116,7 +115,7 @@ function ActivePageMarker({
   group: SidebarNavItem
   pathname: string
 }) {
-  let itemHeight = remToPx(2)
+  let itemHeight = 28
   let offset = remToPx(0.25)
   let activePageIndex =
     group.items?.findIndex((item) => item.href === pathname) ?? 0
@@ -224,10 +223,10 @@ interface SiteSidebarProps {
   className?: string
 }
 
-export function SiteSidebar({ ...props }: SiteSidebarProps) {
+export function SiteSidebar({ className, ...props }: SiteSidebarProps) {
   const segment = useSelectedLayoutSegment()
   return (
-    <nav {...props}>
+    <nav className={cn("scrollbar mb-5", className)} {...props}>
       <ul role="list">
         {docsConfig.mainNav?.map((item, index) => (
           <li key={index} className="md:hidden">

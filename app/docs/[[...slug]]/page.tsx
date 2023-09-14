@@ -6,7 +6,6 @@ import { allDocs } from "contentlayer/generated"
 
 import { getTableOfContents } from "@/lib/toc"
 import { getAbsoluteUrl, getBaseUrl } from "@/lib/utils"
-import { DashboardTableOfContents } from "@/components/dashboard-table-of-contents"
 import { DocsPageHeader } from "@/components/docs-page-header"
 import { Mdx } from "@/components/mdx-components"
 import { InjectTOC } from "@/components/site-provider"
