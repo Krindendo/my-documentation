@@ -6,8 +6,6 @@ import { TableOfContents } from "@/lib/toc"
 import { cn } from "@/lib/utils"
 import { useMounted } from "@/hooks/use-mounted"
 
-import { useSectionStore } from "./site-provider"
-
 interface DashboardTableOfContentsProps {
   toc: TableOfContents
 }
@@ -15,34 +13,31 @@ interface DashboardTableOfContentsProps {
 export function DashboardTableOfContents({
   toc,
 }: DashboardTableOfContentsProps) {
-  useSectionStore().getState().setSections(toc)
+  const itemsIds = React.useMemo(() => {
+    if (toc.items === undefined) return []
 
-  // const itemsIds = React.useMemo(() => {
-  //   if (toc.items === undefined) return []
+    return toc.items
+      .flatMap((content) => [
+        content.url,
+        content.items?.map((item) => item.url),
+      ])
+      .flat()
+      .filter(Boolean)
+      .map((id) => id?.split("#")[1])
+  }, [toc])
 
-  //   return toc.items
-  //     .flatMap((content) => [
-  //       content.url,
-  //       content.items?.map((item) => item.url),
-  //     ])
-  //     .flat()
-  //     .filter(Boolean)
-  //     .map((id) => id?.split("#")[1])
-  // }, [toc])
+  const activeHeading = useActiveItem(itemsIds)
+  const mounted = useMounted()
 
-  // const activeHeading = useActiveItem(itemsIds)
-  // const mounted = useMounted()
-
-  // if (toc.items === undefined || mounted === undefined) {
-  //   return null
-  // }
+  if (toc.items === undefined || mounted === undefined) {
+    return null
+  }
 
   return (
-    <></>
-    // <div className="space-y-2">
-    //   <p className="font-medium">On This Page</p>
-    //   <Tree tree={toc} activeItem={activeHeading} />
-    // </div>
+    <div className="space-y-2">
+      <p className="font-medium">On This Page</p>
+      <Tree tree={toc} activeItem={activeHeading} />
+    </div>
   )
 }
 

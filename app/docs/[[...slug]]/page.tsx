@@ -6,10 +6,10 @@ import { allDocs } from "contentlayer/generated"
 
 import { getTableOfContents } from "@/lib/toc"
 import { getAbsoluteUrl, getBaseUrl } from "@/lib/utils"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { DashboardTableOfContents } from "@/components/dashboard-table-of-contents"
 import { DocsPageHeader } from "@/components/docs-page-header"
 import { Mdx } from "@/components/mdx-components"
+import { InjectTOC } from "@/components/site-provider"
 
 interface DocPageProps {
   params: {
@@ -92,17 +92,7 @@ export default async function DocPage({ params }: DocPageProps) {
           <Mdx code={doc.body.code} />
         </div>
       </div>
-      {toc ? (
-        <div className="hidden text-sm xl:block">
-          <div className="sticky top-16 -mt-10 pt-4">
-            <ScrollArea className="pb-10">
-              <div className="sticky top-16 -mt-10 h-[calc(100vh-3.5rem)] py-12">
-                <DashboardTableOfContents toc={toc} />
-              </div>
-            </ScrollArea>
-          </div>
-        </div>
-      ) : null}
+      <InjectTOC toc={toc} />
     </main>
   )
 }

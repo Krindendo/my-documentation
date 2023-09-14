@@ -1,35 +1,29 @@
 "use client"
 
-import { useRef } from "react"
+import * as React from "react"
 import Link from "next/link"
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSelectedLayoutSegment,
-} from "next/navigation"
+import { usePathname, useSelectedLayoutSegment } from "next/navigation"
 import { SidebarNavItem } from "@/types"
 import { AnimatePresence, motion, useIsPresent } from "framer-motion"
+import { useStore } from "zustand"
 
 import { docsConfig } from "@/config/docs"
 import { siteConfig } from "@/config/site"
 import { remToPx } from "@/lib/remToPx"
 import { cn } from "@/lib/utils"
 import { ButtonLink } from "@/components/ui/button-link"
-import { Tag } from "@/components/ui/tag"
 import { useSectionStore } from "@/components/site-provider"
 import { useIsInsideMobileNavigation } from "@/components/site-sidebar-mobile"
 
 import { Icons } from "./icons"
 
-function useInitialValue(value, condition = true) {
-  let initialValue = useRef(value).current
+function useInitialValue(value: any, condition = true) {
+  let initialValue = React.useRef(value).current
   return condition ? initialValue : value
 }
 
 interface NavLinkProps {
   href: string
-  tag?: string
   active?: boolean
   isAnchorLink?: boolean
   children: React.ReactNode
@@ -37,7 +31,6 @@ interface NavLinkProps {
 
 function NavLink({
   href,
-  tag,
   active,
   isAnchorLink = false,
   children,
@@ -55,7 +48,6 @@ function NavLink({
       )}
     >
       <span className="truncate">{children}</span>
-      {tag && <Tag variant="zinc">{tag}</Tag>}
     </Link>
   )
 }
@@ -67,30 +59,44 @@ function VisibleSectionHighlight({
   group: SidebarNavItem
   pathname: string
 }) {
-  let [sections, visibleSections] = useInitialValue(
-    [
-      useSectionStore().getState().sections,
-      useSectionStore().getState().visibleSections,
-    ],
-    useIsInsideMobileNavigation()
-  )
+  const store = useSectionStore()
+  const sectionIds = useStore(store, (s) => s.sectionIds)
+  const visibleSections = useStore(store, (s) => s.visibleSections)
 
-  console.log("sections", sections)
+  // let [sectionIds, visibleSections] = useInitialValue(
+  //   [
+  //     useSectionStore().getState().sectionIds,
+  //     useSectionStore().getState().visibleSections,
+  //   ],
+  //   useIsInsideMobileNavigation()
+  // )
 
   const isPresent = useIsPresent()
-  const firstVisibleSectionIndex = Math.max(
-    0,
-    [{ id: "_top" }, ...sections].findIndex(
-      (section) => section.id === visibleSections[0]
-    )
-  )
-  const itemHeight = remToPx(2)
-  const height = isPresent
-    ? Math.max(1, visibleSections.length) * itemHeight
-    : itemHeight
+  //const itemHeight = React.useMemo(() => remToPx(2), []) //treba da bude 30px
+  const itemHeight = 28
 
-  const n = group.items?.findIndex((item) => item === pathname) ?? 0
-  let top = n * itemHeight + firstVisibleSectionIndex * itemHeight
+  const firstVisibleSectionIndex = React.useMemo(
+    () =>
+      Math.max(
+        0,
+        [{ id: "_top" }, ...sectionIds].findIndex(
+          (section) => section === visibleSections[0]
+        )
+      ),
+    [sectionIds, visibleSections]
+  )
+
+  const height = React.useMemo(
+    () =>
+      isPresent ? Math.max(1, visibleSections.length) * itemHeight : itemHeight,
+
+    [isPresent, visibleSections, itemHeight]
+  )
+
+  const top = React.useMemo(() => {
+    const n = group.items?.findIndex((item) => item.href === pathname) ?? 0
+    return n * itemHeight + firstVisibleSectionIndex * itemHeight
+  }, [group, itemHeight, firstVisibleSectionIndex, pathname])
 
   return (
     <motion.div
@@ -98,7 +104,7 @@ function VisibleSectionHighlight({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1, transition: { delay: 0.2 } }}
       exit={{ opacity: 0 }}
-      className="bg-zinc-800/2.5 dark:bg-white/2.5 absolute inset-x-0 top-0 will-change-transform"
+      className="absolute inset-x-0 top-0 bg-zinc-800/5 will-change-transform dark:bg-white/5"
       style={{ borderRadius: 8, height, top }}
     />
   )
@@ -114,7 +120,7 @@ function ActivePageMarker({
   let itemHeight = remToPx(2)
   let offset = remToPx(0.25)
   let activePageIndex =
-    group.items?.findIndex((link) => link.href === pathname) ?? 0
+    group.items?.findIndex((item) => item.href === pathname) ?? 0
   let top = offset + activePageIndex * itemHeight
 
   return (
@@ -140,8 +146,12 @@ function NavigationGroup({ group, className }: NavigationGroupProps) {
   // The state will still update when we re-open (re-render) the navigation.
   let isInsideMobileNavigation = useIsInsideMobileNavigation()
 
-  let [pathname, sections] = useInitialValue(
-    [usePathname(), useSectionStore().getState().sections],
+  const store = useSectionStore()
+  const sections = useStore(store, (s) => s.sections)
+  const sectionIds1 = useStore(store, (s) => s.sectionIds)
+
+  let [pathname, sectionIds] = useInitialValue(
+    [usePathname(), sectionIds1],
     isInsideMobileNavigation
   )
 
@@ -178,32 +188,30 @@ function NavigationGroup({ group, className }: NavigationGroupProps) {
                 {item.title}
               </NavLink>
               <AnimatePresence mode="popLayout" initial={false}>
-                {item.href === pathname && sections.length > 0 && (
-                  <motion.ul
-                    role="list"
-                    initial={{ opacity: 0 }}
-                    animate={{
-                      opacity: 1,
-                      transition: { delay: 0.1 },
-                    }}
-                    exit={{
-                      opacity: 0,
-                      transition: { duration: 0.15 },
-                    }}
-                  >
-                    {sections.map((section) => (
-                      <li key={section.id}>
-                        <NavLink
-                          href={`${item.href}#${section.id}`}
-                          tag={section.tag}
-                          isAnchorLink
-                        >
-                          {section.title}
-                        </NavLink>
-                      </li>
-                    ))}
-                  </motion.ul>
-                )}
+                {item.href === pathname &&
+                  sections.items?.length !== undefined &&
+                  sections.items?.length > 0 && (
+                    <motion.ul
+                      role="list"
+                      initial={{ opacity: 0 }}
+                      animate={{
+                        opacity: 1,
+                        transition: { delay: 0.1 },
+                      }}
+                      exit={{
+                        opacity: 0,
+                        transition: { duration: 0.15 },
+                      }}
+                    >
+                      {sections.items?.map((section) => (
+                        <li key={section.url}>
+                          <NavLink href={section.url} isAnchorLink>
+                            {section.title}
+                          </NavLink>
+                        </li>
+                      ))}
+                    </motion.ul>
+                  )}
               </AnimatePresence>
             </motion.li>
           ))}

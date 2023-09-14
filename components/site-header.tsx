@@ -52,7 +52,7 @@ export const SiteHeader = React.forwardRef<HTMLDivElement, SiteHeaderProps>(
           className={cn(
             "absolute inset-x-0 top-full h-px transition",
             (isInsideMobileNavigation || !mobileNavIsOpen) &&
-              "bg-zinc-900/7.5 dark:bg-white/7.5"
+              "bg-zinc-900/10 dark:bg-white/10"
           )}
         />
         <div className="flex items-center gap-5 lg:hidden">
