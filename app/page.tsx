@@ -58,7 +58,7 @@ export default async function IndexPage() {
         </div>
         <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
           {frontend.map((language) => (
-            <Card pattern={language.pattern}>
+            <Card key={language.href} pattern={language.pattern}>
               {language.icon}
               <CardTitle href={language.href}>{language.title}</CardTitle>
               <CardDescription>{language.description}</CardDescription>
@@ -77,7 +77,7 @@ export default async function IndexPage() {
         </div>
         <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
           {backend.map((language) => (
-            <Card pattern={language.pattern}>
+            <Card key={language.href} pattern={language.pattern}>
               {language.icon}
               <CardTitle href={language.href}>{language.title}</CardTitle>
               <CardDescription>{language.description}</CardDescription>
@@ -96,7 +96,7 @@ export default async function IndexPage() {
         </div>
         <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
           {database.map((language) => (
-            <Card pattern={language.pattern}>
+            <Card key={language.href} pattern={language.pattern}>
               {language.icon}
               <CardTitle href={language.href}>{language.title}</CardTitle>
               <CardDescription>{language.description}</CardDescription>
