@@ -9,15 +9,11 @@ import {
 import { GridPattern, GridPatternProps } from "./grid-pattern"
 
 export interface CardProps {
-  resource: {
-    href: string
-    title: string
-    description: string
-    pattern: { y: number; squares: number[][] }
-  }
+  children: React.ReactNode
+  pattern: { y: number; squares: number[][] }
 }
 
-export function Card({ resource }: CardProps) {
+function Card({ children, pattern }: CardProps) {
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
@@ -29,24 +25,39 @@ export function Card({ resource }: CardProps) {
 
   return (
     <div
-      key={resource.href}
       onMouseMove={onMouseMove}
-      className="dark:bg-white/2.5 group relative flex rounded-2xl bg-zinc-50 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:hover:shadow-black/5"
+      className="dark:bg-white/2.5 group  relative flex rounded-2xl bg-zinc-50 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:hover:shadow-black/5"
     >
-      <CardPattern mouseX={mouseX} mouseY={mouseY} {...resource.pattern} />
+      <CardPattern mouseX={mouseX} mouseY={mouseY} {...pattern} />
       <div className="ring-zinc-900/7.5 absolute inset-0 rounded-2xl ring-1 ring-inset group-hover:ring-zinc-900/10 dark:ring-white/10 dark:group-hover:ring-white/20" />
-      <div className="relative rounded-2xl px-4 pb-4 pt-16">
-        <h3 className="mt-4 text-sm font-semibold leading-7 text-zinc-900 dark:text-white">
-          <Link href={resource.href}>
-            <span className="absolute inset-0 rounded-2xl" />
-            {resource.title}
-          </Link>
-        </h3>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-          {resource.description}
-        </p>
-      </div>
+      <div className="relative rounded-2xl p-6">{children}</div>
     </div>
+  )
+}
+
+export interface CardTitleProps {
+  href: string
+  children: React.ReactNode
+}
+
+function CardTitle({ href, children }: CardTitleProps) {
+  return (
+    <h3 className="mt-4 text-base font-bold text-zinc-900 dark:text-white">
+      <Link href={href}>
+        <span className="absolute inset-0 rounded-2xl" />
+        {children}
+      </Link>
+    </h3>
+  )
+}
+
+export interface CardDescriptionProps {
+  children: React.ReactNode
+}
+
+function CardDescription({ children }: CardDescriptionProps) {
+  return (
+    <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{children}</p>
   )
 }
 
@@ -90,3 +101,5 @@ function CardPattern({ mouseX, mouseY, ...gridProps }: CardPatternProps) {
     </div>
   )
 }
+
+export { Card, CardTitle, CardDescription }
