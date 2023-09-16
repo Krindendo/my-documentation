@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import {
   motion,
@@ -26,7 +28,7 @@ function Card({ children, pattern }: CardProps) {
   return (
     <div
       onMouseMove={onMouseMove}
-      className="dark:bg-white/2.5 group  relative flex rounded-2xl bg-zinc-50 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:hover:shadow-black/5"
+      className="group relative flex rounded-2xl bg-zinc-50 pt-5 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/5 dark:hover:shadow-black/5"
     >
       <CardPattern mouseX={mouseX} mouseY={mouseY} {...pattern} />
       <div className="ring-zinc-900/7.5 absolute inset-0 rounded-2xl ring-1 ring-inset group-hover:ring-zinc-900/10 dark:ring-white/10 dark:group-hover:ring-white/20" />
@@ -78,12 +80,12 @@ function CardPattern({ mouseX, mouseY, ...gridProps }: CardPatternProps) {
           width={72}
           height={56}
           x="50%"
-          className="dark:fill-white/1 dark:stroke-white/2.5 absolute inset-x-0 inset-y-[-30%] h-[160%] w-full skew-y-[-18deg] fill-black/[0.02] stroke-black/5"
+          className="absolute inset-x-0 inset-y-[-30%] h-[160%] w-full skew-y-[-18deg] fill-black/[0.02] stroke-black/5 dark:fill-white/5 dark:stroke-white/5"
           {...gridProps}
         />
       </div>
       <motion.div
-        className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#D7EDEA] to-[#F4FBDF] opacity-0 transition duration-300 group-hover:opacity-100 dark:from-[#202D2E] dark:to-[#303428]"
+        className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-100 to-cyan-100 opacity-0 transition duration-300 group-hover:opacity-100 dark:from-blue-900 dark:to-cyan-900"
         style={style}
       />
       <motion.div
@@ -94,7 +96,7 @@ function CardPattern({ mouseX, mouseY, ...gridProps }: CardPatternProps) {
           width={72}
           height={56}
           x="50%"
-          className="dark:fill-white/2.5 absolute inset-x-0 inset-y-[-30%] h-[160%] w-full skew-y-[-18deg] fill-black/50 stroke-black/70 dark:stroke-white/10"
+          className="absolute inset-x-0 inset-y-[-30%] h-[160%] w-full skew-y-[-18deg] fill-black/50 stroke-black/70 dark:fill-white/5 dark:stroke-white/10"
           {...gridProps}
         />
       </motion.div>

@@ -12,6 +12,7 @@ import { Analytics } from "@/components/analytics"
 import { Icons } from "@/components/icons"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteNavigation } from "@/components/site-navigation"
+import { SitePattern } from "@/components/site-pattern"
 import { SectionProvider } from "@/components/site-provider"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -67,6 +68,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           disableTransitionOnChange
         >
           <SectionProvider>
+            <SitePattern />
             <div className="lg:ml-72 xl:ml-80">
               <SiteNavigation />
               <div className="relative px-4 pt-14 sm:px-6 lg:px-8">

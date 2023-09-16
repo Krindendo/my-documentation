@@ -59,7 +59,6 @@ export const WithIcon: Story = {
     ),
   },
 }
-
 export const Small: Story = {
   render: (args) => (
     <div className="w-full max-w-xs">

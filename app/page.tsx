@@ -1,8 +1,7 @@
 import { Metadata } from "next"
-import Link from "next/link"
 
 import { siteConfig } from "@/config/site"
-import { Button } from "@/components/ui/button"
+import { Card, CardDescription, CardTitle } from "@/components/card"
 import { Icons } from "@/components/icons"
 
 export const metadata: Metadata = {
@@ -34,16 +33,16 @@ export default async function IndexPage() {
           </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
             Lorem ipsum dolor sit a
-            <span className="text-orange-500 dark:text-orange-600">m</span>et
+            <span className="text-sky-500 dark:text-sky-600">m</span>et
             consectetur{" "}
-            <span className="text-orange-500 dark:text-orange-600">a</span>
+            <span className="text-sky-500 dark:text-sky-600">a</span>
             dipisicing elit. Officiis animi, recu
-            <span className="text-orange-500 dark:text-orange-600">s</span>andae
-            a<span className="text-orange-500 dark:text-orange-600">t</span>que
-            vero quod magni imp
-            <span className="text-orange-500 dark:text-orange-600">e</span>dit
-            tempore ipsa. Ratione dicta? Ape
-            <span className="text-orange-500 dark:text-orange-600">r</span>iam,
+            <span className="text-sky-500 dark:text-sky-600">s</span>andae a
+            <span className="text-sky-500 dark:text-sky-600">t</span>que vero
+            quod magni imp
+            <span className="text-sky-500 dark:text-sky-600">e</span>dit tempore
+            ipsa. Ratione dicta? Ape
+            <span className="text-sky-500 dark:text-sky-600">r</span>iam,
             dolores.
           </p>
         </div>
@@ -58,93 +57,13 @@ export default async function IndexPage() {
           </h2>
         </div>
         <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
-          <Link
-            href="/docs/js"
-            className="relative overflow-hidden rounded-lg border bg-background p-2 hover:bg-accent hover:text-accent-foreground"
-          >
-            <div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-              <Icons.javascript />
-              <div className="space-y-2">
-                <h3 className="font-bold">JavaScript</h3>
-                <p className="text-sm text-muted-foreground">
-                  Scripting language for web development, but it is used
-                  everywhere
-                </p>
-              </div>
-            </div>
-          </Link>
-          <Link
-            href="/docs/ts"
-            className="relative overflow-hidden rounded-lg border bg-background p-2 hover:bg-accent hover:text-accent-foreground"
-          >
-            <div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-              <Icons.typescript />
-              <div className="space-y-2">
-                <h3 className="font-bold">TypeScript</h3>
-                <p className="text-sm text-muted-foreground">
-                  Statically typed superset of JavaScript that enhances code
-                  quality.
-                </p>
-              </div>
-            </div>
-          </Link>
-          <Link
-            href="/docs/react"
-            className="relative overflow-hidden rounded-lg border bg-background p-2 hover:bg-accent hover:text-accent-foreground"
-          >
-            <div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-              <Icons.react />
-              <div className="space-y-2">
-                <h3 className="font-bold">React</h3>
-                <p className="text-sm text-muted-foreground">
-                  Library for building web and native user interfaces.
-                </p>
-              </div>
-            </div>
-          </Link>
-          <Link
-            href="/docs/next"
-            className="relative overflow-hidden rounded-lg border bg-background p-2 hover:bg-accent hover:text-accent-foreground"
-          >
-            <div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-              <Icons.nextjs />
-              <div className="space-y-2">
-                <h3 className="font-bold">Next.js</h3>
-                <p className="text-sm text-muted-foreground">
-                  The React framework for building <br /> full-stack web
-                  applications.
-                </p>
-              </div>
-            </div>
-          </Link>
-          <Link
-            href="/docs/react-native"
-            className="relative overflow-hidden rounded-lg border bg-background p-2 hover:bg-accent hover:text-accent-foreground"
-          >
-            <div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-              <Icons.react />
-              <div className="space-y-2">
-                <h3 className="font-bold">React Native</h3>
-                <p className="text-sm text-muted-foreground">
-                  Native apps with React
-                </p>
-              </div>
-            </div>
-          </Link>
-          <Link
-            href="/docs/vue"
-            className="relative overflow-hidden rounded-lg border bg-background p-2 hover:bg-accent hover:text-accent-foreground"
-          >
-            <div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-              <Icons.vue />
-              <div className="space-y-2">
-                <h3 className="font-bold">Vue</h3>
-                <p className="text-sm text-muted-foreground">
-                  JavaScript framework for building user interfaces.
-                </p>
-              </div>
-            </div>
-          </Link>
+          {frontend.map((language) => (
+            <Card pattern={language.pattern}>
+              {language.icon}
+              <CardTitle href={language.href}>{language.title}</CardTitle>
+              <CardDescription>{language.description}</CardDescription>
+            </Card>
+          ))}
         </div>
       </section>
       <section
@@ -157,21 +76,13 @@ export default async function IndexPage() {
           </h2>
         </div>
         <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
-          <Link
-            href="/docs/node"
-            className="relative overflow-hidden rounded-lg border bg-background p-2 hover:bg-accent hover:text-accent-foreground"
-          >
-            <div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-              <Icons.nodejs />
-              <div className="space-y-2">
-                <h3 className="font-bold">Node.js</h3>
-                <p className="text-sm text-muted-foreground">
-                  Runtime environment that allows executing JavaScript code
-                  outside web browsers.
-                </p>
-              </div>
-            </div>
-          </Link>
+          {backend.map((language) => (
+            <Card pattern={language.pattern}>
+              {language.icon}
+              <CardTitle href={language.href}>{language.title}</CardTitle>
+              <CardDescription>{language.description}</CardDescription>
+            </Card>
+          ))}
         </div>
       </section>
       <section
@@ -184,31 +95,130 @@ export default async function IndexPage() {
           </h2>
         </div>
         <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
-          <Link
-            href="/docs/mysql"
-            className="relative overflow-hidden rounded-lg border bg-background p-2 hover:bg-accent hover:text-accent-foreground"
-          >
-            <div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-              <Icons.planetScale />
-              <div className="space-y-2">
-                <h3 className="font-bold">MySql</h3>
-                <p className="text-sm text-muted-foreground">
-                  Relational database management system, known for its speed,
-                  reliability.
-                </p>
-              </div>
-            </div>
-          </Link>
+          {database.map((language) => (
+            <Card pattern={language.pattern}>
+              {language.icon}
+              <CardTitle href={language.href}>{language.title}</CardTitle>
+              <CardDescription>{language.description}</CardDescription>
+            </Card>
+          ))}
         </div>
       </section>
     </>
   )
 }
 
-/*
-Add this two text in className for fade-up animation:
-animate-fade-up opacity-0
-and add this class with increment animationDelay
-style={{ animationDelay: "0.15s", animationFillMode: "forwards" }}
-style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
-*/
+const frontend = [
+  {
+    href: "/docs/js",
+    title: "JavaScript",
+    description:
+      "Scripting language for web development, but it is used everywhere",
+    icon: <Icons.javascript />,
+    pattern: {
+      y: -12,
+      squares: [
+        [0, 2],
+        [1, 3],
+      ],
+    },
+  },
+  {
+    href: "/docs/ts",
+    title: "TypeScript",
+    description:
+      "Statically typed superset of JavaScript that enhances code quality.",
+    icon: <Icons.typescript />,
+    pattern: {
+      y: 0,
+      squares: [
+        [1, 4],
+        [1, 4],
+      ],
+    },
+  },
+  {
+    href: "/docs/react",
+    title: "React",
+    description: "Library for building web and native user interfaces.",
+    icon: <Icons.react />,
+    pattern: {
+      y: -8,
+      squares: [
+        [-2, 0],
+        [1, 3],
+      ],
+    },
+  },
+  {
+    href: "/docs/next",
+    title: "Next.js",
+    description:
+      "The React framework for building full-stack web applications.",
+    icon: <Icons.nextjs />,
+    pattern: {
+      y: 8,
+      squares: [
+        [1, 2],
+        [0, 2],
+      ],
+    },
+  },
+  {
+    href: "/docs/react-native",
+    title: "React Native",
+    description: "Native apps with React",
+    icon: <Icons.react />,
+    pattern: {
+      y: 16,
+      squares: [
+        [0, 1],
+        [1, 3],
+      ],
+    },
+  },
+  {
+    href: "/docs/vue",
+    title: "Vue",
+    description: "JavaScript framework for building user interfaces.",
+    icon: <Icons.vue />,
+    pattern: {
+      y: -6,
+      squares: [
+        [-1, 2],
+        [1, 3],
+      ],
+    },
+  },
+]
+
+const backend = [
+  {
+    href: "/docs/node",
+    title: "Node.js",
+    description:
+      "Runtime environment that allows executing JavaScript code outside web browsers.",
+    icon: <Icons.nodejs />,
+    pattern: {
+      y: 32,
+      squares: [
+        [0, 2],
+        [1, 4],
+      ],
+    },
+  },
+]
+
+const database = [
+  {
+    href: "/docs/mysql",
+    title: "MySql",
+    description:
+      "Relational database management system, known for its speed, reliability.",
+    icon: <Icons.planetScale />,
+    pattern: {
+      y: 22,
+      squares: [[0, 1]],
+    },
+  },
+]
