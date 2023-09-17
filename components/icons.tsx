@@ -6,6 +6,7 @@ import {
   Laptop,
   Loader2,
   LucideProps,
+  Menu,
   Moon,
   SunMedium,
   X,
@@ -21,6 +22,7 @@ export const Icons = {
   moon: Moon,
   laptop: Laptop,
   check: Check,
+  menu: Menu,
   gitHub: ({ ...props }: LucideProps) => (
     <>
       <svg
