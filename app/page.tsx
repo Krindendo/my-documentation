@@ -58,9 +58,13 @@ export default async function IndexPage() {
         </div>
         <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
           {frontend.map((language) => (
-            <Card key={language.href} pattern={language.pattern}>
+            <Card
+              key={language.href}
+              href={language.href}
+              pattern={language.pattern}
+            >
               {language.icon}
-              <CardTitle href={language.href}>{language.title}</CardTitle>
+              <CardTitle>{language.title}</CardTitle>
               <CardDescription>{language.description}</CardDescription>
             </Card>
           ))}
@@ -77,9 +81,13 @@ export default async function IndexPage() {
         </div>
         <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
           {backend.map((language) => (
-            <Card key={language.href} pattern={language.pattern}>
+            <Card
+              key={language.href}
+              href={language.href}
+              pattern={language.pattern}
+            >
               {language.icon}
-              <CardTitle href={language.href}>{language.title}</CardTitle>
+              <CardTitle>{language.title}</CardTitle>
               <CardDescription>{language.description}</CardDescription>
             </Card>
           ))}
@@ -96,9 +104,13 @@ export default async function IndexPage() {
         </div>
         <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
           {database.map((language) => (
-            <Card key={language.href} pattern={language.pattern}>
+            <Card
+              key={language.href}
+              href={language.href}
+              pattern={language.pattern}
+            >
               {language.icon}
-              <CardTitle href={language.href}>{language.title}</CardTitle>
+              <CardTitle>{language.title}</CardTitle>
               <CardDescription>{language.description}</CardDescription>
             </Card>
           ))}

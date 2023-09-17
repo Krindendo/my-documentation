@@ -1,5 +1,6 @@
 "use client"
 
+import { Url } from "next/dist/shared/lib/router/router"
 import Link from "next/link"
 import {
   motion,
@@ -12,10 +13,11 @@ import { GridPattern, GridPatternProps } from "./grid-pattern"
 
 export interface CardProps {
   children: React.ReactNode
+  href: Url
   pattern: { y: number; squares: number[][] }
 }
 
-function Card({ children, pattern }: CardProps) {
+function Card({ children, href, pattern }: CardProps) {
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
@@ -26,29 +28,28 @@ function Card({ children, pattern }: CardProps) {
   }
 
   return (
-    <div
-      onMouseMove={onMouseMove}
-      className="group relative flex rounded-2xl bg-zinc-50 pt-5 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/5 dark:hover:shadow-black/5"
-    >
-      <CardPattern mouseX={mouseX} mouseY={mouseY} {...pattern} />
-      <div className="ring-zinc-900/7.5 absolute inset-0 rounded-2xl ring-1 ring-inset group-hover:ring-zinc-900/10 dark:ring-white/10 dark:group-hover:ring-white/20" />
-      <div className="relative rounded-2xl p-6">{children}</div>
-    </div>
+    <Link href={href}>
+      <div
+        onMouseMove={onMouseMove}
+        className="group relative flex rounded-2xl bg-zinc-50 pt-5 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/5 dark:hover:shadow-black/5"
+      >
+        <CardPattern mouseX={mouseX} mouseY={mouseY} {...pattern} />
+        <div className="ring-zinc-900/7.5 absolute inset-0 rounded-2xl ring-1 ring-inset group-hover:ring-zinc-900/10 dark:ring-white/10 dark:group-hover:ring-white/20" />
+        <div className="relative rounded-2xl p-6">{children}</div>
+      </div>
+    </Link>
   )
 }
 
 export interface CardTitleProps {
-  href: string
   children: React.ReactNode
 }
 
-function CardTitle({ href, children }: CardTitleProps) {
+function CardTitle({ children }: CardTitleProps) {
   return (
     <h3 className="mt-4 text-base font-bold text-zinc-900 dark:text-white">
-      <Link href={href}>
-        <span className="absolute inset-0 rounded-2xl" />
-        {children}
-      </Link>
+      <span className="absolute inset-0 rounded-2xl" />
+      {children}
     </h3>
   )
 }

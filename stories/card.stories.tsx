@@ -24,12 +24,13 @@ export const Main: Story = {
   args: {
     children: (
       <>
-        <CardTitle href="#">Javascript</CardTitle>
+        <CardTitle>Javascript</CardTitle>
         <CardDescription>
           Scripting language for web development, but it is used everywhere
         </CardDescription>
       </>
     ),
+    href: "#",
     pattern: {
       y: 16,
       squares: [
@@ -51,7 +52,7 @@ export const WithIcon: Story = {
     children: (
       <>
         <Icons.javascript />
-        <CardTitle href="#">Javascript</CardTitle>
+        <CardTitle>Javascript</CardTitle>
         <CardDescription>
           Scripting language for web development, but it is used everywhere
         </CardDescription>
