@@ -1,4 +1,4 @@
-import { createContext, Fragment, useContext } from "react"
+import * as React from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import { motion } from "framer-motion"
 import { create } from "zustand"
@@ -8,10 +8,10 @@ import { SiteHeader } from "@/components/site-header"
 import { Icons } from "./icons"
 import { SiteSidebar } from "./site-sidebar"
 
-const IsInsideMobileNavigationContext = createContext(false)
+const IsInsideMobileNavigationContext = React.createContext(false)
 
 export function useIsInsideMobileNavigation() {
-  return useContext(IsInsideMobileNavigationContext)
+  return React.useContext(IsInsideMobileNavigationContext)
 }
 
 interface MobileNavigationState {
@@ -46,10 +46,10 @@ export function SiteSidebarMobile() {
         <ToggleIcon className="w-5 stroke-zinc-900 dark:stroke-white" />
       </button>
       {!isInsideMobileNavigation && (
-        <Transition.Root show={isOpen} as={Fragment}>
+        <Transition.Root show={isOpen} as={React.Fragment}>
           <Dialog onClose={close} className="fixed inset-0 z-50 lg:hidden">
             <Transition.Child
-              as={Fragment}
+              as={React.Fragment}
               enter="duration-300 ease-out"
               enterFrom="opacity-0"
               enterTo="opacity-100"
@@ -62,7 +62,7 @@ export function SiteSidebarMobile() {
 
             <Dialog.Panel>
               <Transition.Child
-                as={Fragment}
+                as={React.Fragment}
                 enter="duration-300 ease-out"
                 enterFrom="opacity-0"
                 enterTo="opacity-100"
@@ -74,7 +74,7 @@ export function SiteSidebarMobile() {
               </Transition.Child>
 
               <Transition.Child
-                as={Fragment}
+                as={React.Fragment}
                 enter="duration-500 ease-in-out"
                 enterFrom="-translate-x-full"
                 enterTo="translate-x-0"

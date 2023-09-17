@@ -129,7 +129,7 @@ function useVisibleSections(sectionStore: StoreApi<SidebarState>) {
   const sectionIds = useStore(sectionStore, (s) => s.sectionIds)
   const setVisibleSections = useStore(sectionStore, (s) => s.setVisibleSections)
 
-  console.log("sectionIds", sectionIds)
+  //console.log("sectionIds", sectionIds)
 
   const [activeIds, dispatchActiveIds] = React.useReducer<
     React.Reducer<State, Action>

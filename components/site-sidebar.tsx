@@ -13,7 +13,10 @@ import { remToPx } from "@/lib/remToPx"
 import { cn } from "@/lib/utils"
 import { ButtonLink } from "@/components/ui/button-link"
 import { useSectionStore } from "@/components/site-provider"
-import { useIsInsideMobileNavigation } from "@/components/site-sidebar-mobile"
+import {
+  useIsInsideMobileNavigation,
+  useMobileNavigationStore,
+} from "@/components/site-sidebar-mobile"
 
 import { Icons } from "./icons"
 
@@ -35,9 +38,19 @@ function NavLink({
   isAnchorLink = false,
   children,
 }: NavLinkProps) {
+  const { close } = useMobileNavigationStore()
+  const isInsideMobileNavigation = useIsInsideMobileNavigation()
+
+  function handleChangeRoute() {
+    if (isInsideMobileNavigation) {
+      close()
+    }
+  }
+
   return (
     <Link
       href={href}
+      onClick={handleChangeRoute}
       aria-current={active ? "page" : undefined}
       className={cn(
         "flex justify-between gap-2 py-1 pr-3 text-sm transition",
