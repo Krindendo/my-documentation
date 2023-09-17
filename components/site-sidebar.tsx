@@ -266,18 +266,6 @@ export function SiteSidebar({ className, ...props }: SiteSidebarProps) {
             className={groupIndex === 0 ? "md:mt-0" : undefined}
           />
         ))}
-        <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
-          <ButtonLink
-            variant="filled"
-            size="sm"
-            className="w-full"
-            href={siteConfig.links.github}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Icons.gitHub className="h-6 w-6" />
-          </ButtonLink>
-        </li>
       </ul>
     </nav>
   )

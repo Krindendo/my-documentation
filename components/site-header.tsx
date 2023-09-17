@@ -88,7 +88,7 @@ export const SiteHeader = React.forwardRef<HTMLDivElement, SiteHeaderProps>(
             {/* <SearchMobile /> */}
             <ModeToggle />
           </div>
-          <div className="hidden min-[416px]:contents">
+          <div className="flex">
             <ButtonLink
               variant="ghost"
               size="sm"
