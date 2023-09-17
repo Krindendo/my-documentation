@@ -19,7 +19,7 @@ const buttonVariants = cva(
           "bg-zinc-100 text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800/40 dark:text-zinc-400 dark:ring-1 dark:ring-inset dark:ring-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-zinc-300",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         filled:
-          " bg-zinc-900 text-zinc-700 ring-1 ring-inset ring-zinc-900/10 hover:bg-zinc-900/2.5 hover:text-zinc-900 dark:text-zinc-400 dark:ring-white/10 dark:hover:bg-white/5 dark:hover:text-white",
+          " bg-zinc-900 text-zinc-700 ring-1 ring-inset ring-zinc-900/10 hover:bg-zinc-900/5 hover:text-zinc-900 dark:text-zinc-400 dark:ring-white/10 dark:hover:bg-white/5 dark:hover:text-white",
         link: "text-teal-500 hover:text-teal-600 dark:text-teal-400 dark:hover:text-teal-500 underline-offset-4 hover:underline",
       },
       size: {
