@@ -23,12 +23,12 @@ interface SiteHeaderProps extends React.HtmlHTMLAttributes<HTMLDivElement> {}
 export const SiteHeader = React.forwardRef<HTMLDivElement, SiteHeaderProps>(
   ({ className, ...props }, ref) => {
     const segment = useSelectedLayoutSegment()
-    let { isOpen: mobileNavIsOpen } = useMobileNavigationStore()
-    let isInsideMobileNavigation = useIsInsideMobileNavigation()
+    const { isOpen: mobileNavIsOpen } = useMobileNavigationStore()
+    const isInsideMobileNavigation = useIsInsideMobileNavigation()
 
-    let { scrollY } = useScroll()
-    let bgOpacityLight = useTransform(scrollY, [0, 72], [0.5, 0.9])
-    let bgOpacityDark = useTransform(scrollY, [0, 72], [0.2, 0.8])
+    const { scrollY } = useScroll()
+    const bgOpacityLight = useTransform(scrollY, [0, 72], [0.5, 0.9])
+    const bgOpacityDark = useTransform(scrollY, [0, 72], [0.2, 0.8])
 
     return (
       <motion.div
@@ -42,10 +42,12 @@ export const SiteHeader = React.forwardRef<HTMLDivElement, SiteHeaderProps>(
             ? "bg-white dark:bg-zinc-900"
             : "bg-white/[var(--bg-opacity-light)] dark:bg-zinc-900/[var(--bg-opacity-dark)]"
         )}
-        // style={{
-        //   "--bg-opacity-light": bgOpacityLight,
-        //   "--bg-opacity-dark": bgOpacityDark,
-        // }}
+        style={
+          {
+            "--bg-opacity-light": bgOpacityLight,
+            "--bg-opacity-dark": bgOpacityDark,
+          } as React.CSSProperties
+        }
       >
         <div
           className={cn(
