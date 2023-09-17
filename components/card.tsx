@@ -31,7 +31,7 @@ function Card({ children, href, pattern }: CardProps) {
     <Link href={href}>
       <div
         onMouseMove={onMouseMove}
-        className="group relative flex rounded-2xl bg-zinc-50 pt-5 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/5 dark:hover:shadow-black/5"
+        className="group relative flex h-full rounded-2xl bg-zinc-50 pt-5 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/5 dark:hover:shadow-black/5"
       >
         <CardPattern mouseX={mouseX} mouseY={mouseY} {...pattern} />
         <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-zinc-900/10 group-hover:ring-zinc-900/10 dark:ring-white/10 dark:group-hover:ring-white/20" />

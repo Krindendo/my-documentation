@@ -69,12 +69,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
         >
           <SectionProvider>
             <SitePattern />
-            <div className="lg:ml-72 xl:ml-80">
+            <div className="flex min-h-screen flex-col lg:ml-72 xl:ml-80">
               <SiteNavigation />
-              <div className="relative px-4 pt-14 sm:px-6 lg:px-8">
+              <div className="relative flex-1 px-4 pt-14 sm:px-6 lg:px-8">
                 <main className="py-16">{children}</main>
-                <SiteFooter />
               </div>
+              <SiteFooter />
             </div>
             <TailwindIndicator />
           </SectionProvider>
