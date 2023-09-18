@@ -1,4 +1,5 @@
 import * as React from "react"
+import { usePathname } from "next/navigation"
 import { Dialog, Transition } from "@headlessui/react"
 import { motion } from "framer-motion"
 import { create } from "zustand"
@@ -31,9 +32,18 @@ export const useMobileNavigationStore = create<MobileNavigationState>(
 )
 
 export function SiteSidebarMobile() {
+  const pathname = usePathname()
+  const lastPathName = React.useRef(pathname)
   let isInsideMobileNavigation = useIsInsideMobileNavigation()
   let { isOpen, toggle, close } = useMobileNavigationStore()
   let ToggleIcon = isOpen ? Icons.close : Icons.menu
+
+  React.useEffect(() => {
+    if (pathname !== lastPathName.current) {
+      lastPathName.current = pathname
+      close()
+    }
+  }, [close, pathname])
 
   return (
     <IsInsideMobileNavigationContext.Provider value={true}>
