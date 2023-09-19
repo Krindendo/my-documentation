@@ -68,12 +68,43 @@ const getToc = () => (node, file) => {
   file.data = getItems(table.map, {})
 }
 
+function removeCode(content: string) {
+  const contentAndTripleBackticksRegex = /```[\s\S]*?```/g
+  const stringWithoutContentAndTripleBackticks = content.replace(
+    contentAndTripleBackticksRegex,
+    ""
+  )
+  return stringWithoutContentAndTripleBackticks
+}
+
+function removeComponents(content: string) {
+  const componentRegex = /<(\w+)[^>]*>[\s\S]*?<\/\1>/g
+
+  function removeNestedComponents(_content) {
+    const withoutComponents = _content.replace(componentRegex, "")
+    if (withoutComponents !== _content) {
+      return removeNestedComponents(withoutComponents)
+    }
+    return withoutComponents
+  }
+
+  const stringWithoutComponents = removeNestedComponents(content)
+  return stringWithoutComponents
+}
+
+function removeCodeAndComponents(content: string) {
+  const contentWithoutCode = removeCode(content)
+  const contentWithoutCodeAndComponents = removeComponents(contentWithoutCode)
+
+  return contentWithoutCodeAndComponents
+}
+
 export type TableOfContents = Items
 
 export async function getTableOfContents(
   content: string
 ): Promise<TableOfContents> {
-  const result = await remark().use(getToc).process(content)
-
+  const strippedContent = removeCodeAndComponents(content)
+  const result = await remark().use(getToc).process(strippedContent)
   return result.data
 }
