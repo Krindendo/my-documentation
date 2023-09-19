@@ -34,13 +34,16 @@ const createSectionStore = () => {
     setSectionIds: (newSections) =>
       set(() => {
         if (newSections.items === undefined) return {}
+        const sectionIds = newSections.items
+          .flatMap((content) => [
+            content.url,
+            content.items?.map((item) => item.url),
+          ])
+          .flat()
+          .filter(Boolean)
+          .map((id) => id?.split("#")[1])
 
-        const sectionIds = newSections.items.map((content) => [
-          content.url.split("#")[1],
-        ])
-        const sectionIdsArray = sectionIds.flat()
-
-        return { sectionIds: ["_top", ...sectionIdsArray] as string[] }
+        return { sectionIds: ["_top", ...sectionIds] as string[] }
       }),
   }))
 }

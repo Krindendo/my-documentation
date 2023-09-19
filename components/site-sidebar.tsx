@@ -8,17 +8,16 @@ import { AnimatePresence, motion, useIsPresent } from "framer-motion"
 import { useStore } from "zustand"
 
 import { docsConfig } from "@/config/docs"
-import { siteConfig } from "@/config/site"
 import { remToPx } from "@/lib/remToPx"
+import { TableOfContents } from "@/lib/toc"
 import { cn } from "@/lib/utils"
-import { ButtonLink } from "@/components/ui/button-link"
 import { useSectionStore } from "@/components/site-provider"
 import {
   useIsInsideMobileNavigation,
   useMobileNavigationStore,
 } from "@/components/site-sidebar-mobile"
 
-import { Icons } from "./icons"
+const SIDEBAR_DEEP_LEVEL = 2
 
 function useInitialValue(value: any, condition = true) {
   let initialValue = React.useRef(value).current
@@ -199,30 +198,9 @@ function NavigationGroup({ group, className }: NavigationGroupProps) {
                 {item.title}
               </NavLink>
               <AnimatePresence mode="popLayout" initial={false}>
-                {item.href === pathname &&
-                  sections.items?.length !== undefined &&
-                  sections.items?.length > 0 && (
-                    <motion.ul
-                      role="list"
-                      initial={{ opacity: 0 }}
-                      animate={{
-                        opacity: 1,
-                        transition: { delay: 0.1 },
-                      }}
-                      exit={{
-                        opacity: 0,
-                        transition: { duration: 0.15 },
-                      }}
-                    >
-                      {sections.items?.map((section) => (
-                        <li key={section.url}>
-                          <NavLink href={section.url} isAnchorLink>
-                            {section.title}
-                          </NavLink>
-                        </li>
-                      ))}
-                    </motion.ul>
-                  )}
+                {item.href === pathname && sections.items?.length ? (
+                  <Tree tree={sections} />
+                ) : null}
               </AnimatePresence>
             </motion.li>
           ))}
@@ -231,6 +209,65 @@ function NavigationGroup({ group, className }: NavigationGroupProps) {
     </li>
   )
 }
+
+interface TreeProps {
+  tree: TableOfContents
+  level?: number
+}
+
+const Tree = React.forwardRef<HTMLUListElement, TreeProps>(
+  ({ tree, level = 1 }, ref) => {
+    if (tree.items?.length === undefined || level > SIDEBAR_DEEP_LEVEL) {
+      return null
+    }
+
+    if (level === 1) {
+      return (
+        <motion.ul
+          ref={ref}
+          role="list"
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: 1,
+            transition: { delay: 0.1 },
+          }}
+          exit={{
+            opacity: 0,
+            transition: { duration: 0.15 },
+          }}
+        >
+          {tree.items?.map((section) => (
+            <li key={section.url}>
+              <NavLink href={section.url} isAnchorLink>
+                {section.title}
+              </NavLink>
+              {tree.items?.length ? (
+                <Tree tree={section} level={level + 1} />
+              ) : null}
+            </li>
+          ))}
+        </motion.ul>
+      )
+    }
+
+    return (
+      <ul className={cn("", { "pl-4": level !== 1 })}>
+        {tree.items?.map((section) => (
+          <li key={section.url}>
+            <NavLink href={section.url} isAnchorLink>
+              {section.title}
+            </NavLink>
+            {tree.items?.length ? (
+              <Tree tree={section} level={level + 1} />
+            ) : null}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+)
+
+Tree.displayName = "Tree"
 
 interface SiteSidebarProps {
   className?: string
@@ -270,3 +307,40 @@ export function SiteSidebar({ className, ...props }: SiteSidebarProps) {
     </nav>
   )
 }
+
+/*
+
+const Tree = ({ tree, level = 1 }: TreeProps) => {
+  if (tree.items?.length === undefined || level > SIDEBAR_DEEP_LEVEL) {
+    return null
+  }
+
+  return (
+    <motion.ul
+      role="list"
+      initial={{ opacity: 0 }}
+      animate={{
+        opacity: 1,
+        transition: { delay: 0.1 },
+      }}
+      exit={{
+        opacity: 0,
+        transition: { duration: 0.15 },
+      }}
+      className={cn("", { "pl-4": level !== 1 })}
+    >
+      {tree.items?.map((section) => (
+        <li key={section.url}>
+          <NavLink href={section.url} isAnchorLink>
+            {section.title}
+          </NavLink>
+          {tree.items?.length ? (
+            <Tree tree={section} level={level + 1} />
+          ) : null}
+        </li>
+      ))}
+    </motion.ul>
+  )
+}
+
+*/
