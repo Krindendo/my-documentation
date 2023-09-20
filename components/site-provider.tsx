@@ -143,7 +143,6 @@ function reducer(state: State, action: Action) {
 
 function useVisibleSections(sectionStore: StoreApi<SidebarState>) {
   const sectionIds = useStore(sectionStore, (s) => s.sectionIds)
-  const sections = useStore(sectionStore, (s) => s.sections)
   const setVisibleSections = useStore(sectionStore, (s) => s.setVisibleSections)
 
   const [activeIds, dispatchActiveIds] = React.useReducer<
@@ -151,20 +150,77 @@ function useVisibleSections(sectionStore: StoreApi<SidebarState>) {
   >(reducer, initialState)
 
   React.useEffect(() => {
-    //console.log("activeIds", activeIds.visibleSections)
-  }, [activeIds])
-
-  React.useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          console.log("entry", entry.target.id)
+          let { innerHeight, scrollY } = window
+          const currentEntryIndex = sectionIds.findIndex(
+            (id) => id === entry.target.id
+          )
+
+          const prevEntryId = sectionIds[currentEntryIndex - 1]
+          const nextEntryId = sectionIds[currentEntryIndex + 1]
+
+          const prevEntryTop =
+            (document.getElementById(prevEntryId)?.getBoundingClientRect()
+              .top ?? Infinity) + scrollY
+          const currentEntry = entry.boundingClientRect.top + scrollY
+          const nextEntryBottom =
+            (document.getElementById(nextEntryId)?.getBoundingClientRect()
+              .top ?? Infinity) + scrollY
+
+          // console.log("entryId: ", entry.target.id)
+          // console.log("prevEntryBox: ", prevEntryTop, currentEntry)
+          // console.log("currentEntryBox: ", currentEntry, nextEntryBottom)
+
+          const navbarHeight = 56
+          const screenTop = scrollY + navbarHeight
+          const screenBottom = scrollY + innerHeight
+
+          // console.log("visible top", screenTop)
+          // console.log("visible bottom", visibleBottom)
+
+          if (
+            (prevEntryTop > screenTop && prevEntryTop < screenBottom) ||
+            (currentEntry > screenTop && currentEntry < screenBottom) ||
+            (prevEntryTop <= screenTop && currentEntry >= screenBottom)
+          ) {
+            console.log("add prevEntry: ", prevEntryId)
+            dispatchActiveIds({
+              type: "ADD_SELECTOR",
+              payload: { id: prevEntryId, sectionIds },
+            })
+          } else {
+            console.log("remove prevEntry: ", prevEntryId)
+            dispatchActiveIds({
+              type: "DELETE_SELECTOR",
+              payload: { id: prevEntryId },
+            })
+          }
+
+          if (
+            (currentEntry > screenTop && currentEntry < screenBottom) ||
+            (nextEntryBottom > screenTop && nextEntryBottom < screenBottom) ||
+            (currentEntry <= screenTop && nextEntryBottom >= screenBottom)
+          ) {
+            console.log("add entry: ", entry.target.id)
+            dispatchActiveIds({
+              type: "ADD_SELECTOR",
+              payload: { id: entry.target.id, sectionIds },
+            })
+          } else {
+            console.log("remove entry: ", entry.target.id)
+            dispatchActiveIds({
+              type: "DELETE_SELECTOR",
+              payload: { id: entry.target.id },
+            })
+          }
         })
       },
       {
         root: null,
-        rootMargin: "0px 0px -30px 0px",
-        threshold: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+        rootMargin: "-55px 0px 1px 0px",
+        threshold: [0, 1],
       }
     )
 
@@ -208,109 +264,3 @@ export function InjectTOC({ toc }: { toc: TableOfContents }) {
 
   return null
 }
-
-/*
-          if (entry.isIntersecting) {
-            // console.log("add: ", entry.target.id)
-            dispatchActiveIds({
-              type: "ADD_SELECTOR",
-              payload: { id: entry.target.id, sectionIds },
-            })
-          } else {
-            // console.log("delete: ", entry.target.id)
-            dispatchActiveIds({
-              type: "DELETE_SELECTOR",
-              payload: { id: entry.target.id },
-            })
-          }
-
-
-*/
-
-/*
-    function checkVisibleSections() {
-      let { innerHeight, scrollY } = window
-      let newVisibleSections = []
-
-      for (
-        let sectionIndex = 0;
-        sectionIndex < sections.length;
-        sectionIndex++
-      ) {
-        let { id, headingRef, offsetRem } = sections[sectionIndex]
-        let offset = remToPx(offsetRem)
-        let top = headingRef.current.getBoundingClientRect().top + scrollY
-
-        if (sectionIndex === 0 && top - offset > scrollY) {
-          newVisibleSections.push("_top")
-        }
-
-        let nextSection = sections[sectionIndex + 1]
-        let bottom =
-          (nextSection?.headingRef.current.getBoundingClientRect().top ??
-            Infinity) +
-          scrollY -
-          remToPx(nextSection?.offsetRem ?? 0)
-
-        if (
-          (top > scrollY && top < scrollY + innerHeight) ||
-          (bottom > scrollY && bottom < scrollY + innerHeight) ||
-          (top <= scrollY && bottom >= scrollY + innerHeight)
-        ) {
-          newVisibleSections.push(id)
-        }
-      }
-
-      setVisibleSections(newVisibleSections)
-    }
-
-*/
-
-/*
-          const { innerHeight, scrollY } = window
-
-          const top = entry.boundingClientRect.top + scrollY
-
-          const indexOfPreviousSection = sectionIds.findIndex(
-            (section) => section === entry.target.id
-          )
-
-          let previousSection = sectionIds[indexOfPreviousSection + 1]
-
-          const bottom =
-            document.getElementById(previousSection)?.getBoundingClientRect()
-              .top ?? Infinity + scrollY
-
-          if (entry.target.id === "_top") {
-            if (top > scrollY) {
-              dispatchActiveIds({
-                type: "ADD_SELECTOR",
-                payload: { id: "_top", sectionIds },
-              })
-            } else {
-              dispatchActiveIds({
-                type: "DELETE_SELECTOR",
-                payload: { id: "_top" },
-              })
-            }
-          } else {
-            if (
-              (top > scrollY && top < scrollY + innerHeight) ||
-              (bottom > scrollY && bottom < scrollY + innerHeight) ||
-              (top <= scrollY && bottom >= scrollY + innerHeight)
-            ) {
-              console.log("add: ", entry.target.id)
-              dispatchActiveIds({
-                type: "ADD_SELECTOR",
-                payload: { id: entry.target.id, sectionIds },
-              })
-            } else {
-              console.log("delete: ", entry.target.id)
-              dispatchActiveIds({
-                type: "DELETE_SELECTOR",
-                payload: { id: entry.target.id },
-              })
-            }
-          }
-
-*/
