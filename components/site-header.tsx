@@ -83,7 +83,7 @@ export const SiteHeader = React.forwardRef<HTMLDivElement, SiteHeaderProps>(
               ))}
             </ul>
           </nav>
-          <div className="md:dark:bg-white/15 hidden md:block md:h-5 md:w-px md:bg-zinc-900/10" />
+          <div className="hidden h-5 w-px bg-zinc-900/10 dark:bg-white/10 md:block" />
           <div className="flex gap-4">
             {/* <SearchMobile /> */}
             <ModeToggle />
