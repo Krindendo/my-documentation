@@ -8,6 +8,7 @@ import {
   LucideProps,
   Menu,
   Moon,
+  Search,
   SunMedium,
   X,
 } from "lucide-react"
@@ -23,6 +24,7 @@ export const Icons = {
   laptop: Laptop,
   check: Check,
   menu: Menu,
+  search: Search,
   gitHub: ({ ...props }: LucideProps) => (
     <>
       <svg

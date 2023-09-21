@@ -18,6 +18,8 @@ import {
   useMobileNavigationStore,
 } from "@/components/site-sidebar-mobile"
 
+import { NavSearch, NavSearchMobile } from "./nav-search"
+
 interface SiteHeaderProps extends React.HtmlHTMLAttributes<HTMLDivElement> {}
 
 export const SiteHeader = React.forwardRef<HTMLDivElement, SiteHeaderProps>(
@@ -60,7 +62,7 @@ export const SiteHeader = React.forwardRef<HTMLDivElement, SiteHeaderProps>(
           <SiteSidebarMobile />
           <Logo />
         </div>
-        {/* <Search /> */}
+        <NavSearch />
         <div className="ml-auto flex items-center gap-5">
           <nav className="hidden md:block">
             <ul role="list" className="flex items-center gap-8">
@@ -85,7 +87,7 @@ export const SiteHeader = React.forwardRef<HTMLDivElement, SiteHeaderProps>(
           </nav>
           <div className="hidden h-5 w-px bg-zinc-900/10 dark:bg-white/10 md:block" />
           <div className="flex gap-4">
-            {/* <SearchMobile /> */}
+            <NavSearchMobile />
             <ModeToggle />
           </div>
           <div className="flex">
