@@ -3,33 +3,64 @@
 import * as React from "react"
 import { createStore, StoreApi, useStore } from "zustand"
 
-import { remToPx } from "@/lib/remToPx"
 import { TableOfContents } from "@/lib/toc"
-
-interface SectionHeader {
-  headingRef: React.MutableRefObject<React.JSX.Element>
-  id: string
-  offsetRem: number
-  title: string
-}
 
 interface SidebarState {
   sections: TableOfContents
-  setSections: (sections: TableOfContents) => void
   visibleSections: string[]
-  setVisibleSections: (visibleSections: string[]) => void
   sectionIds: string[]
+}
+
+type SidebarAction = {
+  setSections: (sections: SidebarState["sections"]) => void
+  setVisibleSections: (visibleSections: SidebarState["visibleSections"]) => void
+  updateVisibleSection: (id: string) => void
+  removeVisibleSection: (id: string) => void
   setSectionIds: (newSections: TableOfContents) => void
 }
 
 type SectionStore = ReturnType<typeof createSectionStore>
 
 const createSectionStore = () => {
-  return createStore<SidebarState>()((set) => ({
+  return createStore<SidebarState & SidebarAction>()((set) => ({
     sections: [],
     setSections: (sections) => set(() => ({ sections })),
     visibleSections: [],
     setVisibleSections: (visibleSections) => set(() => ({ visibleSections })),
+    updateVisibleSection: (id: string) =>
+      set((state) => {
+        const sectionIndex = state.visibleSections.findIndex(
+          (section) => section === id
+        )
+
+        if (sectionIndex !== -1) {
+          return { visibleSections: state.visibleSections }
+        }
+
+        const index = state.sectionIds.findIndex((item) => item === id)
+
+        const firstIndex = state.sectionIds.findIndex(
+          (item) => item === state.visibleSections[0]
+        )
+
+        if (index === -1) {
+          return { visibleSections: state.visibleSections }
+        }
+
+        if (index < firstIndex) {
+          return {
+            visibleSections: [id, ...state.visibleSections],
+          }
+        }
+
+        return {
+          visibleSections: [...state.visibleSections, id],
+        }
+      }),
+    removeVisibleSection: (id: string) =>
+      set((state) => ({
+        visibleSections: state.visibleSections.filter((s) => s !== id),
+      })),
     sectionIds: [],
     setSectionIds: (newSections) =>
       set(() => {
@@ -76,78 +107,18 @@ export function useSectionStore() {
   return store
 }
 
-const addSelector = (id: string, sectionIds: string[]) => ({
-  type: "ADD_SELECTOR" as const,
-  payload: { id, sectionIds },
-})
-
-const deleteSelector = (id: string) => ({
-  type: "DELETE_SELECTOR" as const,
-  payload: { id },
-})
-
-type Action = ReturnType<typeof addSelector> | ReturnType<typeof deleteSelector>
-type State = {
-  visibleSections: string[]
-}
-
-const initialState: State = {
-  visibleSections: [],
-}
-
-function reducer(state: State, action: Action) {
-  switch (action.type) {
-    case "ADD_SELECTOR": {
-      const sectionIndex = state.visibleSections.findIndex(
-        (section) => section === action.payload.id
-      )
-
-      if (sectionIndex !== -1) {
-        return { visibleSections: state.visibleSections }
-      }
-
-      const index = action.payload.sectionIds.findIndex(
-        (item) => item === action.payload.id
-      )
-
-      const firstIndex = action.payload.sectionIds.findIndex(
-        (item) => item === state.visibleSections[0]
-      )
-
-      if (index === -1) {
-        return { visibleSections: state.visibleSections }
-      }
-
-      if (index < firstIndex) {
-        return {
-          visibleSections: [action.payload.id, ...state.visibleSections],
-        }
-      }
-
-      return {
-        visibleSections: [...state.visibleSections, action.payload.id],
-      }
-    }
-    case "DELETE_SELECTOR": {
-      return {
-        visibleSections: state.visibleSections.filter(
-          (s) => s !== action.payload.id
-        ),
-      }
-    }
-    default: {
-      throw Error("Unknown action: " + action["type"])
-    }
-  }
-}
-
-function useVisibleSections(sectionStore: StoreApi<SidebarState>) {
+function useVisibleSections(
+  sectionStore: StoreApi<SidebarState & SidebarAction>
+) {
   const sectionIds = useStore(sectionStore, (s) => s.sectionIds)
-  const setVisibleSections = useStore(sectionStore, (s) => s.setVisibleSections)
-
-  const [activeIds, dispatchActiveIds] = React.useReducer<
-    React.Reducer<State, Action>
-  >(reducer, initialState)
+  const updateVisibleSection = useStore(
+    sectionStore,
+    (s) => s.updateVisibleSection
+  )
+  const removeVisibleSection = useStore(
+    sectionStore,
+    (s) => s.removeVisibleSection
+  )
 
   React.useEffect(() => {
     const observer = new IntersectionObserver(
@@ -185,17 +156,11 @@ function useVisibleSections(sectionStore: StoreApi<SidebarState>) {
             (currentEntry > screenTop && currentEntry < screenBottom) ||
             (prevEntryTop <= screenTop && currentEntry >= screenBottom)
           ) {
-            console.log("add prevEntry: ", prevEntryId)
-            dispatchActiveIds({
-              type: "ADD_SELECTOR",
-              payload: { id: prevEntryId, sectionIds },
-            })
+            //console.log("add prevEntry: ", prevEntryId)
+            updateVisibleSection(prevEntryId)
           } else {
-            console.log("remove prevEntry: ", prevEntryId)
-            dispatchActiveIds({
-              type: "DELETE_SELECTOR",
-              payload: { id: prevEntryId },
-            })
+            //console.log("remove prevEntry: ", prevEntryId)
+            removeVisibleSection(prevEntryId)
           }
 
           if (
@@ -203,17 +168,11 @@ function useVisibleSections(sectionStore: StoreApi<SidebarState>) {
             (nextEntryBottom > screenTop && nextEntryBottom < screenBottom) ||
             (currentEntry <= screenTop && nextEntryBottom >= screenBottom)
           ) {
-            console.log("add entry: ", entry.target.id)
-            dispatchActiveIds({
-              type: "ADD_SELECTOR",
-              payload: { id: entry.target.id, sectionIds },
-            })
+            //console.log("add entry: ", entry.target.id)
+            updateVisibleSection(entry.target.id)
           } else {
-            console.log("remove entry: ", entry.target.id)
-            dispatchActiveIds({
-              type: "DELETE_SELECTOR",
-              payload: { id: entry.target.id },
-            })
+            //console.log("remove entry: ", entry.target.id)
+            removeVisibleSection(entry.target.id)
           }
         })
       },
@@ -246,21 +205,19 @@ function useVisibleSections(sectionStore: StoreApi<SidebarState>) {
       })
     }
   }, [sectionIds])
-
-  React.useEffect(() => {
-    setVisibleSections(activeIds.visibleSections)
-  }, [activeIds, setVisibleSections])
 }
 
 export function InjectTOC({ toc }: { toc: TableOfContents }) {
   const store = useSectionStore()
   const setSections = useStore(store, (s) => s.setSections)
   const setSectionIds = useStore(store, (s) => s.setSectionIds)
+  const setVisibleSections = useStore(store, (s) => s.setVisibleSections)
 
   React.useEffect(() => {
     setSections(toc)
     setSectionIds(toc)
-  }, [toc, setSections, setSectionIds])
+    setVisibleSections([])
+  }, [toc, setSections, setSectionIds, setVisibleSections])
 
   return null
 }
