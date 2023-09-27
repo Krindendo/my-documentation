@@ -22,6 +22,40 @@ If you can express something as a prop, you should not use a ref. For example, i
 
 ## useRef
 
+### Caveats
+
+- The ref.current property can mutate. Unlike state, it is mutable. However, if it holds an object that is used for rendering, then you shouldn’t mutate that object.
+
+- Changing a ref does not trigger a re-render. React is not aware of when you change it because a ref is a plain JavaScript object.
+
+- Do not write or read ref.current during rendering, except for initialization. This makes your component’s behavior unpredictable. (example: don'ts)
+
+### Example: Don'ts
+
+```tsx title="do's"
+function Main() {
+  useEffect(() => {
+    // You can read or write refs in effects
+    ref.current = "something"
+  })
+
+  function handleClick() {
+    // You can read or write refs in event handlers
+    doSomething(myOtherRef.current)
+  }
+}
+```
+
+```tsx title="don'ts"
+function Main() {
+  // Don't write a ref during rendering
+  ref.current = "something"
+
+  // Don't read a ref during rendering
+  return <h1>{myOtherRef.current}</h1>
+}
+```
+
 ### Example
 
 ```tsx
