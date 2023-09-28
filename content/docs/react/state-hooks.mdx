@@ -158,7 +158,15 @@ function handleClick() {
 
 ## useReducer
 
-This hook is similar to useState, but it is used when you have complext state logic.
+This hook is similar to useState, but it is used when you have complext state logic. State is imutable.
+
+### Parameters 
+
+- reducer: The reducer function that specifies how the state gets updated. Should take the state and action as arguments, and should return the next state. State and action can be of any types.
+
+- initialArg: The value from which the initial state is calculated. It can be a value of any type. How the initial state is calculated from it depends on the next init argument.
+
+- optional init: The initializer function that should return the initial state. If it’s not specified, the initial state is set to initialArg. Otherwise, the initial state is set to the result of calling init(initialArg).
 
 ### Example: basic
 
@@ -306,3 +314,56 @@ export default function ToDo() {
   )
 }
 ```
+
+### Example: Avoiding recreating the initial state 
+
+```tsx {13}
+function createInitialState(username) {
+  // ...
+}
+
+// React will call this function on every render.
+function TodoList({ username }) {
+  const [state, dispatch] = useReducer(reducer, createInitialState(username));
+  // ...
+}
+
+// React will only call it during initialization.
+function BlogList({ username }) {
+  const [state, dispatch] = useReducer(reducer, username, createInitialState);
+  // ...
+}
+
+```
+
+### Example: Show calculated value in same function
+
+You need to do two calculations.
+
+```tsx
+function handleClick() {
+  console.log(state.age);  // 42
+
+  dispatch({ type: 'incremented_age' }); // Request a re-render with 43
+  console.log(state.age);  // Still 42!
+
+  setTimeout(() => {
+    console.log(state.age); // Also 42!
+  }, 5000);
+}
+```
+
+```tsx
+const action = { type: 'incremented_age' };
+dispatch(action);
+
+const nextState = reducer(state, action);
+console.log(state);     // { age: 42 }
+console.log(nextState); // { age: 43 }
+```
+
+## useState vs useReducer
+
+The difference between useState and useReducer is in the setState. You simply save data in useState, but useReducer uses the initialization logic you gave to decide how to save new data.
+
+https://react.dev/learn/extracting-state-logic-into-a-reducer#comparing-usestate-and-usereducer
