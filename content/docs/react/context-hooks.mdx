@@ -209,15 +209,13 @@ export function AddTask() {
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
-      <button
-        onClick={() => {
+      <button onClick={() => {
           setText("")
           dispatch({
             type: "added",
             payload: { text },
           })
-        }}
-      >
+        }}>
         Add
       </button>
     </>

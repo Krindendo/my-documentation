@@ -85,9 +85,7 @@ import { forwardRef, useImperativeHandle, useRef } from "react"
 const MyInput = forwardRef(function MyInput(props, ref) {
   const inputRef = useRef(null)
 
-  useImperativeHandle(
-    ref,
-    () => {
+  useImperativeHandle(ref, () => {
       return {
         focus() {
           inputRef.current.focus()
@@ -96,9 +94,7 @@ const MyInput = forwardRef(function MyInput(props, ref) {
           inputRef.current.scrollIntoView()
         },
       }
-    },
-    []
-  )
+  }, [])
 
   return <input {...props} ref={inputRef} />
 })

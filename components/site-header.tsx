@@ -86,11 +86,9 @@ export const SiteHeader = React.forwardRef<HTMLDivElement, SiteHeaderProps>(
             </ul>
           </nav>
           <div className="hidden h-5 w-px bg-zinc-900/10 dark:bg-white/10 md:block" />
+          <NavSearchMobile />
           <div className="flex gap-4">
-            <NavSearchMobile />
             <ModeToggle />
-          </div>
-          <div className="flex">
             <ButtonLink
               variant="ghost"
               size="sm"

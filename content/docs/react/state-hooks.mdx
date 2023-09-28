@@ -10,10 +10,149 @@ For storing information in component use one of these Hooks:
 
 ## useState
 
+useState returns an array with exactly two values:
+
+1. The current state.
+2. The set function that lets you update the state to a different value and trigger a re-render.
+
+### Set function
+
+- The set function **only updates the state variable for the next render**. If you read the state variable
+  after calling the set function, [you will still get the old value](#example-update-value-in-current-render) that was on the screen before your call.
+
+- If the new value is identical to the current state, React will **skip re-rendering the component and its children**.
+
+- React updates the screen **after all the event handlers have run** and have called their set functions.
+  This prevents multiple re-renders during a single event.
+
+- Calling the set function during rendering is only allowed from within the currently rendering component. [See an example below.](#example-storing-information-from-previous-renders)
+
+- State is considered read-only, so **you should replace it rather then mutate your existing objects.** [don't mutate state](#example-updating-objects-and-arrays-in-state)
+
+- React saves the initial state once and ignores it on the next renders. [don't call functions in initialState](#example-avoiding-recreating-the-initial-state)
+
+- You can reset a component’s state by passing a different key to a component. [Resetting state with a key](#)
+
+### Example: basic
+
 ```tsx
 function Calculator() {
   const [sum, setSum] = useState(0)
+
+  function handleClick(value) {
+    setSum((a) => a + value)
+  }
   // ...
+}
+```
+
+### Example: update value in current render
+
+```tsx
+function handleClick() {
+  console.log(count) // 0
+
+  setCount(count + 1) // Request a re-render with 1
+  console.log(count) // Still 0!
+
+  setTimeout(() => {
+    console.log(count) // Also 0!
+  }, 5000)
+}
+```
+
+### Example: Storing information from previous renders
+
+```tsx
+import { useState } from "react"
+
+export default function CountLabel({ count }) {
+  const [prevCount, setPrevCount] = useState(count)
+  const [trend, setTrend] = useState(null)
+  if (prevCount !== count) {
+    setPrevCount(count)
+    setTrend(count > prevCount ? "increasing" : "decreasing")
+  }
+  return (
+    <>
+      <h1>{count}</h1>
+      {trend && <p>The count is {trend}</p>}
+    </>
+  )
+}
+```
+
+### Example: Updating objects and arrays in state
+
+```tsx
+// Don't mutate an object in state like this:
+form.firstName = "Taylor"
+
+// Replace state with a new object
+
+setForm({
+  ...form,
+  firstName: "Taylor",
+})
+```
+
+### Example: Avoiding recreating the initial state
+
+The result of createInitialTodos() is only used for the initial render,
+you’re still calling this function on every render. This can be wasteful if it’s creating large arrays or performing expensive calculations.
+
+```tsx
+function TodoList() {
+  // React will call this function on every render.
+  const [todos, setTodos] = useState(createInitialTodos())
+
+  // React will only call it during initialization.
+  const [blogs, setBlogs] = useState(createInitialBlogs);
+
+  // ...
+}
+```
+
+### Example: Resetting state with a key
+
+When the key changes, React re-creates the Form component (and all of its children) from scratch, so its state gets reset.
+
+```tsx
+export default function App() {
+  const [version, setVersion] = useState(0);
+
+  function handleReset() {
+    setVersion(version + 1);
+  }
+
+  return (
+    <>
+      <button onClick={handleReset}>Reset</button>
+      <Form key={version} />
+    </>
+  );
+}
+```
+
+### Example: How to store functions
+
+This example below will call function
+
+```tsx
+const [fn, setFn] = useState(someFunction);
+
+function handleClick() {
+  setFn(someOtherFunction);
+}
+```
+
+To store functions, you need to do something like this:
+
+```tsx
+const [fn, setFn] = useState(() => someFunction);
+
+function handleClick() {
+  setFn(() => someOtherFunction);
 }
 ```
 
@@ -21,15 +160,16 @@ function Calculator() {
 
 This hook is similar to useState, but it is used when you have complext state logic.
 
+### Example: basic
+
 ```tsx /appDir: true/
 function Counter() {
   const [counter, setCounter] = useReducer<Reducer<number, number>>(
     (prev, next) => {
       if (next <= 5) return next
       return prev
-    },
-    0
-  )
+    }, 0)
+
   return (
     <div>
       <p>Counter: {counter}</p>
@@ -38,6 +178,8 @@ function Counter() {
   )
 }
 ```
+
+### Example: Todo
 
 ```tsx showLineNumbers /appDir: true/
 const changeText = (newText: string) => ({
@@ -150,14 +292,12 @@ export default function ToDo() {
           <p>{todo.text}</p>
           <button
             className="bg-yellow-500"
-            onClick={() => handleUpdateTodo(todo.id)}
-          >
+            onClick={() => handleUpdateTodo(todo.id)}>
             Update todo
           </button>
           <button
             className="bg-red-500"
-            onClick={() => handleDeleteTodo(todo.id)}
-          >
+            onClick={() => handleDeleteTodo(todo.id)}>
             Delete todo
           </button>
         </div>

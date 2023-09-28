@@ -8,7 +8,6 @@ import { AnimatePresence, motion, useIsPresent } from "framer-motion"
 import { useStore } from "zustand"
 
 import { docsConfig } from "@/config/docs"
-import { remToPx } from "@/lib/remToPx"
 import { TableOfContents } from "@/lib/toc"
 import { cn } from "@/lib/utils"
 import { useSectionStore } from "@/components/site-provider"
@@ -128,7 +127,7 @@ function ActivePageMarker({
   pathname: string
 }) {
   let itemHeight = 28
-  let offset = remToPx(0.25)
+  let offset = 4
   let activePageIndex =
     group.items?.findIndex((item) => item.href === pathname) ?? 0
   let top = offset + activePageIndex * itemHeight
