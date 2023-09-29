@@ -168,6 +168,12 @@ This hook is similar to useState, but it is used when you have complext state lo
 
 - optional init: The initializer function that should return the initial state. If it’s not specified, the initial state is set to initialArg. Otherwise, the initial state is set to the result of calling init(initialArg).
 
+### Writing reducers well
+
+- **Reducers must be pure.** Similar to state updater function. reducers run during rendering! Actions should not send requests, schedule timeouts, or perform any side effects. They should update objects and arrays without mutations.
+
+- **Each action describes a single user interaction, even if that leads to multiple changes in the data.** For example, if a user presses "Reset" on a form with five fields managed by a reducer, it makes more sense to dispatch one reset_form action rather than five separate set_field actions. If you log every action in a reducer, that log should be clear enough for you to reconstruct what interactions or responses happened in what order.
+
 ### Example: basic
 
 ```tsx /appDir: true/
@@ -364,6 +370,16 @@ console.log(nextState); // { age: 43 }
 
 ## useState vs useReducer
 
-The difference between useState and useReducer is in the setState. You simply save data in useState, but useReducer uses the initialization logic you gave to decide how to save new data.
+useState and useReducer differ from each other in the logic used to save state. useReducer uses the initialization logic you provided to determine how to save new data, whereas useState simply saves the data you provide.
 
-https://react.dev/learn/extracting-state-logic-into-a-reducer#comparing-usestate-and-usereducer
+It is recommended that you use a reducer if you often encounter bugs due to incorrect state updates in some components and want to introduce more structure to their code.
+
+- **Code size:** useReducer requires you to write both a reducer function and dispatch actions, but with useState you will not have to write that. 
+However, useReducer can reduce the amount of code if numerous event handlers change state similarly.
+
+- **Readability:** useState is very easy to read when the state updates are simple. When they get more complex, they can bloat your component’s code and make it difficult to scan. In this case, useReducer lets you cleanly separate the how of update logic from the what happened of event handlers.
+
+- **Debugging:** When you have a bug with useState, it can be difficult to tell where the state was set incorrectly, and why. With useReducer, you can add a console log into your reducer to see every state update, and why it happened (due to which action).
+
+- **Testing:** A reducer is a pure function that doesn’t depend on your component. This means that you can export and test it separately in isolation.
+
