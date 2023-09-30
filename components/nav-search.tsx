@@ -2,8 +2,21 @@
 
 //TODO: change navigator.platform
 import * as React from "react"
+import { useRouter } from "next/navigation"
+import { CircleIcon, FileIcon } from "lucide-react"
+
+import { docsConfig } from "@/config/docs"
 
 import { Icons } from "./icons"
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "./ui/command"
 
 export function NavSearch() {
   let [modifierKey, setModifierKey] = React.useState<string>("")
@@ -29,7 +42,7 @@ export function NavSearch() {
           <kbd className="font-sans">K</kbd>
         </kbd>
       </button>
-      <SearchDialog className="hidden lg:block" {...dialogProps} />
+      <SearchDialog {...dialogProps} />
     </div>
   )
 }
@@ -47,7 +60,7 @@ export function NavSearchMobile() {
       >
         <Icons.search className="h-5 w-5 stroke-zinc-900 dark:stroke-white" />
       </button>
-      <SearchDialog className="lg:hidden" {...dialogProps} />
+      <SearchDialog {...dialogProps} />
     </div>
   )
 }
@@ -80,10 +93,71 @@ function useSearchProps() {
 
 interface SearchDialogProps {
   open: boolean
-  setOpen: (open: boolean) => void
-  className: string
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function SearchDialog({ open, setOpen, className }: SearchDialogProps) {
-  return <></>
+function SearchDialog({ open, setOpen }: SearchDialogProps) {
+  const router = useRouter()
+
+  React.useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        setOpen((open) => !open)
+      }
+    }
+    document.addEventListener("keydown", down)
+    return () => document.removeEventListener("keydown", down)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const runCommand = React.useCallback((command: () => unknown) => {
+    setOpen(false)
+    command()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
+    <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandInput placeholder="Type a command or search..." />
+      <CommandList className="scrollbar">
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup heading="Links">
+          {docsConfig.mainNav
+            .filter((navitem) => !navitem.external)
+            .map((navItem) => (
+              <CommandItem
+                key={navItem.href}
+                value={navItem.title}
+                onSelect={() => {
+                  runCommand(() => router.push(navItem.href as string))
+                }}
+              >
+                <FileIcon className="mr-2 h-4 w-4" />
+                {navItem.title}
+              </CommandItem>
+            ))}
+        </CommandGroup>
+        {docsConfig.sidebarNav.map((group) => (
+          <CommandGroup key={group.title} heading={group.title}>
+            {group.items?.map((navItem) => (
+              <CommandItem
+                key={navItem.href}
+                value={navItem.href}
+                onSelect={() => {
+                  runCommand(() => router.push(navItem.href as string))
+                }}
+              >
+                <div className="mr-2 flex h-4 w-4 items-center justify-center">
+                  <CircleIcon className="h-3 w-3" />
+                </div>
+                {navItem.title}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        ))}
+        <CommandSeparator />
+      </CommandList>
+    </CommandDialog>
+  )
 }

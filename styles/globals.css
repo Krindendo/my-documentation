@@ -80,6 +80,7 @@
   }
 }
 
+@media (min-width: 1024px){
 .scrollbar::-webkit-scrollbar {
     width: 16px;
 }
@@ -105,4 +106,5 @@
 
 .dark .scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #a1a1aa;
+}
 }
