@@ -1,4 +1,9 @@
-import { DocsConfig } from "types"
+import { MainNavItem, SidebarNavItem } from "types"
+
+interface DocsConfig {
+  mainNav: MainNavItem[]
+  sidebarNav: SidebarNavItem[]
+}
 
 export const docsConfig: DocsConfig = {
   mainNav: [

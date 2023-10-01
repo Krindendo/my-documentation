@@ -2,14 +2,6 @@ import { Icons } from "@/components/icons"
 
 export type NavItem = {
   title: string
-  href: string
-  disabled?: boolean
-}
-
-export type DocsNavItem = NavItem
-
-export type SidebarNavItem = {
-  title: string
   disabled?: boolean
   external?: boolean
   icon?: keyof typeof Icons
@@ -20,9 +12,17 @@ export type SidebarNavItem = {
     }
   | {
       href?: string
-      items: NavLink[]
+      items: NavItem[]
     }
 )
+
+export interface MainNavItem {
+  title: string
+  href: string
+  disabled?: boolean
+}
+
+export type SidebarNavItem = NavItem & {}
 
 export type SiteConfig = {
   name: string
@@ -32,9 +32,4 @@ export type SiteConfig = {
   links: {
     github: string
   }
-}
-
-export type DocsConfig = {
-  mainNav: MainNavItem[]
-  sidebarNav: SidebarNavItem[]
 }

@@ -18,11 +18,6 @@ import {
 
 const SIDEBAR_DEEP_LEVEL = 2
 
-function useInitialValue(value: any, condition = true) {
-  let initialValue = React.useRef(value).current
-  return condition ? initialValue : value
-}
-
 interface NavLinkProps {
   href: string
   active?: boolean
@@ -73,14 +68,6 @@ function VisibleSectionHighlight({
   const store = useSectionStore()
   const sectionIds = useStore(store, (s) => s.sectionIds)
   const visibleSections = useStore(store, (s) => s.visibleSections)
-
-  // let [sectionIds, visibleSections] = useInitialValue(
-  //   [
-  //     useSectionStore().getState().sectionIds,
-  //     useSectionStore().getState().visibleSections,
-  //   ],
-  //   useIsInsideMobileNavigation()
-  // )
 
   const isPresent = useIsPresent()
   const itemHeight = 28
@@ -156,13 +143,8 @@ function NavigationGroup({ group, className }: NavigationGroupProps) {
   let isInsideMobileNavigation = useIsInsideMobileNavigation()
 
   const store = useSectionStore()
+  const pathname = usePathname()
   const sections = useStore(store, (s) => s.sections)
-  const sectionIds1 = useStore(store, (s) => s.sectionIds)
-
-  let [pathname, sectionIds] = useInitialValue(
-    [usePathname(), sectionIds1],
-    isInsideMobileNavigation
-  )
 
   let isActiveGroup =
     group.items?.findIndex((link) => link.href === pathname) !== -1
@@ -193,7 +175,7 @@ function NavigationGroup({ group, className }: NavigationGroupProps) {
         <ul role="list" className="border-l border-transparent">
           {group.items?.map((item) => (
             <motion.li key={item.href} layout="position" className="relative">
-              <NavLink href={item.href} active={item.href === pathname}>
+              <NavLink href={item.href || "#"} active={item.href === pathname}>
                 {item.title}
               </NavLink>
               <AnimatePresence mode="popLayout" initial={false}>
@@ -306,40 +288,3 @@ export function SiteSidebar({ className, ...props }: SiteSidebarProps) {
     </nav>
   )
 }
-
-/*
-
-const Tree = ({ tree, level = 1 }: TreeProps) => {
-  if (tree.items?.length === undefined || level > SIDEBAR_DEEP_LEVEL) {
-    return null
-  }
-
-  return (
-    <motion.ul
-      role="list"
-      initial={{ opacity: 0 }}
-      animate={{
-        opacity: 1,
-        transition: { delay: 0.1 },
-      }}
-      exit={{
-        opacity: 0,
-        transition: { duration: 0.15 },
-      }}
-      className={cn("", { "pl-4": level !== 1 })}
-    >
-      {tree.items?.map((section) => (
-        <li key={section.url}>
-          <NavLink href={section.url} isAnchorLink>
-            {section.title}
-          </NavLink>
-          {tree.items?.length ? (
-            <Tree tree={section} level={level + 1} />
-          ) : null}
-        </li>
-      ))}
-    </motion.ul>
-  )
-}
-
-*/
