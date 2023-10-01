@@ -124,7 +124,7 @@ function SearchDialog({ open, setOpen }: SearchDialogProps) {
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Links">
           {docsConfig.mainNav
-            .filter((navitem) => !navitem.external)
+            .filter((navitem) => !navitem.disabled)
             .map((navItem) => (
               <CommandItem
                 key={navItem.href}
