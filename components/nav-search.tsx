@@ -1,6 +1,5 @@
 "use client"
 
-//TODO: change navigator.platform
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import { CircleIcon, FileIcon } from "lucide-react"
@@ -18,15 +17,18 @@ import {
   CommandSeparator,
 } from "./ui/command"
 
-export function NavSearch() {
-  let [modifierKey, setModifierKey] = React.useState<string>("")
-  let { buttonProps, dialogProps } = useSearchProps()
+function selectKey() {
+  let platform: string =
+    (navigator as any).userAgentData?.platform ||
+    navigator.platform ||
+    "unknown"
 
-  React.useEffect(() => {
-    setModifierKey(
-      /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) ? "⌘" : "Ctrl "
-    )
-  }, [])
+  return /(Mac|iPhone|iPod|iPad)/i.test(platform) ? "⌘" : "Ctrl"
+}
+
+export function NavSearch() {
+  let [modifierKey, setModifierKey] = React.useState<string>(selectKey)
+  let { buttonProps, dialogProps } = useSearchProps()
 
   return (
     <div className="hidden lg:block lg:max-w-sm lg:flex-auto">
@@ -38,7 +40,7 @@ export function NavSearch() {
         <Icons.search className="h-4 w-4 stroke-current" />
         Search documentation...
         <kbd className="ml-auto text-xs text-zinc-400 dark:text-zinc-500">
-          <kbd className="font-sans">{modifierKey}</kbd>
+          <kbd className="pr-1 font-sans">{modifierKey}</kbd>
           <kbd className="font-sans">K</kbd>
         </kbd>
       </button>
