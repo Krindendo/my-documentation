@@ -6,14 +6,6 @@ description: Refs let a component hold some information that isnt used for rende
 - `useRef` You can hold any value in it, but most often its used to hold DOM node.
 - `useImperativeHandle` lets you customize the ref exposed by your component.
 
-<Callout type="warning">
-
-Do not overuse refs. You should only use refs for imperative behaviors that you can’t express as props: for example, scrolling to a node, focusing a node, triggering an animation, selecting text, and so on.
-
-If you can express something as a prop, you should not use a ref. For example, instead of exposing an imperative handle like \{ open, close \} from a Modal component, it is better to take isOpen as a prop like `<Modal isOpen={isOpen} />`. Effects can help you expose imperative behaviors via props.
-
-</Callout>
-
 ## useRef
 
 Used for saving DOM node and timeout ID.
@@ -64,6 +56,14 @@ function Calculator() {
 ## useImperativeHandle
 
 If you don’t want to expose the entire \<input> DOM node, but you want to expose two of its methods: focus and scrollIntoView. To do this, keep the real browser DOM in a separate ref. Then use useImperativeHandle to expose a handle with only the methods that you want the parent component to call
+
+<Callout type="warning">
+
+Do not overuse refs. You should only use refs for imperative behaviors that you can’t express as props: for example, scrolling to a node, focusing a node, triggering an animation, selecting text, and so on.
+
+If you can express something as a prop, you should not use a ref. For example, instead of exposing an imperative handle like \{ open, close \} from a Modal component, it is better to take isOpen as a prop like `<Modal isOpen={isOpen} />`. Effects can help you expose imperative behaviors via props.
+
+</Callout>
 
 ### Parameters
 
