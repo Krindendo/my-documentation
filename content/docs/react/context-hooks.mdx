@@ -7,6 +7,19 @@ description: Context allows a component to receive information from distant pare
 
 ## useContext
 
+### Parameters
+
+- The context that you’ve previously created with createContext. The context itself does not hold the information, it only represents the kind of information you can provide or read from components.
+
+### Returns
+
+useContext returns the context value for the calling component. It is determined as the value passed to the closest SomeContext.Provider above the calling component in the tree. If there is no such provider, then the returned value will be the defaultValue you have passed to createContext for that context. The returned value is always up-to-date. React automatically re-renders components that read some context if it changes.
+
+### Caveats
+
+- `useContext()` call in a component is not affected by providers returned from the same component. The corresponding <Context.Provider> needs to be above the component doing the useContext() call.
+
+- React automatically re-renders all the children that use a particular context starting from the provider that receives a different value.
 
 
 ### Example: basic
@@ -265,5 +278,53 @@ export function Task({ task }: { task: Task }) {
       {task.text}
     </button>
   )
+}
+```
+
+### Example: Optimizing re-renders when passing objects and functions 
+
+Whenever MyApp re-renders (for example, on a route update), this will be a different object pointing at a different function, so React will also have to re-render all components deep in the tree that call useContext(AuthContext).
+
+There is no need to re-render if currentUser has not changed. So you need to wrap the login function with useCallback and wrap
+the object creation into useMemo.
+
+```tsx title="basic"
+function MyApp() {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  function login(response) {
+    storeCredentials(response.credentials);
+    setCurrentUser(response.user);
+  }
+
+  return (
+    <AuthContext.Provider value={{ currentUser, login }}>
+      <Page />
+    </AuthContext.Provider>
+  );
+}
+```
+
+```tsx title="optimized"
+import * as React from 'react';
+
+function MyApp() {
+  const [currentUser, setCurrentUser] = React.useState(null);
+
+  const login = React.useCallback((response) => {
+    storeCredentials(response.credentials);
+    setCurrentUser(response.user);
+  }, []);
+
+  const contextValue = React.useMemo(() => ({
+    currentUser,
+    login
+  }), [currentUser, login]);
+
+  return (
+    <AuthContext.Provider value={contextValue}>
+      <Page />
+    </AuthContext.Provider>
+  );
 }
 ```

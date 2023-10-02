@@ -17,18 +17,17 @@ import {
   CommandSeparator,
 } from "./ui/command"
 
-function selectKey() {
-  let platform: string =
-    (navigator as any).userAgentData?.platform ||
-    navigator.platform ||
-    "unknown"
-
-  return /(Mac|iPhone|iPod|iPad)/i.test(platform) ? "⌘" : "Ctrl"
-}
-
 export function NavSearch() {
-  let [modifierKey, setModifierKey] = React.useState<string>(selectKey)
+  let [modifierKey, setModifierKey] = React.useState<string>("")
   let { buttonProps, dialogProps } = useSearchProps()
+
+  React.useEffect(() => {
+    let platform =
+      (navigator as any)?.userAgentData?.platform ||
+      navigator?.platform ||
+      "unknown"
+    setModifierKey(/(Mac|iPhone|iPod|iPad)/i.test(platform) ? "⌘" : "Ctrl")
+  }, [])
 
   return (
     <div className="hidden lg:block lg:max-w-sm lg:flex-auto">
