@@ -17,7 +17,7 @@ useContext returns the context value for the calling component. It is determined
 
 ### Caveats
 
-- `useContext()` call in a component is not affected by providers returned from the same component. The corresponding <Context.Provider> needs to be above the component doing the useContext() call.
+- `useContext()` call in a component is not affected by providers returned from the same component. The corresponding `<Context.Provider>` needs to be above the component doing the useContext() call.
 
 - React automatically re-renders all the children that use a particular context starting from the provider that receives a different value.
 
