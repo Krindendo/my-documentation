@@ -9,23 +9,116 @@ description: Effect includes dealing with network, browser DOM, animations, widg
 
 ## useEffect
 
-### useEffect dependency array
+### Parameters 
 
-The useEffect controls an array containing state variables or functions that are monitored for changes. These changes then trigger the callback function.
+- **setup**: The function with your Effect’s logic. Your setup function may also optionally return a cleanup function. When your component is added to the DOM, React will run your setup function. After every re-render with changed dependencies, React will first run the cleanup function (if you provided it) with the old values, and then run your setup function with the new values. After your component is removed from the DOM, React will run your cleanup function.
 
-#### Empty array
+- **optional dependencies**: The list of all reactive values referenced inside of the setup code. Reactive values include props, state, and all the variables and functions declared directly inside your component body. The list of dependencies must have a constant number of items and be written inline like [dep1, dep2, dep3]. If you ignore this argument, your Effect will re-run after every re-render of the component.
 
-When the page is rendered, the callback function is only called once.
+### Caveats
 
-#### Array with state
+- If you’re not trying to synchronize with some external system, [you probably don’t need an Effect](#).
 
-The callback function is triggered when the page is first rendered and whenever any of the included states gets updated.
+- When Strict Mode is on, React will run one extra development-only setup+cleanup cycle before the first real setup. This is a stress-test that ensures that your cleanup logic “mirrors” your setup logic and that it stops or undoes whatever the setup is doing.
+
+- If your Effect wasn’t caused by an interaction (like a click), React will generally let the browser **paint the updated screen first before running your Effect.** If your Effect is doing something visual (for example, positioning a tooltip), and the delay is noticeable (for example, it flickers), replace useEffect with useLayoutEffect.
+
+<Callout>
+
+**External systemes**
+
+- A timer managed with `setInterval()` and `clearInterval()`.
+
+- An event subscription using `window.addEventListener()` and `window.removeEventListener()`.
+
+- A third-party animation library with an API like `animation.start()` and `animation.reset()`.
+
+**If you’re not connecting to any external system, [you probably don’t need an Effect.](#)**
+
+</Callout>
+
+
+```tsx
+import { useEffect } from 'react';
+import { createConnection } from './chat.js';
+
+function ChatRoom({ roomId }) {
+  const [serverUrl, setServerUrl] = useState('https://localhost:1234');
+
+  useEffect(() => {
+  	const connection = createConnection(serverUrl, roomId);
+    connection.connect();
+  	return () => {
+      connection.disconnect();
+  	};
+  }, [serverUrl, roomId]);
+  // ...
+}
+```
+
+#### React calls your setup and cleanup functions whenever it’s necessary, which may happen multiple times:
+
+1. Your **setup code** runs when your component is added to the page (mounts).
+
+2. After every re-render of your component where the dependencies have changed:
+
+- First, your **cleanup code** runs with the old props and state.
+
+- Then, your **setup code** runs with the new props and state.
+
+3. Your **cleanup code** runs one final time after your component is removed from the page (unmounts).
+
+#### Let’s illustrate this sequence for the example above.
+
+When the `ChatRoom` component above gets added to the page, it will connect to the chat room with the initial `serverUrl` and `roomId`. If either `serverUrl` or `roomId` change as a result of a re-render (say, if the user picks a different chat room in a dropdown), your Effect will disconnect from the previous room, and connect to the next one. When the `ChatRoom` component is removed from the page, your Effect will disconnect one last time.
+
+### Example: Wrapping Effects in custom Hooks
+
+If you find yourself often needing to manually write Effects, it’s usually a sign that you need to extract some custom Hooks for common behaviors your components rely on.
+
+```tsx
+function useChatRoom({ serverUrl, roomId }) {
+  useEffect(() => {
+    const options = {
+      serverUrl: serverUrl,
+      roomId: roomId
+    };
+    const connection = createConnection(options);
+    connection.connect();
+    return () => connection.disconnect();
+  }, [roomId, serverUrl]);
+}
+
+function ChatRoom({ roomId }) {
+  const [serverUrl, setServerUrl] = useState('https://localhost:1234');
+
+  useChatRoom({
+    roomId: roomId,
+    serverUrl: serverUrl
+  });
+  // ...
+}
+```
+
+<Callout type="danger">
+
+**If you have an existing codebase, you might have some Effects that suppress the linter like this:**
 
 ```tsx
 useEffect(() => {
-  console.log(`${name}: ${age}`)
-}, [name, age])
+  // ...
+  // Avoid suppressing the linter like this:
+  // eslint-ignore-next-line react-hooks/exhaustive-deps
+}, []);
 ```
+
+When dependencies don’t match the code, there is a high risk of introducing bugs. By suppressing the linter, you “lie” to React about the values your Effect depends on. Instead, prove they’re unnecessary.
+
+</Callout>
+
+### You Might Not Need an Effect
+
+
 
 ## useLayoutEffect
 

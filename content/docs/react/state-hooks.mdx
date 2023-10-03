@@ -33,17 +33,11 @@ useState returns an array with exactly two values:
 
 - You can reset a component’s state by passing a different key to a component. [Resetting state with a key](#)
 
-### Example: basic
-
 ```tsx
-function Calculator() {
   const [sum, setSum] = useState(0)
-
   function handleClick(value) {
     setSum((a) => a + value)
   }
-  // ...
-}
 ```
 
 ### Example: update value in current render

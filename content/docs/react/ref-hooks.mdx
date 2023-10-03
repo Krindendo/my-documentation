@@ -44,7 +44,7 @@ function Main() {
 }
 ```
 
-### Example
+### Example: basic
 
 ```tsx
 function Calculator() {
@@ -73,9 +73,9 @@ If you can express something as a prop, you should not use a ref. For example, i
 
 - The list of all reactive values referenced inside of the function. If a re-render resulted in a change to some dependency, or if you omitted this argument, this function will re-execute, and the newly created handle will be assigned to the ref.
 
-### Example
+### Example: basic
 
-```tsx title="MyInput.tsx" {8-17}
+```tsx title="MyInput.tsx" {8-13}
 import { forwardRef, useImperativeHandle, useRef } from "react"
 
 const MyInput = forwardRef(function MyInput(props, ref) {

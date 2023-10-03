@@ -72,7 +72,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <div className="flex min-h-screen flex-col lg:ml-72 xl:ml-80">
               <SiteNavigation />
               <div className="relative flex-1 px-4 pt-14 sm:px-6 lg:px-8">
-                <main className="py-16">{children}</main>
+                <main className="flex py-16">{children}</main>
               </div>
               <SiteFooter />
             </div>

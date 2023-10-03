@@ -35,9 +35,7 @@ export function GuidesComponent({ children }: GuidesComponentProps) {
     startTransition(() => {
       replace(createUrl("/guides", newParams))
     })
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch])
+  }, [debouncedSearch, replace, searchParams])
 
   return (
     <>
