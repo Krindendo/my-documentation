@@ -3,21 +3,21 @@ title: Typescript
 description: TypeScript extends JavaScript and enhances the developer experience.
 ---
 
-### Primitive types
+### Primitive Types
 
 TypeScript has three primitive types that are frequently used: `string`, `number`, and `boolean`.
 
-#### Type any
+**Type any**
 
 The any type is generic type used when a variable's type is unclear or hasn't yet been defined.
 The any type allows one to gradually opt-in and out of type checking during compilation, which is useful when converting existing JavaScript to TypeScript.
 
-#### Type void
+**Type void**
 
 The void indicates a variable's lack of a type. It acts as the opposite type to any. It is especially useful in functions that don’t return a value.
 
-#### Type unknown
+**Type unknown**
 
 The unknown type is the type-safe counterpart of any type. You can assign anything to the unknown, but the unknown isn’t assignable to anything but itself and any, without performing a type assertion of a control-flow-based narrowing. You cannot perform any operations on a variable of an unknown type without first asserting or narrowing it to a more specific type.
 
-#### What is the difference between null and undifined?
+**Difference between null and undifined:**
