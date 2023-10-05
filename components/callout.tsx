@@ -24,7 +24,7 @@ export function Callout({
       {...props}
     >
       {icon && <span className="mr-4 text-2xl">{icon}</span>}
-      <div className={className}>{children}</div>
+      <div className={cn("w-full", className)}>{children}</div>
     </div>
   )
 }
