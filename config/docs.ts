@@ -70,5 +70,13 @@ export const docsConfig: DocsConfig = {
       title: "Vue",
       items: [{ title: "Introduction", href: "/docs/vue" }],
     },
+    {
+      title: "Node.js",
+      items: [{ title: "Introduction", href: "/docs/node" }],
+    },
+    {
+      title: "MySql",
+      items: [{ title: "Introduction", href: "/docs/mysql" }],
+    },
   ],
 }
