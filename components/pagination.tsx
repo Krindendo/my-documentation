@@ -130,7 +130,7 @@ export function Pagination({
                   className={cn(
                     "relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline",
                     currentPage.toString() === item
-                      ? "bg-orange-500 text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 dark:bg-orange-600"
+                      ? "bg-blue-500 text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:bg-blue-900"
                       : "hidden text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-100 focus:outline-offset-0 dark:text-white dark:hover:text-gray-900 md:inline-flex",
                     item === "..." && "text-gray-700 ring-gray-300"
                   )}
