@@ -59,4 +59,47 @@ export default function ProductPage({ productId, referrer, theme }) {
 
 ## useTransition
 
+[useTransition](https://react.dev/reference/react/useTransition) is used to update the state without blocking the UI.
+
+useTransition returns an array with exactly two values:
+
+1. The state that tells you whether there is a pending transition.
+2. The startTransition function that lets you mark a state update as a transition.
+
+Transitions let you keep the user interface updates responsive even on slow devices.
+
+With a transition, your UI stays responsive in the middle of a re-render. For example, if the user clicks a tab but then change their mind and click another tab, they can do that without waiting for the first re-render to finish.
+
+```tsx
+function TabContainer() {
+  const [isPending, startTransition] = useTransition();
+  const [tab, setTab] = useState('about');
+
+  function selectTab(nextTab) {
+    startTransition(() => {
+      setTab(nextTab);
+    });
+  }
+  // ...
+}
+```
+
+### startTransition function
+
+startTransition function have one parametar 
+
+scope: A function that updates some state by calling one or more set functions. React immediately calls scope with no parameters and marks all state updates scheduled synchronously during the scope function call as transitions. They will be non-blocking and will not display unwanted loading indicators.
+
+- useTransition is a Hook, so it can only be called inside components or custom Hooks. If you need to start a transition somewhere else (for example, from a data library), call the standalone startTransition instead.
+
+- You can wrap an update into a transition only if you have access to the set function of that state. If you want to start a transition in response to some prop or a custom Hook value, try useDeferredValue instead.
+
+- The function you pass to startTransition must be synchronous. React immediately executes this function, marking all state updates that happen while it executes as transitions. If you try to perform more state updates later (for example, in a timeout), they won’t be marked as transitions.
+
+- A state update marked as a transition will be interrupted by other state updates. For example, if you update a chart component inside a transition, but then start typing into an input while the chart is in the middle of a re-render, React will restart the rendering work on the chart component after handling the input update.
+
+- Transition updates can’t be used to control text inputs.
+
+- If there are multiple ongoing transitions, React currently batches them together. This is a limitation that will likely be removed in a future release.
+
 ## useDeferredValue
