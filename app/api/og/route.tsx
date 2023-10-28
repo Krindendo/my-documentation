@@ -1,4 +1,5 @@
-import { ImageResponse, NextRequest } from "next/server"
+import { ImageResponse } from "next/og"
+import { NextRequest } from "next/server"
 
 import { siteConfig } from "@/config/site"
 import { ogImageSchema } from "@/lib/validations/og"
