@@ -18,7 +18,7 @@ import {
 } from "./ui/command"
 
 export function NavSearch() {
-  let [modifierKey, setModifierKey] = React.useState<string>("")
+  let [modifierKey, setModifierKey] = React.useState<string>("Ctrl")
   let { buttonProps, dialogProps } = useSearchProps()
 
   React.useEffect(() => {
