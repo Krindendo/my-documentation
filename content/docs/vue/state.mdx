@@ -5,6 +5,25 @@ description: How to store information in components and refresh them?
 
 ## ref()
 
+Takes an inner value and returns a reactive and mutable ref object, which has a single property .value that points to the inner value.
+
+The ref object is mutable.
+- you can assign new values to .value - it is also reactive 
+- any read operations to .value are tracked, and write operations will trigger associated effects.
+
+<Callout>
+
+**If an object is assigned as a ref's value**, the object is made deeply reactive with reactive(). 
+This also means if the object contains nested refs, they will be deeply unwrapped.
+
+</Callout>
+
+```vue
+const count = ref(0)
+count.value++
+console.log(count.value) // 1
+```
+
 ## reactive()
 
 ## readonly()
