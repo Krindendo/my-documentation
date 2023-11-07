@@ -68,7 +68,18 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "Vue",
-      items: [{ title: "Introduction", href: "/docs/vue" }],
+      items: [
+        { title: "Introduction", href: "/docs/vue" },
+        { title: "Reactivity", href: "/docs/vue/reactivity" },
+        { title: "State", href: "/docs/vue/state" },
+        { title: "Effect", href: "/docs/vue/effect" },
+        { title: "Utilities", href: "/docs/vue/utilities" },
+        { title: "Lifecycle Hooks", href: "/docs/vue/lifecycle-hooks" },
+        {
+          title: "Dependency Injection",
+          href: "/docs/vue/dependency-injection",
+        },
+      ],
     },
     {
       title: "Node.js",

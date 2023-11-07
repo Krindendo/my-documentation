@@ -1,0 +1,101 @@
+---
+title: Reactivity in Depth
+description: When you modify reactive JavaScript object, the view updates.
+---
+
+## Reactivity in Depth
+
+By default, JavaScript cannot automatically update values that are connected to other values.
+If we have one value (A1) that is related to another value (A2) and want to connect them so that when you modify A2 value, A1 value will also change, we will need some function that will trigger and update A1.
+
+Reactivity in Vue works diferently.
+
+There are two ways of intercepting property access in JavaScript: getter / setters and Proxies. 
+
+Vue 2 used getter / setters exclusively due to browser support limitations. 
+
+In Vue 3, Proxies are used for reactive objects and getter / setters are used for refs.
+
+Limitations of reactive objects:
+
+- When you assign or destructure a reactive object's property to a local variable, accessing or assigning to that variable is non-reactive because it no longer triggers the get / set proxy traps on the source object.
+
+- The returned proxy from reactive(), although behaving just like the original, has a different identity if we compare it to the original using the === operator.
+
+---
+
+I dont know how track() and trigger() function works.
+
+## Runtime vs Compile-time Reactivity
+
+Vue's reactivity system is primarily runtime-based: the tracking and triggering are all performed while the code is running directly in the browser. The pros of runtime reactivity are that it can work without a build step, and there are fewer edge cases. On the other hand, this makes it constrained by the syntax limitations of JavaScript, leading to the need of value containers like Vue refs.
+
+Some frameworks, such as Svelte, choose to overcome such limitations by implementing reactivity during compilation. It analyzes and transforms the code in order to simulate reactivity.
+
+
+## Reactivity Debugging
+
+Debug hooks only work in development mode.
+
+We can debug what dependencies are used during a component's render and which dependency is triggering an update using the onRenderTracked and onRenderTriggered lifecycle hooks. It is recommended to place a debugger statement in the callbacks to interactively inspect the dependency:
+
+```vue
+<script setup>
+import { onRenderTracked, onRenderTriggered } from 'vue'
+
+onRenderTracked((event) => {
+  debugger;
+})
+
+onRenderTriggered((event) => {
+  debugger;
+})
+</script>
+```
+
+We can debug computed properties by passing computed() a second options object with onTrack and onTrigger callbacks:
+
+onTrack will be called when a reactive property or ref is tracked as a dependency.
+onTrigger will be called when the watcher callback is triggered by the mutation of a dependency.
+Both callbacks will receive debugger events in the same format as component debug hooks:
+
+```js
+const plusOne = computed(() => count.value + 1, {
+  onTrack(e) {
+    // triggered when count.value is tracked as a dependency
+    debugger;
+  },
+  onTrigger(e) {
+    // triggered when count.value is mutated
+    debugger;
+  }
+})
+
+// access plusOne, should trigger onTrack
+console.log(plusOne.value)
+
+// mutate count.value, should trigger onTrigger
+count.value++
+```
+
+```js
+watch(source, callback, {
+  onTrack(e) {
+    debugger;
+  },
+  onTrigger(e) {
+    debugger;
+  }
+})
+
+watchEffect(callback, {
+  onTrack(e) {
+    debugger;
+  },
+  onTrigger(e) {
+    debugger;
+  }
+})
+```
+
+## Integration with External State Systems
