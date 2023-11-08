@@ -24,7 +24,21 @@ Limitations of reactive objects:
 
 ---
 
-I dont know how track() and trigger() function works.
+Not finished
+
+When you get value from ref function you will trigger `track()` function, and when you set value in ref you will trigger `trigger()` function;
+
+Inside `track()` it will first check if there's currently `running effect` and if does it will lookup for `subscriber effect` for the propery that is tracked.
+
+
+
+Subscribing effects Set and if no subscribing effects was found, it will be created one.
+
+In summary, a `running effect` is a function currently executing and tracking dependencies, while a `subscribed effect` is a function that has been registered to be notified when a specific reactive property changes.
+
+
+
+---
 
 ## Runtime vs Compile-time Reactivity
 
@@ -99,3 +113,116 @@ watchEffect(callback, {
 ```
 
 ## Integration with External State Systems
+
+Vue's reactivity system works by deeply converting plain JavaScript objects into reactive proxies.
+
+The general idea of integrating Vue's reactivity system with an external state management solution is to hold the external state in a shallowRef. A shallow ref is only reactive when its .value property is accessed - the inner value is left intact. When the external state changes, replace the ref value to trigger updates.
+
+## Immutable Data
+
+If you are implementing an undo / redo feature, you likely want to take a snapshot of the application's state on every user edit. However, Vue's mutable reactivity system isn't best suited for this if the state tree is large, because serializing the entire state object on every update can be expensive in terms of both CPU and memory costs.
+
+Immutable data structures solve this by never mutating the state objects - instead, it creates new objects that share the same, unchanged parts with old ones. There are different ways of using immutable data in JavaScript, but we recommend using Immer with Vue because it allows you to use immutable data while keeping the more ergonomic, mutable syntax.
+
+```js
+import produce from 'immer'
+import { shallowRef } from 'vue'
+
+export function useImmer(baseState) {
+  const state = shallowRef(baseState)
+  const update = (updater) => {
+    state.value = produce(state.value, updater)
+  }
+
+  return [state, update]
+}
+```
+
+## State Machines
+
+State Machine is a model for describing all the possible states an application can be in, and all the possible ways it can transition from one state to another. While it may be overkill for simple components, it can help make complex state flows more robust and manageable.
+
+```js
+import { createMachine, interpret } from 'xstate'
+import { shallowRef } from 'vue'
+
+export function useMachine(options) {
+  const machine = createMachine(options)
+  const state = shallowRef(machine.initialState)
+  const service = interpret(machine)
+    .onTransition((newState) => (state.value = newState))
+    .start()
+  const send = (event) => service.send(event)
+
+  return [state, send]
+}
+```
+
+---
+
+## Connection to Signals
+
+Fundamentally, signals are the same kind of reactivity primitive as Vue refs. It's a value container that provides dependency tracking on access, and side-effect triggering on mutation.
+
+Although not a necessary trait for something to qualify as signals, today the concept is often discussed alongside the rendering model where updates are performed through fine-grained subscriptions. Due to the use of Virtual DOM, Vue currently relies on compilers to achieve similar optimizations. However, we are also exploring a new Solid-inspired compilation strategy (Vapor Mode) that does not rely on Virtual DOM and takes more advantage of Vue's built-in reactivity system.
+
+In Solid you can passed down value without the setter. This ensures that the state can never be mutated unless the setter is also explicitly exposed. Whether this safety guarantee justifies the more verbose syntax could be subject to the requirement of the project and personal taste.
+
+```js
+import { shallowRef, triggerRef } from 'vue'
+
+export function createSignal(value, options) {
+  const r = shallowRef(value)
+  const get = () => r.value
+  const set = (v) => {
+    r.value = typeof v === 'function' ? v(r.value) : v
+    if (options?.equals === false) triggerRef(r)
+  }
+  return [get, set]
+}
+
+const [count, setCount] = createSignal(0)
+
+count() // access the value
+setCount(1) // update the value
+```
+
+Angular signals
+
+```js
+import { shallowRef, triggerRef } from 'vue'
+
+export function signal(initialValue) {
+  const r = shallowRef(initialValue)
+  const s = () => r.value
+  s.set = (value) => {
+    r.value = value
+  }
+  s.update = (updater) => {
+    r.value = updater(r.value)
+  }
+  s.mutate = (mutator) => {
+    mutator(r.value)
+    triggerRef(r)
+  }
+  return s
+}
+
+const count = signal(0)
+
+count() // access the value
+count.set(1) // set new value
+count.update((v) => v + 1) // update based on previous value
+
+// mutate deep objects with same identity
+const state = signal({ count: 0 })
+state.mutate((o) => {
+  o.count++
+})
+
+```
+
+Compared to Vue refs, Solid and Angular's getter-based API style provide some interesting trade-offs when used in Vue components:
+
+- `()` is slightly less verbose than .value, but updating the value is more verbose.
+- There is no ref-unwrapping: accessing values always require `()`. This makes value access consistent everywhere. This also means you can pass raw signals down as component props.
