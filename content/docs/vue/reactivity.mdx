@@ -22,23 +22,20 @@ Limitations of reactive objects:
 
 - The returned proxy from reactive(), although behaving just like the original, has a different identity if we compare it to the original using the === operator.
 
----
-
-Not finished
-
 When you get value from ref function you will trigger `track()` function, and when you set value in ref you will trigger `trigger()` function;
 
 Inside `track()` it will first check if there's currently `running effect` and if does it will lookup for `subscriber effect` for the propery that is tracked.
+If no `subscribing effects` was found, it will be created one.
 
+A `running effect` is a function currently executing and tracking dependencies, while a `subscribed effect` is a function that has been registered to be notified when a specifide reactive property changes.
 
+Inside `trigger()` it will lookup for `subscriber efects` and it will invoke them.
 
-Subscribing effects Set and if no subscribing effects was found, it will be created one.
+<Callout>
 
-In summary, a `running effect` is a function currently executing and tracking dependencies, while a `subscribed effect` is a function that has been registered to be notified when a specific reactive property changes.
+In summary, when you use a ref in a template, and change the ref's value later, Vue automatically detects the change and updates the DOM accordingly. This is made possible with a dependency-tracking based reactivity system. When a component is rendered for the first time, Vue tracks every ref that was used during the render. Later on, when a ref is mutated, it will trigger a re-render for components that are tracking it.
 
-
-
----
+</Callout>
 
 ## Runtime vs Compile-time Reactivity
 
