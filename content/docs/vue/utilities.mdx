@@ -1,11 +1,31 @@
 ---
 title: Utilities
-description: asd
+description: Built-in utility functions for Vue.
 ---
 
 ## isRef()
 
+Checks if a value is a ref object.
+
+```ts
+let foo: unknown
+if (isRef(foo)) {
+  // foo's type is narrowed to Ref<unknown>
+  foo.value
+}
+```
+
 ## unref()
+
+Returns the inner value if the argument is a ref, otherwise return the argument itself. 
+This is a sugar function for val = isRef(val) ? val.value : val.
+
+```ts
+function useFoo(x: number | Ref<number>) {
+  const unwrapped = unref(x)
+  // unwrapped is guaranteed to be number now
+}
+```
 
 ## toRef()
 
