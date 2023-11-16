@@ -29,12 +29,86 @@ function useFoo(x: number | Ref<number>) {
 
 ## toRef()
 
+Can be used to normalize values / refs / getters into refs.
+
+Converts a single reactive object property to a ref that maintains its connection with the parent object.
+
+```js
+const state = reactive({
+  foo: 1,
+  bar: 2
+})
+```
+
+`toRef` is useful when you copying a property from the `reactive` object to a new variable, for example foo which contains the number 1. If you copied this to a new variable, the copy would of course be a regular, non-reactive variable having no connection to the reactive object it was copied from. If foo changed later, the copy would not, meaning the copy is not reactive.
+
 ## toValue()
+
+Normalizes values / refs / getters to values. This is similar to unref(), except that it also normalizes getters. If the argument is a getter, it will be invoked and its return value will be returned.
+
+This can be used in Composables to normalize an argument that can be either a value, a ref, or a getter.
+
+```js
+toValue(1) //       --> 1
+toValue(ref(1)) //  --> 1
+toValue(() => 1) // --> 1
+```
 
 ## toRefs()
 
+Converts a reactive object to a plain object where each property of the resulting object is a ref pointing to the corresponding property of the original object. Each individual ref is created using toRef().
+
+```js
+const state = reactive({
+  foo: 1,
+  bar: 2
+})
+
+const stateAsRefs = toRefs(state)
+/*
+Type of stateAsRefs: {
+  foo: Ref<number>,
+  bar: Ref<number>
+}
+*/
+
+// The ref and the original property is "linked"
+state.foo++
+console.log(stateAsRefs.foo.value) // 2
+
+stateAsRefs.foo.value++
+console.log(state.foo) // 3
+```
+
+toRefs is useful when returning a reactive object from a composable function so that the consuming component can destructure/spread the returned object without losing reactivity:
+
+```js
+function useFeatureX() {
+  const state = reactive({
+    foo: 1,
+    bar: 2
+  })
+
+  // ...logic operating on state
+
+  // convert to refs when returning
+  return toRefs(state)
+}
+
+// can destructure without losing reactivity
+const { foo, bar } = useFeatureX()
+```
+
+toRefs will only generate refs for properties that are enumerable on the source object at call time. To create a ref for a property that may not exist yet, use toRef instead.
+
 ## isProxy()
+
+Checks if an object is a proxy created by reactive(), readonly(), shallowReactive() or shallowReadonly().
 
 ## isReactive()
 
+Checks if an object is a proxy created by reactive() or shallowReactive().
+
 ## isReadonly()
+
+The proxies created by readonly() and shallowReadonly() are both considered readonly, as is a computed() ref without a set function.

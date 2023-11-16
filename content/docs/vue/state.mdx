@@ -20,6 +20,9 @@ For storing information that are reactive only root level properties use one of 
 
 Takes an inner value and returns a reactive and mutable ref object, which has a single property .value that points to the inner value.
 
+ref method is used to convert non-object variables into objects and then to grant reactive.
+ref is pretty much the reactive that works also with primitives.
+
 The ref object is mutable.
 - you can assign new values to .value - it is also reactive 
 - any read operations to .value are tracked, and write operations will trigger associated effects.
@@ -40,6 +43,8 @@ console.log(count.value) // 1
 ## reactive()
 
 The reactive conversion affects all nested properties. A reactive object also deeply unwraps any properties that are refs while maintaining reactivity.
+
+If your original variable is already an object (or array), a ref wrapping is not needed because it is already a reference type. It only needs Vue's reactive functionality.
 
 ```js
 const obj = reactive({ count: 0 })
