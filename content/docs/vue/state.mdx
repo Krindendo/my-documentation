@@ -42,6 +42,10 @@ console.log(count.value) // 1
 
 ## reactive()
 
+Not finished
+
+https://stackoverflow.com/questions/66585688/what-is-the-difference-between-ref-toref-and-torefs
+
 The reactive conversion affects all nested properties. A reactive object also deeply unwraps any properties that are refs while maintaining reactivity.
 
 If your original variable is already an object (or array), a ref wrapping is not needed because it is already a reference type. It only needs Vue's reactive functionality.
@@ -91,6 +95,23 @@ obj.count = count
 
 console.log(obj.count) // 1
 console.log(obj.count === count.value) // true
+```
+
+### edge cases to watch
+
+1. the recursive creation of nested proxies can only happen if there is a nested object. If a given property does not exist, or it exists but it is not an object, no proxy can be created at that property. E.g. this is why reactivity does not work off the baz variable created by const baz = state.baz, nor the bar variable of const bar = state.foo.bar. To make it clear, what it means is that you can use state.baz and state.foo.bar in your template/computed/watch, but not baz or bar created above.
+
+2. if you extract a nest proxy out to a variable, it is detached from its original parent. This can be made clearer with an example. The second assignment below (state.foo = {bar: 3}) does not destroy the reactivity of foo, but state.foo will be a new proxy object while the foo variable still points the to original proxy object.
+
+```js
+const state = reactive({foo: {bar: 1}});
+const foo = state.foo;
+
+state.foo.bar = 2;
+foo.bar === 2; // true, because foo and state.foo are the same
+
+state.foo = {bar: 3};
+foo.bar === 3; // false, foo.bar will still be 2 
 ```
 
 ## readonly()
@@ -188,20 +209,3 @@ state.nested.bar++
 Shallow data structures should only be used for root level state in a component.
 </Callout>
 
----
-
-## computed()
-
-## triggerRef()
-
-## customRef()
-
-## toRaw()
-
-## markRaw()
-
-## effectScope()
-
-## getCurrentScope()
-
-## onScopeDispose()

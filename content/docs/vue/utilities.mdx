@@ -3,6 +3,21 @@ title: Utilities
 description: Built-in utility functions for Vue.
 ---
 
+For converting values use one of these functions:
+
+- `unref` 
+- `toRef`
+- `toValue`
+- `toRefs`
+
+For checking type use one of these functions:
+
+- `isRef`
+- `isProxy`
+- `isReactive`
+- `isReadonly`
+
+
 ## isRef()
 
 Checks if a value is a ref object.
@@ -29,9 +44,11 @@ function useFoo(x: number | Ref<number>) {
 
 ## toRef()
 
-Can be used to normalize values / refs / getters into refs.
+Converts a reactive object property to a ref that maintains its connection with the parent object.
 
-Converts a single reactive object property to a ref that maintains its connection with the parent object.
+toRef is here to handle the two edge cases mentioned for reactive.
+
+toRef can convert any property of a reactive object into a ref that is linked to its original parent. The property can be one that does not exist initially, or whose value is primitive.
 
 ```js
 const state = reactive({
@@ -41,6 +58,10 @@ const state = reactive({
 ```
 
 `toRef` is useful when you copying a property from the `reactive` object to a new variable, for example foo which contains the number 1. If you copied this to a new variable, the copy would of course be a regular, non-reactive variable having no connection to the reactive object it was copied from. If foo changed later, the copy would not, meaning the copy is not reactive.
+
+`const foo = toRef(state, 'foo')` will be very similar to `const foo = state.foo` but with two differences:
+1. `foo` is a `ref` so you need to do `foo.value`
+2. `foo` is linked to its parent, so reassigning `state.foo = {bar: 2}` will get reflected in `foo.value`
 
 ## toValue()
 
@@ -57,6 +78,8 @@ toValue(() => 1) // --> 1
 ## toRefs()
 
 Converts a reactive object to a plain object where each property of the resulting object is a ref pointing to the corresponding property of the original object. Each individual ref is created using toRef().
+
+toRefs is used for destructing a reactive object and convert all its properties to ref
 
 ```js
 const state = reactive({
@@ -90,6 +113,9 @@ function useFeatureX() {
   })
 
   // ...logic operating on state
+
+  // will not work, destruction removes reactivity
+  return {...state}; 
 
   // convert to refs when returning
   return toRefs(state)

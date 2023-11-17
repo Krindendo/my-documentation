@@ -1,4 +1,20 @@
 ---
-title: Dependency Injection
+title: Effect
 description: asd
 ---
+
+## watch()
+
+Watches one or more reactive data sources and invokes a callback function when the sources change.
+
+## watchEffect()
+
+Runs a function immediately while reactively tracking its dependencies and re-runs it whenever the dependencies are changed.
+
+## watchPostEffect()
+
+Alias of watchEffect() with flush: 'post' option.
+
+## watchSyncEffect()
+
+Alias of watchEffect() with flush: 'sync' option.
