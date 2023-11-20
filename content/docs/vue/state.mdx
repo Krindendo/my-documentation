@@ -7,6 +7,7 @@ For storing information in component use one of these functions:
 
 - `ref` 
 - `reactive`
+- `computed`
 - `readonly`
 
 For storing information that are reactive only root level properties use one of these functions:
@@ -113,6 +114,8 @@ foo.bar === 2; // true, because foo and state.foo are the same
 state.foo = {bar: 3};
 foo.bar === 3; // false, foo.bar will still be 2 
 ```
+
+## computed()
 
 ## readonly()
 

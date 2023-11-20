@@ -9,6 +9,7 @@ For converting values use one of these functions:
 - `toRef`
 - `toValue`
 - `toRefs`
+- `toRaw`
 
 For checking type use one of these functions:
 
@@ -127,6 +128,19 @@ const { foo, bar } = useFeatureX()
 
 toRefs will only generate refs for properties that are enumerable on the source object at call time. To create a ref for a property that may not exist yet, use toRef instead.
 
+## toRaw()
+
+toRaw() can return the original object from proxies created by reactive(), readonly(), shallowReactive() or shallowReadonly().
+
+This is an escape hatch that can be used to temporarily read without incurring proxy access / tracking overhead or write without triggering changes. It is not recommended to hold a persistent reference to the original object. Use with caution.
+
+```js
+const foo = {}
+const reactiveFoo = reactive(foo)
+
+console.log(toRaw(reactiveFoo) === foo) // true
+```
+
 ## isProxy()
 
 Checks if an object is a proxy created by reactive(), readonly(), shallowReactive() or shallowReadonly().
@@ -138,3 +152,4 @@ Checks if an object is a proxy created by reactive() or shallowReactive().
 ## isReadonly()
 
 The proxies created by readonly() and shallowReadonly() are both considered readonly, as is a computed() ref without a set function.
+
