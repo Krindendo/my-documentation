@@ -80,6 +80,7 @@ export const docsConfig: DocsConfig = {
           href: "/docs/vue/dependency-injection",
         },
         { title: "Advanced", href: "/docs/vue/advanced" },
+        { title: "Directives", href: "/docs/vue/directives" },
       ],
     },
     {
