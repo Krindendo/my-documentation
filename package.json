@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "concurrently \"contentlayer dev\" \"next dev\"",
     "build": "contentlayer build && next build",
+    "clean": "rm -rf .contentlayer .next node_modules",
+    "clean:windows": "powershell -File .\\scripts\\clean.ps1",
     "start": "next start",
     "lint": "next lint",
     "preview": "next build && next start",
