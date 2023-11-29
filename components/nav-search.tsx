@@ -1,5 +1,7 @@
 "use client"
 
+//TODO: https://vercel.com/templates/next.js/nextjs-openai-doc-search-starter
+
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import { CircleIcon, FileIcon } from "lucide-react"
