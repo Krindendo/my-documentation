@@ -1,7 +1,6 @@
 "use client"
 
 //TODO: https://vercel.com/templates/next.js/nextjs-openai-doc-search-starter
-
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import { CircleIcon, FileIcon } from "lucide-react"
@@ -140,7 +139,7 @@ function SearchDialog({ open, setOpen }: SearchDialogProps) {
               </CommandItem>
             ))}
         </CommandGroup>
-        {docsConfig.sidebarNav.map((group) => (
+        {docsConfig.sidebarNavDocs.map((group) => (
           <CommandGroup key={group.title} heading={group.title}>
             {group.items?.map((navItem) => (
               <CommandItem

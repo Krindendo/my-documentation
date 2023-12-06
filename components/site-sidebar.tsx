@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname, useSelectedLayoutSegment } from "next/navigation"
-import { SidebarNavItem } from "@/types"
+import { MainNavItem, SidebarNavItem } from "@/types"
 import { AnimatePresence, motion, useIsPresent } from "framer-motion"
 import { useStore } from "zustand"
 
@@ -15,6 +15,8 @@ import {
   useIsInsideMobileNavigation,
   useMobileNavigationStore,
 } from "@/components/site-sidebar-mobile"
+
+import SiteSidebarToggle from "./site-sidebar-toggle"
 
 const SIDEBAR_DEEP_LEVEL = 2
 
@@ -256,35 +258,74 @@ interface SiteSidebarProps {
 
 export function SiteSidebar({ className, ...props }: SiteSidebarProps) {
   const segment = useSelectedLayoutSegment()
+  const [toggleDocs, setToggleDocs] = React.useState(false)
+
+  const handleToggleDocs = () => {
+    setToggleDocs((prev) => !prev)
+  }
   return (
     <nav className={cn("mb-5", className)} {...props}>
+      <SiteSidebarToggle
+        toggleDocs={toggleDocs}
+        handleToggleDocs={handleToggleDocs}
+      />
       <ul role="list">
-        {docsConfig.mainNav?.map((item, index) => (
-          <li key={index} className="md:hidden">
-            <Link
-              key={index}
-              href={item.disabled ? "#" : item.href}
-              className={cn(
-                "text-sm leading-5 transition hover:text-foreground/80",
-                item.href.startsWith(`/${segment}`)
-                  ? "text-foreground"
-                  : "text-foreground/60",
-                item.disabled && "cursor-not-allowed opacity-80"
-              )}
-            >
-              {item.title}
-            </Link>
-          </li>
-        ))}
+        {toggleDocs ? (
+          <>
+            {docsConfig.mainNav?.map((item, index) => (
+              <SidebarItem index={index} item={item} segment={segment} />
+            ))}
 
-        {docsConfig.sidebarNav.map((group, groupIndex) => (
-          <NavigationGroup
-            key={group.title}
-            group={group}
-            className={groupIndex === 0 ? "md:mt-0" : undefined}
-          />
-        ))}
+            {docsConfig.sidebarNavAlgorithms.map((group, groupIndex) => (
+              <NavigationGroup
+                key={group.title}
+                group={group}
+                className={groupIndex === 0 ? "md:mt-0" : undefined}
+              />
+            ))}
+          </>
+        ) : (
+          <>
+            {docsConfig.mainNav?.map((item, index) => (
+              <SidebarItem index={index} item={item} segment={segment} />
+            ))}
+
+            {docsConfig.sidebarNavDocs.map((group, groupIndex) => (
+              <NavigationGroup
+                key={group.title}
+                group={group}
+                className={groupIndex === 0 ? "md:mt-0" : undefined}
+              />
+            ))}
+          </>
+        )}
       </ul>
     </nav>
+  )
+}
+
+interface SidebarItemProps {
+  index: number
+  item: MainNavItem
+  segment: string | null
+}
+
+function SidebarItem({ item, index, segment }: SidebarItemProps) {
+  return (
+    <li key={index} className="md:hidden">
+      <Link
+        key={index}
+        href={item.disabled ? "#" : item.href}
+        className={cn(
+          "text-sm leading-5 transition hover:text-foreground/80",
+          item.href.startsWith(`/${segment}`)
+            ? "text-foreground"
+            : "text-foreground/60",
+          item.disabled && "cursor-not-allowed opacity-80"
+        )}
+      >
+        {item.title}
+      </Link>
+    </li>
   )
 }

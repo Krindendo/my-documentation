@@ -64,9 +64,29 @@ export const Guide = defineDocumentType(() => ({
   computedFields,
 }))
 
+export const Algorithms = defineDocumentType(() => ({
+  name: "Algorithms",
+  filePathPattern: `algorithms/**/*.mdx`,
+  contentType: "mdx",
+  fields: {
+    title: {
+      type: "string",
+      required: true,
+    },
+    description: {
+      type: "string",
+    },
+    published: {
+      type: "boolean",
+      default: true,
+    },
+  },
+  computedFields,
+}))
+
 export default makeSource({
   contentDirPath: "./content",
-  documentTypes: [Doc, Guide],
+  documentTypes: [Doc, Guide, Algorithms],
   mdx: {
     remarkPlugins: [remarkGfm],
     rehypePlugins: [

@@ -2,7 +2,8 @@ import { MainNavItem, SidebarNavItem } from "types"
 
 interface DocsConfig {
   mainNav: MainNavItem[]
-  sidebarNav: SidebarNavItem[]
+  sidebarNavDocs: SidebarNavItem[]
+  sidebarNavAlgorithms: SidebarNavItem[]
 }
 
 export const docsConfig: DocsConfig = {
@@ -12,8 +13,12 @@ export const docsConfig: DocsConfig = {
       title: "Guides",
       href: "/guides",
     },
+    {
+      title: "Algorithms",
+      href: "/algorithms",
+    },
   ],
-  sidebarNav: [
+  sidebarNavDocs: [
     {
       title: "Getting Started",
       items: [
@@ -90,6 +95,17 @@ export const docsConfig: DocsConfig = {
     {
       title: "MySql",
       items: [{ title: "Introduction", href: "/docs/mysql" }],
+    },
+  ],
+  sidebarNavAlgorithms: [
+    {
+      title: "Getting Started",
+      items: [
+        {
+          title: "Introduction",
+          href: "/algorithms",
+        },
+      ],
     },
   ],
 }
