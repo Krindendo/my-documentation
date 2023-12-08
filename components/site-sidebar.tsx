@@ -270,12 +270,25 @@ export function SiteSidebar({ className, ...props }: SiteSidebarProps) {
         handleToggleDocs={handleToggleDocs}
       />
       <ul role="list">
+        {docsConfig.mainNav?.map((item, index) => (
+          <li key={index} className="md:hidden">
+            <Link
+              key={index}
+              href={item.disabled ? "#" : item.href}
+              className={cn(
+                "text-sm leading-5 transition hover:text-foreground/80",
+                item.href.startsWith(`/${segment}`)
+                  ? "text-foreground"
+                  : "text-foreground/60",
+                item.disabled && "cursor-not-allowed opacity-80"
+              )}
+            >
+              {item.title}
+            </Link>
+          </li>
+        ))}
         {toggleDocs ? (
           <>
-            {docsConfig.mainNav?.map((item, index) => (
-              <SidebarItem index={index} item={item} segment={segment} />
-            ))}
-
             {docsConfig.sidebarNavAlgorithms.map((group, groupIndex) => (
               <NavigationGroup
                 key={group.title}
@@ -286,10 +299,6 @@ export function SiteSidebar({ className, ...props }: SiteSidebarProps) {
           </>
         ) : (
           <>
-            {docsConfig.mainNav?.map((item, index) => (
-              <SidebarItem index={index} item={item} segment={segment} />
-            ))}
-
             {docsConfig.sidebarNavDocs.map((group, groupIndex) => (
               <NavigationGroup
                 key={group.title}
@@ -301,31 +310,5 @@ export function SiteSidebar({ className, ...props }: SiteSidebarProps) {
         )}
       </ul>
     </nav>
-  )
-}
-
-interface SidebarItemProps {
-  index: number
-  item: MainNavItem
-  segment: string | null
-}
-
-function SidebarItem({ item, index, segment }: SidebarItemProps) {
-  return (
-    <li key={index} className="md:hidden">
-      <Link
-        key={index}
-        href={item.disabled ? "#" : item.href}
-        className={cn(
-          "text-sm leading-5 transition hover:text-foreground/80",
-          item.href.startsWith(`/${segment}`)
-            ? "text-foreground"
-            : "text-foreground/60",
-          item.disabled && "cursor-not-allowed opacity-80"
-        )}
-      >
-        {item.title}
-      </Link>
-    </li>
   )
 }
