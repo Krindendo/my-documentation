@@ -12,3 +12,170 @@ avl trees
 
 
 https://frontendmasters.com/courses/algorithms/
+
+
+## Big O Time Complexity
+
+Big O is a way to categorize your algorithms time or memory requirements based on input. It is meant to generalize the growth of your algorithm or how fast does computation or memory grow?
+
+Often it will help us make decisions about what data strucures and algorithms to use. Knowing how they will perform can greatly help create the best posible program out there.
+
+```ts
+function sum_char_codes(n: string): number {
+  let sum = 0;
+  for(let i = 0; i < n.length; ++i){
+    // convert the string as a sequence of UTF-16 code units
+    sum += n.charCodeAt(i)
+  }
+
+  return sum
+}
+```
+
+How can you tell that this code is O(N) time complexity?
+
+Simplest trick for complexity is ``Look for loops``
+
+Important concepts
+
+1. growth is with respect to the input
+
+2. Constants are dropped
+
+O(2N) -> O(N) and this makes sense. That is because Big O is meant to describe the growth of the algorithm. The constant eventually becomes irrelevant.
+
+Example below is also O(N)
+
+```ts
+function sum_char_codes(n: string): number {
+  let sum = 0;
+  for(let i = 0; i < n.length; ++i){
+    // convert the string as a sequence of UTF-16 code units
+    sum += n.charCodeAt(i)
+  }
+
+    for(let i = 0; i < n.length; ++i){
+    // convert the string as a sequence of UTF-16 code units
+    sum += n.charCodeAt(i)
+  }
+
+  return sum
+}
+```
+
+Take the following:
+
+N = 1, O (10N) = 10, O(N^2) = 1
+
+N = 5, O (10N) = 50, O(N^2) = 25
+
+N = 100, O (10N) = 1000, O(N^2) = 10.000 // 10x bigger
+
+N = 1000, O (10N) = 10000, O(N^2) = 1.000.000 // 100x bigger
+
+N = 10.000, O (10N) = 1.000.000 , O(N^2) = 100.000.000 // 1000x bigger
+
+Practically speaking, constants are extremely important. Theoretically they're not important, that is because we're not trying to get exact time, but it's how does it grow?
+
+There is practical vs theoretical differences
+
+Just because N is faster then N^2, doesn't mean practically its always faster for smaller input.
+
+Therefore O(100N) is faster then O(N^2) but practically speaking, you would probably win for some small set of input.
+
+But just like in sorting algorithms, often it will use insertion sort for smaller subsets of data. Because insertion sort, though slower in theoretical terms, because it is O(N^2) is actually faster then say quicksort witch is log(N) when it comes to small datasets
+
+
+Worst Case
+
+In BigO we often consider the worst case. Especially in interviews.
+
+Therefore any string with E in it will terminate early (unless E is the last item in the list).
+ITS STILL 0(N)
+
+```ts
+function sum_char_codes(n: string): number {
+  let sum = 0;
+  for(let i=0; i< n.length; ++i){
+    const charCode = n.charCodeAt(i);
+    // Capital E
+    if(charCode === 69){
+      return sum
+    }
+    sum += charCode;
+  }
+  return sum
+}
+```
+
+Important concepts
+
+1. Growth is with respect to the input
+
+2. Constants are dropped
+
+3. Worst case is usually the way we measure
+
+<img src="/images/algorithms/ece920b.png" alt="Big O Time Complexity " />
+
+### O(N^2)
+
+```ts
+function sum_char_codes(n: string): number{
+  let sum = 0;
+  for(let i=0; i < n.length; ++i){
+    for(let j=0; j < n.length; ++j){
+      sum += charCode;
+    }
+  }
+  return sum;
+}
+```
+
+### O(N^3)
+
+```ts
+function sum_char_codes(n: string): number{
+  let sum = 0;
+  for(let i=0; i < n.length; ++i){
+    for(let j=0; j < n.length; ++j){
+      for(let k=0; k < n.length; ++k){
+        sum += charCode;
+      }
+    }
+  }
+  return sum;
+}
+```
+
+### O(n log n)
+
+Quicksort
+
+### O(log n)
+
+Binary search trees
+
+---
+
+There is technically a bunch of different ways to measure the complexity of algorithms like Stata, little omega, but in general the easiest one to use is the "Upper Bound".
+
+
+## Arrays Data Structure
+
+Array is unbreaking memory space in which conains a certain amount of bytes. 
+
+How memory is interpreted is based on what you tell the compiler how to interpret it. 
+
+Because an array is simply a collection of bits, we'll instruct the compiler on how to interpret that memory.
+
+This means we'll take one bunch of bits from the array and treat them like a single number. This means we'll notify the compiler that that particular group of bytes in memory has a special meaning.
+
+Just because it's contiguous, just because is's all one piece of memory doesn't mean that it has any specific meaning until you give it meaning. So, an array is effectively just a big, long version of group of bites.
+
+
+If we have A=int[3] that meains i want three ints in contiguous space, unbreakable like for me to be able to use.
+
+If you wanted A0, it is really telling the compiler go to memory address of A, then add in the `offset of zero multiplied by how big my type is`, because if your time is 32 bits or 4 bytes, index one has to be 4 bytes into the array or memory space. And that's kind of what creates an actual array.
+
+
