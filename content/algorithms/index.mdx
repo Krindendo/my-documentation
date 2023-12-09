@@ -178,4 +178,23 @@ If we have A=int[3] that meains i want three ints in contiguous space, unbreakab
 
 If you wanted A0, it is really telling the compiler go to memory address of A, then add in the `offset of zero multiplied by how big my type is`, because if your time is 32 bits or 4 bytes, index one has to be 4 bytes into the array or memory space. And that's kind of what creates an actual array.
 
+When you want to insert something in array, it doesn't insert it, it actually overwrites it. It do not get to grow your array into more memory, because what happend if right after that array is stored value for user name. If you grow array, it will overide user name. So we can't just grow array just simply. If you want to delete value from array, you don't delete something out of contiguous memory, it will set it to zero.
+
+What is BigO for array?
+
+If you want to insert something into array, it will do with this formula: 
+
+a + width * offset
+
+a is memory address
+
+width of type which is usualy specified in bytes like, 32 bit integer is 4 bytes 
+
+offset is position for that place in array - a[2] - offset is 2
+
+BigO for array is O(1) - constant time, because nothing in this formula goes over the entire array. We do not have to walk to that position, we know width of type and the offset, we multiply them together, get to that position and read out the value.
+
+It doesn't mean we literally only do one thing. It just means we do constant amount of things no matter what the input is, it does not grow with input at all.
+
+
 
