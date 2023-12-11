@@ -259,10 +259,21 @@ interface SiteSidebarProps {
 export function SiteSidebar({ className, ...props }: SiteSidebarProps) {
   const segment = useSelectedLayoutSegment()
   const [toggleDocs, setToggleDocs] = React.useState(false)
+  const pathname = usePathname()
 
   const handleToggleDocs = () => {
     setToggleDocs((prev) => !prev)
   }
+
+  React.useEffect(() => {
+    if (pathname.includes("algorithms")) {
+      setToggleDocs(true)
+    }
+    if (pathname.includes("docs")) {
+      setToggleDocs(false)
+    }
+  }, [pathname])
+
   return (
     <nav className={cn("mb-5", className)} {...props}>
       <SiteSidebarToggle
