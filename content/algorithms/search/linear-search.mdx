@@ -1,9 +1,15 @@
 ---
 title: Linear Search
-description: Things that make you happy and have fun
+description: test
 ---
 
-It is O(N)
+<h3 className="text-lg font-semibold">- How it works</h3>
+
+It is walking linearly until it finds the value.
+
+<h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
+
+It is **O(N)**.
 
 ```ts
 export default function linear_search(haystack: number[], needle: number): boolean {
@@ -12,7 +18,6 @@ export default function linear_search(haystack: number[], needle: number): boole
       return true
     }
   }
-
   return false
 }
 ```

@@ -107,5 +107,18 @@ export const docsConfig: DocsConfig = {
         },
       ],
     },
+    {
+      title: "Search",
+      items: [
+        {
+          title: "Linear search",
+          href: "/algorithms/search/linear-search",
+        },
+        {
+          title: "Binary search",
+          href: "/algorithms/search/binary-search",
+        },
+      ],
+    },
   ],
 }
