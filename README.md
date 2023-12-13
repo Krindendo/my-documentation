@@ -20,3 +20,17 @@ I made this app to help me with my work and to keep track of my progress.
 // Highlight line 1 and line 3 to 6
 ```
 ````
+
+### comitlint
+
+- build =>
+- chore =>
+- ci =>
+- docs =>
+- feat => 
+- fix => 
+- perf =>
+- refactor =>
+- revert =>
+- style =>
+- test =>

@@ -111,12 +111,29 @@ export const docsConfig: DocsConfig = {
       title: "Search",
       items: [
         {
+          title: "Introduction",
+          href: "/algorithms/search",
+        },
+        {
           title: "Linear search",
           href: "/algorithms/search/linear-search",
         },
         {
           title: "Binary search",
           href: "/algorithms/search/binary-search",
+        },
+      ],
+    },
+    {
+      title: "Sorting",
+      items: [
+        {
+          title: "Introduction",
+          href: "/algorithms/sort",
+        },
+        {
+          title: "Bubble sort",
+          href: "/algorithms/sort/bubble-sort",
         },
       ],
     },
