@@ -1,0 +1,47 @@
+---
+title: Linked list data structures
+description: test
+---
+
+- Singly linked list
+
+- Doubly linked list
+
+The difference between a singly-lined and a doubly-linked list is that nodes in a doubly-linked list know what the previous node is.
+
+<h3 className="text-lg font-semibold">- How it works</h3>
+
+Data is organized in such a way that you will be able to visit nodes, and it will also point to the next node.
+Node is often a container item witch have value of type T and next which could contain an value of another node.
+
+If we have node A,B,C,D in 
+
+- singly linked list: node A will point to node B, node B will point to node C ....
+
+- doubly linked list: node A will point to node B, but node B can point to node C and to point A.
+
+Because in singly linked list, node doesnt have reference to previous node so after you go forward, you will lost value from previous node.
+
+Also if you get node A to point to node C, you will lost node B, and you ...
+
+<h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
+
+- prepend/append 
+- Insertion in the middle
+- Deletion from ends
+- Deletion from the middle
+- Get head/tail
+- Get in general
+
+```ts
+interface LinkedList<T>{
+  get length(): number;
+  insertAt(item: T, index: number): void;
+  remove(item: T) : T | undefined;
+  removeAt(index: number): T | undefined;
+  append(item: T): void;
+  prepend(item: T): void;
+  get(index: number): T | undefined;
+}
+```
+

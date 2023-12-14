@@ -18,7 +18,7 @@ After the first iteration, the highest number will be at the end of the array, s
 
 Running time for this algorithm is (N*(N-1))/2. But how?
 
-example - add number 1 to 100
+example - add the numbers from 1 to 100 as written in the example
 
 1...100 = 101
 2...99  = 101
@@ -36,15 +36,15 @@ example - add number 1 to 100
 
 It is **O(N^2)**.
 
-Lets continue from example: add number 1 to 100
+Lets continue from example: add the numbers from 1 to 100 as written in the example
 
 Because we dont need constants. Formula is N(N+1) => N^2 + N 
 
-Now we will ignore ninsignificant values so formula is N^2
+Now we will ignore non significant values so formula is N^2
 
-....
+The reason why we drop N from N^2 + N is just because it will not drastically change the result.
 
-
+If we take input (N) to be 10 000. 10 000^2 + 10 000 = 100 010 000, so N in N^2 + N formula is insignificant so we remove it.
 
 ```ts
 export default function bubble_sort(arr: number[]): void {

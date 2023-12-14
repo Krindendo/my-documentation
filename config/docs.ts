@@ -135,6 +135,10 @@ export const docsConfig: DocsConfig = {
           title: "Bubble sort",
           href: "/algorithms/sort/bubble-sort",
         },
+        {
+          title: "Linked list data structures",
+          href: "/algorithms/sort/linked-list-data-structures",
+        },
       ],
     },
   ],
