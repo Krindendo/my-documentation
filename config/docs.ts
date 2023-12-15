@@ -139,6 +139,23 @@ export const docsConfig: DocsConfig = {
           title: "Linked list data structures",
           href: "/algorithms/sort/linked-list-data-structures",
         },
+        {
+          title: "Queue",
+          href: "/algorithms/sort/queue",
+        },
+        {
+          title: "Stack",
+          href: "/algorithms/sort/stack",
+        },
+      ],
+    },
+    {
+      title: "Arrays",
+      items: [
+        {
+          title: "Introduction",
+          href: "/algorithms/arrays",
+        },
       ],
     },
   ],
