@@ -156,6 +156,14 @@ export const docsConfig: DocsConfig = {
           title: "Introduction",
           href: "/algorithms/arrays",
         },
+        {
+          title: "Array list",
+          href: "/algorithms/arrays/array-list",
+        },
+        {
+          title: "Array buffer",
+          href: "/algorithms/arrays/array-buffer",
+        },
       ],
     },
   ],
