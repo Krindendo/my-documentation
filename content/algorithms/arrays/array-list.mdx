@@ -5,4 +5,32 @@ description: test
 
 <h3 className="text-lg font-semibold">- How it works</h3>
 
+Array list is where instead of heaving underlying container, we have an array of generic T. 
+So we are using array for fundamental datatype instead of node-based structure.
+
+For example are having array from 0 to 3 and in that array we have only one value, 2. That means we have a length of 1 and we have capacity of 3.
+
+So with get(idx) we need to check if idx is greater then or equal to length, so then we could throw some error. 
+
+If we want to push new value we first need to check if length is in capacity if it does, then just add another value, and increment length if not
+
+we need to make new array with doble capacity, then copy all data to new array and then add new value. And when you remove value from array, you dont need to reduce capacity of array. We could if we have device with extremely low memory but we dont need to do that.
+
+You dont need to clean up values when you removing them, you only need to store length of array.
+
+If we want to enqueue in array list with values \[2,3,5\] there is length is 3 and capacity is 3. First we need to grow our capacity. So our capacity is now 6.
+For enqueue we can now push new value from begining of the array. But if we do that immediately we will overriten value 2. So first we need to move all values in array to one value to right. Result is to have array list with values \[null,2,3,5\]. Now we created the spot where we can insert new value.
+
 <h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
+
+-- Check this --
+
+- get(idx) - O(1)
+- push(value:T) - O(1)
+- pop(): T | undefined - O(1)
+- enqueue - add value to the queue or push to the queue - O(N)
+- deque - removing value from the queue - O(N)
+- Deletrion/Insertion at beginning of list - enqueue(unshift) - deque(shift) - O(N)
+- Deletrion/Insertion in the middle - O(N)
+- Deletrion/Insertion at end of list - O(1)
+
