@@ -11,7 +11,7 @@ A Queue is just a specific implementation of **singly linked list**. It is simpl
 
 Let asume that we have list with node A,B,C,D. To make queue work we also need node head and node tail. 
 
-<img src="/images/algorithms/queueBase.png" alt="Queue example" className="my-6" />
+<img src="/images/algorithms/queue-base.png" alt="Queue example" className="my-6" />
 
 If we wish to insert node E into the queue, we will grab the last node from tail, which in our example is D, and D will now point to E, and then we will update tail to point to E.
 
@@ -19,7 +19,7 @@ If we want to pop node A, we will get from head point, what is the first node, w
 
 <h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
 
-It's **N(1)**
+It's **O(1)**
 
 - enqueue(unshift) - add value to the queue or push to the queue
 - deque(shift) - removing value from the queue

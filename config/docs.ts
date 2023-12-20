@@ -168,7 +168,10 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "Recursion",
-      items: [{ title: "Introduction", href: "/algorithms/recursion" }],
+      items: [
+        { title: "Introduction", href: "/algorithms/recursion" },
+        { title: "Path finding", href: "/algorithms/recursion/path-finding" },
+      ],
     },
   ],
 }

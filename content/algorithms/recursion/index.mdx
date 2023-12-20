@@ -3,6 +3,8 @@ title: Recursion
 description: test
 ---
 
+- [Path finding](/algorithms/recursion/path-finding)
+
 The simplest way to think of recursion is a function that calls itself until the problem is solved. This usually involves what is referred to as a "base case." A base case is the point in which the problem is solved at.
 
 ```ts title="The simplest example"
@@ -40,6 +42,15 @@ procedure for recursion function above:
 when we get value 1 then we finally stopped recursing. We've hit a base case and we no loger need to keep calling functions.
 Now it goes back. 2 plus return value 1, then 3 plus returned value 3 ...
 
-...........
+First it will go down the stack, then up the stack. So there is two steps: 
 
--4:31
+- base case
+- recurse
+
+when we hit base case then we stop recursing and we undo our function stack. 
+
+Recurse can actually be broken into three steps:
+
+- pre - you can do something before you recurse - n+ (from example above, 2+, 3+, 4+, 5+)
+- recurse - which does the calling of the function
+- post - we can do something else after recursing
