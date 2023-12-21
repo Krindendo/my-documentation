@@ -147,6 +147,10 @@ export const docsConfig: DocsConfig = {
           title: "Stack",
           href: "/algorithms/sort/stack",
         },
+        {
+          title: "Quick sort",
+          href: "/algorithms/sort/quick-sort",
+        },
       ],
     },
     {
