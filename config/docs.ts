@@ -108,6 +108,28 @@ export const docsConfig: DocsConfig = {
       ],
     },
     {
+      title: "Data structures",
+      items: [
+        {
+          title: "Introduction",
+          href: "/algorithms/data-structures",
+        },
+        {
+          title: "Queue",
+          href: "/algorithms/data-structures/queue",
+        },
+        {
+          title: "Stack",
+          href: "/algorithms/data-structures/stack",
+        },
+
+        {
+          title: "Trees",
+          href: "/algorithms/data-structures/trees",
+        },
+      ],
+    },
+    {
       title: "Search",
       items: [
         {
@@ -134,18 +156,6 @@ export const docsConfig: DocsConfig = {
         {
           title: "Bubble sort",
           href: "/algorithms/sort/bubble-sort",
-        },
-        {
-          title: "Linked list data structures",
-          href: "/algorithms/sort/linked-list-data-structures",
-        },
-        {
-          title: "Queue",
-          href: "/algorithms/sort/queue",
-        },
-        {
-          title: "Stack",
-          href: "/algorithms/sort/stack",
         },
         {
           title: "Quick sort",

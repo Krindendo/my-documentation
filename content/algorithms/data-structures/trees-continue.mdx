@@ -1,0 +1,46 @@
+---
+title: Trees
+description: test
+---
+
+This file will now exist. Merge to Trees.
+
+Breadth First Search
+
+<h3 className="text-lg font-semibold">- How it works</h3>
+
+Breadth First Search is kinda like the opposite of a depth frist search. Breadth first search will goind to visit first node, then it's gonna visit first node in next row,  then secound node in first row, then first node in secound row and so on.
+
+<img src="/images/algorithms/tree-graph-BFS.png" alt="Tree graph" className="my-6" />
+
+Let's draw this out again using a queue. 
+
+So we are starting with 7. First node have value 7 and children 23 and 8. So In Queue we are adding, 23 and 8. Now Queue looks like this 7 -> 23 -> 8.
+Because node with value 7 doesnt have any other children then we will pop off 7 and print out 7. 
+Then we will visit node with value 23. 23 have two children 5 and 4 so we will add them to queue now our queue is 23 -> 8 -> 5 -> 4. Then we will pop up 23 and print out 23.
+Now it is \[7,23\].Next in queue is 8, then we will visit his children. We will repeat this until we dont have value in our queue. End array will be \[7,23,8,5,4,21,15\]
+
+<h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
+
+Big O for Beadth First Search is **O(N)** but if we using javascript array then it will be **O(N^2)**
+
+```ts
+export default function bfs(head: BinaryNode<number>, needle: number):boolean {
+  const q: (BinaryNode<number> | null)[] = [head];
+  while(q.length){
+    const curr = q.shift() as BinaryNode<number> | undefined | null;
+    if(!curr){
+      continue;
+    }
+    //search
+    if(curr. value === needle){
+      return true;
+    }
+
+    q.push(curr.left);
+    q.push(curr.right);
+  }
+
+  return false;
+}
+```

@@ -1,0 +1,118 @@
+---
+title: Trees
+description: test
+---
+
+A tree usually are represented by nodes. There is different ways we can represent a node in tree:
+
+```ts
+interface TreeNode<T>{
+  value: T,
+  children: []
+}
+
+interface BinaryTreeNode<T>{
+  value: T,
+  left: BinaryTreeNode<T>,
+  right: BinaryTreeNode<T>,
+}
+```
+
+### Terminology
+
+- root - the most parent node. The First.
+- height - the longest path from the root to the most child node.
+- binary tree - a tree in which has at most 2 children, at least 0 children
+- general tree - a tree with 0 or more children
+- binary search tree - a tree in which has a specific ordering to the nodes and at most 2 children
+- leaves - a node without children
+- balanced - a tree is perfectly balanced when any node's left and right children have the same height.
+- branching factor - the amount of children a tree has.
+
+---
+
+<h3 className="text-lg font-semibold">- How it works</h3>
+
+<img src="/images/algorithms/tree-graph.png" alt="Tree graph" className="my-6" />
+
+<h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
+
+It's **O(N)**
+
+
+### Traversals
+
+There are different ways in which you can visit the nodes of a tree. And these types of traversals are known as DFS (depth first search or depth first traversal)
+
+- pre order - \[7,23,5,4,3,18,21\]
+- in order - \[5,23,4,7,18,3,21\]
+- post order - \[5,4,23,18,21,3,7\]
+
+```ts title="pre order"
+function walk(curr: BinaryNode<number> | null, path: number[]):number[]{
+  if(!curr){
+    return path;
+  }
+
+  // recurse
+  // pre
+  path.push(curr.value);
+
+  // recurse
+  walk(curr.left, path);
+  walk(curr.right, path);
+
+  // post
+  return path;
+
+}
+
+export default function pre_order_search(head: BinaryNode<number>): number[]{
+  return walk(head,[])
+}
+```
+```ts title="in order"
+function walk(curr: BinaryNode<number> | null, path: number[]):number[]{
+  if(!curr){
+    return path;
+  }
+  
+  // recurse
+  walk(curr.left, path);
+  // pre
+  path.push(curr.value);
+  // recurse
+  walk(curr.right, path);
+
+  // post
+  return path;
+
+}
+
+export default function in_order_search(head: BinaryNode<number>): number[]{
+  return walk(head,[])
+}
+```
+
+```ts title="post order"
+function walk(curr: BinaryNode<number> | null, path: number[]):number[]{
+  if(!curr){
+    return path;
+  }
+  
+  // recurse
+  // pre
+  // recurse
+  walk(curr.left, path);
+  walk(curr.right, path);
+
+  // post
+  path.push(curr.value);
+  return path;
+
+}
+
+export default function post_order_search(head: BinaryNode<number>): number[]{
+  return walk(head,[])
+}
+```
