@@ -44,3 +44,84 @@ export default function bfs(head: BinaryNode<number>, needle: number):boolean {
   return false;
 }
 ```
+
+Diferance between depth first search vs breath first search.
+
+**Depth first search does preserve shape, wheareas breath first search does not.**
+
+- complete tree is where all left and right is completely filled and it has the same height.
+- non-complete tree is oposite of complete tree.
+
+## Binary search tree
+
+Binary search tree is still binary tree, but there is a rule that has to be applied at every node. Left side has to be less then or equal to parrent value and right side has to be greater than parrent value.
+
+<img src="/images/algorithms/binary-tree.png" alt="Tree graph" className="my-6" />
+
+Example below is to check if two binary trees is equal in shape and in strucutre.
+
+```ts
+export default function compareTrees(a: BinaryNode<number> | null, b: BindaryNode<number> | null): boolean {
+  if(a === null && b === null){
+    return true;
+  }
+
+  if(a === null || b === null){
+    return false;
+  }
+
+  if(a.value !== b.value){
+    return false;
+  }
+
+  return campare(a.left, b.left) && compare(a.right, b.right);
+
+}
+```
+
+### Find value
+
+<h3 className="text-lg font-semibold">- How it works</h3>
+
+Because we know that left side is smaller value of parrent value and right side is bigger then value, then we know what path to choose to find our value.
+
+<h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
+
+It's between **O(logN)** and **O(N)**
+
+```ts
+function binarySearchTree(curr: BinaryNode<number> | null, needle: number):boolean {
+  if(!curr){
+    return false;
+  }
+  if(curr.value === needle){
+    return true;
+  }
+
+  if(curr.value < needle){
+    return search(curr.right, needle);
+  }
+
+  return search(curr.left, needle);
+}
+
+
+export default function dfs(head: BinaryNode<number>, needle: number): boolean{
+  return search(head, needle);
+}
+
+```
+
+### Insert value
+
+6:05:21
+
+<h3 className="text-lg font-semibold">- How it works</h3>
+
+<h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
+
+### Delete value
+
+<h3 className="text-lg font-semibold">- How it works</h3>
+
+<h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
