@@ -122,10 +122,13 @@ export const docsConfig: DocsConfig = {
           title: "Stack",
           href: "/algorithms/data-structures/stack",
         },
-
         {
           title: "Trees",
           href: "/algorithms/data-structures/trees",
+        },
+        {
+          title: "Heap",
+          href: "/algorithms/data-structures/heap",
         },
       ],
     },
