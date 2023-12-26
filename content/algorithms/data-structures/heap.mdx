@@ -1,0 +1,107 @@
+---
+title: Heap
+description: Heap or Priority Queue
+---
+
+The simplest way to put it is a binary tree where every child and grand child is smaller (MaxHeap), or larger (MinHeap) than the current node. It is self-balancing.
+
+- Whenever a node is added, we must adjust the tree
+
+- Whenever a node is deleted, we must adjust the tree
+
+<img src="/images/algorithms/heap-graph.png" alt="Heap graph" className="my-6" />
+
+<h3 className="text-lg font-semibold">- How it works</h3>
+
+<h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
+
+- Insert is **O(N)**
+
+- Deleting is  **O(N)**
+
+```ts
+export default class MinHeap{
+  public length: number;
+  private data: number[];
+
+  constructor(){
+    this.data = [];
+    this.length = 0;
+  }
+
+  insert(value: number): void {
+    this.data[this.lenghth] = value;
+    this.heapifyUp(this.length);
+    this.length++;
+  }
+  delete(): number | undefined{
+    if(this.length === 0){
+      return undefined;
+    }
+
+    const out = this.data[0];
+    this.length--;
+
+    if(this.length === 0){
+      this.data = []
+      return out;
+    }
+
+    this.data[0] = this.data[this.length];
+    this.heapifyDown(0);
+    return out;
+
+  }
+
+  private heapifyDown(idx: number): void {
+    const lIdx = this.leftChild(idx);
+    const rIdx = this.rightChild(idx);
+
+    if(idx >= this.lenghth || lIdx >= this.lenght){
+      return;
+    }
+
+    const lV = this.data[lIdx];
+    const rV = this.data[rIdx];
+    const v = this.data[Idx];
+
+    if(lV > rV && v > rV){
+      this.data[idx] = rV;
+      this.data[rIdx] = v;
+      this.heapifyDown(rIdx);
+    }
+    else if(rV > lV && v > lV){
+      this.data[idx] = lV;
+      this.data[lIdx] = v;
+      this.heapifyDown(lIdx);
+    }
+
+  }
+
+  private heapifyUp(idx: number): void {
+    if(idx === 0){
+      return;
+    }
+    const p = this.parent(idx);
+    const parentV = this.data[p];
+    const v = this.data[idx];
+
+    if(parentV > v){
+      this.data[idx] = parentV;
+      this.data[p] = v;
+      this.heapifyUp(p);
+    }
+  }
+
+  private parent(idx: number): number {
+    return Math.floor((idx - 1) / 2)
+  }
+  private leftChild(idx: number): number {
+    return idx * 2 + 1
+  }
+  private rightChild(idx: number): number {
+    return idx * 2 + 2
+  }
+}
+
+```

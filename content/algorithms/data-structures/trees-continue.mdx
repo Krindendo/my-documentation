@@ -114,14 +114,47 @@ export default function dfs(head: BinaryNode<number>, needle: number): boolean{
 
 ### Insert value
 
-6:05:21
-
 <h3 className="text-lg font-semibold">- How it works</h3>
 
+Insertion is a lot like find. 
+
+Before we want to insert some value, we need to find location where to insert it. On that way we will preserve the rule of the binary tree.
+
+Left subtree will be less then or equal to parent value, and right subtree will be bigger then parent value.
+
+```js
+insert(node,v)
+
+if (node.v < n)
+insert(node.r, v)
+
+else if(node.v >= v)
+insert(node.l, v)
+
+```
+
 <h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
+
+It's between **O(logN)** and **O(N)** . N is height of tree.
 
 ### Delete value
 
 <h3 className="text-lg font-semibold">- How it works</h3>
+
+<img src="/images/algorithms/trees-delete-value.png" alt="Tree graph for deleting value" className="my-6" />
+
+We need to preserve the rule of the binary tree and there are multiple scenario what can happend because of that:
+
+If we want to remove number 4. Because 4 does not have any children, then tree will be still valid.
+
+case 1: no child -> just delete
+
+If we want to remove 7. Then we will make 15 to point to 4 to tree be valid.
+
+case 2: one child -> set parent to child
+
+If we want to remove 51 we first need to find largest value from left side or smallest value from the right side. Then we will put that item on position where we want to remove value. You will chose one path or another base on maximum height of that subtree. You can remove from side were is bigger height to shrink tree.
+
+case 3 two child -> 
 
 <h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
