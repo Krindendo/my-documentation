@@ -1,0 +1,47 @@
+---
+title: Graphs
+description: test
+---
+
+Graph is a series of nodes with some amount of connections. There is no rules. It's just, there's a lot of connections between nodes or some connections or no connections.
+
+
+<img src="/images/algorithms/graph-example.png" alt="Graph dag" className="my-6" />
+
+### Terminology
+
+#### Graph Terms
+
+cycle: When you start at Node(x), follow the links, and end back at Node(x) - A -> B -> C -> D -> A
+
+acyclic: A graph that contains no cycles
+
+connected: When every node has a path to another node. Every node can reach to every other node.
+
+not fully connectd graph is when we have node E that had a one way direction from C to E. Then Every node can reach E but E can't reach other nodes.
+
+directed: When there is a direction to the connections. - There are one-way connections or the connections are asymmetric.
+
+undirected: !directed. This means that nodes don't have any direction associated with them. You can go both ways.
+
+weighted: The edges have a weight associated with them. Think Google Maps -> In one direction from example A to B cost 10 pounds but direction B to A costs 20 pounds.
+
+dag: Directed, acyclic graph - example below - Is when you can't quite make it to any other node, everything has a terminus. So B could go all the way to C but it can't go any furher.
+
+<img src="/images/algorithms/graph-dag.png" alt="Graph dag" className="my-6" />
+
+#### Implementation Terms
+
+node: a point or vertex on the graph
+
+edge: the connection betxit two nodes
+
+
+<h3 className="text-lg font-semibold">- How it works</h3>
+
+<h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
+
+BigO is commonly started in terms of V and E where V stands for vertices and E stands for edges.
+So O(V * E) means that we will check every vertex and on every vertex we check every edge.
+
+For every Verte, we would visit every single edge in the graph.

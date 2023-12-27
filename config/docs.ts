@@ -130,6 +130,14 @@ export const docsConfig: DocsConfig = {
           title: "Heap",
           href: "/algorithms/data-structures/heap",
         },
+        {
+          title: "Tries",
+          href: "/algorithms/data-structures/tries",
+        },
+        {
+          title: "Graphs",
+          href: "/algorithms/data-structures/graphs",
+        },
       ],
     },
     {
