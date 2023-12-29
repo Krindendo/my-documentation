@@ -138,6 +138,14 @@ export const docsConfig: DocsConfig = {
           title: "Graphs",
           href: "/algorithms/data-structures/graphs",
         },
+        {
+          title: "Maps",
+          href: "/algorithms/data-structures/maps",
+        },
+        {
+          title: "Least recently used",
+          href: "/algorithms/data-structures/lru",
+        },
       ],
     },
     {
