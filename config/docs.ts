@@ -94,7 +94,10 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "MySql",
-      items: [{ title: "Introduction", href: "/docs/mysql" }],
+      items: [
+        { title: "Introduction", href: "/docs/mysql" },
+        { title: "Schema", href: "/docs/mysql/schema" },
+      ],
     },
   ],
   sidebarNavAlgorithms: [

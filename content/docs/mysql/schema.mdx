@@ -1,0 +1,80 @@
+---
+title: Schema
+description: test
+---
+
+## 3 guiding principles regardless of what the data type is:
+
+- Columns should be small
+
+- Simples data type
+
+- It should be honest - schema should reflect reality
+
+More compact data is the faster database will be able to access it.
+
+### Integers
+
+| Type | Storage (bytes) | Minimum Signed | Maximum Signed | Minimum Unsigned | Maximum Unsigned |
+| --- | ----: | ----: | --- | ----: | --- |
+| TINYINT | 1  | -128 | 127 | 0 | 255 |
+| SMALLINT | 2  | -32768 | 32767 | 0 | 65535 |
+| MEDIUMINT | 3  | -8388608 | 8388607 | 0 | 16777215 |
+| INT | 4  | -2147483648 | 2147483647 | 0 | 4294967295 |
+| BIGINT | 8  | -2^63 | 2^63-1 | 0 | 2^64-1 |
+
+TINYINT can have negative numbers, then it need to have range from -128 to +127, thats because with negative number it shift bits to 1:
+
+0 1111111 - -128
+
+0 0000000 - -1
+
+1 0000000 - +0
+
+1 1111111 - +127
+
+### Decimals
+
+- DECIMAL: a fixed-precision data type that stores **exact values**.
+
+- FLOAT: a floating-point data type that stores **approximate values**.
+
+- DOUBLE: a floating-point data type that stores larger and more precise values than FLOAT.
+
+To define DECIMAL it need to be define how many digits there are and how many digits should occur after the decimal point.
+
+For example, suppose you want to store a maximum of 10 digits, with two digits after the decimal, the syntax would be:
+
+```sql
+DECIMAL(10,2)
+```
+
+### Strings
+
+- CHAR - fixed lenght character  example: md hash, 2 digit string, something that will always going to be same size
+
+- VARCHAR - variable character
+
+- TINYTEXT
+
+- TEXT
+
+- MEDIUMTEXT
+
+- LONGTEXT
+
+- BINARY
+
+- VARBINARY
+
+- TINYBLOB
+
+- BLOB
+
+- MEDIUMBLOB
+
+- LONGBLOB
+
+- ENUM
+
+- SET
