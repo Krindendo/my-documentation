@@ -51,30 +51,96 @@ DECIMAL(10,2)
 
 ### Strings
 
-- CHAR - fixed lenght character  example: md hash, 2 digit string, something that will always going to be same size
+- CHAR - fixed lenght character  example: two-digit prefixes, MD5 hashes, something that will always going to be same size
 
 - VARCHAR - variable character
-
+---
 - TINYTEXT
 
-- TEXT
+- TEXT - columns are used to store character data, such as strings of text
 
 - MEDIUMTEXT
 
-- LONGTEXT
+- LONGTEXT - it can store up to 4gb of data
+---
+- BINARY - It is similar to the CHAR. CHAR store characters but BINARY only store bytes.
 
-- BINARY
-
-- VARBINARY
-
+- VARBINARY - It is similar to the VARCHAR. VARCHAR store characters but VARBINARY only store bytes. 
+---
 - TINYBLOB
 
-- BLOB
+- BLOB - are used to store binary data
 
 - MEDIUMBLOB
 
-- LONGBLOB
-
-- ENUM
+- LONGBLOB - it can store up to 4gb of data
+---
+- ENUM - look like strings, but under the hood, they're stored as integers
 
 - SET
+
+Example: diference between CHAR and VARCHAR 
+
+If we want to store name Dimitri, with char(100) it will store Dimitri with 3 white spaces and if we want to use varchar(100) it will only store Dimitri wihout white spaces.
+
+Regardless of what you put in the column it is always going to take a 100 bytes. but with varchar, it's only going to take 7 bytes to store characters and 1 byte for prefix to tell how long string is.
+
+**Character sets and collations**
+
+- A character set defines what characters are allowed to go into a column. MySQL supports a wide range of character sets, which you can view from the information_schema database. utf8 and utf8mb4 are the character sets you will likely use, with the latter being the default in MySQL 8.
+
+- Collations, on the other hand, determine how two or more strings are compared or sorted. A collation is a group of rules that decide whether two strings are equivalent or not. The default collation for MySQL 8 is utf8mb4_0900_ai_ci, with the ai indicating that the collation is accent-insensitive, and ci meaning that it is case-insensitive.
+
+Example: Best case use for BINARY is when you want to store hashes (passwords)
+
+MD5 hash of "hello" is "5d41402abc4b2a76b9719d911017c592". We can turn this hash into binary data using the UNHEX function. To get a readable version of the data back, we can use the HEX function. Also it can be useful if you want to find exact word or something
+
+```sql 
+select * from bins where bin_hash = UNHEX("something")
+```
+
+**Text columns**
+
+TEXT columns are used to store character data, such as strings of text. Unlike other string data types we've talked about, TEXT columns allow you to store much larger amounts of data, making them a great option for storing long blocks of text. However, it's important to note that text columns are not indexable (without using full text indexes) and cannot be sorted on their full values.
+
+**Blob columns**
+
+BLOB columns, on the other hand, are used to store binary data. They are similar to TEXT columns in that they allow you to store much larger amounts of data compared to other data types. However, BLOB columns do not have a character set or a collation like TEXT columns do.
+
+**Best practices for TEXT and BLOB**
+
+When using text or blob columns, it's important to consider two things: how much data you need to store and how you will access that data. Here are some best practices to keep in mind:
+
+- **Only select the columns that you need**: Because of how large TEXT and BLOB columns are stored on the disk, it's best to only select them when you need them. Refactor your data so that BLOB columns can be joined in when necessary.
+
+- Don't index or sort entire columns: Because of the size of TEXT and BLOB columns, it's not feasible to index or sort on the entire column. You should only index or sort on a prefix of the column.
+
+- Use VARCHAR columns for smaller amounts of data: If you only need to store a few hundred characters, consider using VARCHAR instead of text columns. This can help with indexing and sorting.
+
+Example: ENUM
+
+```sql
+CREATE TABLE orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  size ENUM('extra small', 'small', 'medium', 'large', 'extra large')
+);
+
+
+INSERT INTO orders (size) VALUES ('small'), ('medium'), ('large');
+```
+
+**Benefits of enums**
+
+- Data validation - When attempting to enter an invalid value, an error is thrown, preventing the data from being inserted into the database.
+
+- Readability - Since enums allow you to store readable values in your database, it's easier to read the stored data at a glance. You don't need to memorize integers to understand the data;
+
+- Compact data type - Enums are compact data types, which means they take up less storage space than other data types, such as strings. 
+
+**Downsides of enums**
+
+- Changes to the schema - If a business requirement changes, and you need to add another option to the allowable values, you'll have to alter the schema of your table to add a new enum.
+
+- Ordering - When sorting data using enums, MySQL sorts by the underlying integer value rather than the actual string.
+
+- Using integer enums - It can be confusing and should be avoided if possible. If you must use integer enums, it's best to use a TINYINT column instead.
