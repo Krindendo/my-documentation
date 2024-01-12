@@ -132,16 +132,16 @@ const mdxComponents = {
   pre: ({ className, ...props }) => (
     <pre
       className={cn(
-        "mb-4 mt-6 overflow-x-auto rounded-lg border bg-black py-4",
+        "mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg border bg-zinc-950 py-4 dark:bg-zinc-900",
         className
       )}
       {...props}
     />
   ),
-  code: ({ className, ...props }) => (
+  code: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
     <code
       className={cn(
-        "relative rounded border px-[0.3rem] py-[0.2rem] font-mono text-sm",
+        "relative rounded px-4 py-[0.2rem] font-mono text-sm",
         className
       )}
       {...props}

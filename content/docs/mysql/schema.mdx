@@ -144,3 +144,59 @@ INSERT INTO orders (size) VALUES ('small'), ('medium'), ('large');
 - Ordering - When sorting data using enums, MySQL sorts by the underlying integer value rather than the actual string.
 
 - Using integer enums - It can be confusing and should be avoided if possible. If you must use integer enums, it's best to use a TINYINT column instead.
+
+### Dates
+
+| Type | Storage (bytes) | Min | Max |
+| --- | --- | --- | --- | 
+| DATE | 3  | 1000-01-01 | 9999-12-31 | 
+| DATETIME | 8  | 1000-01-01 00:00:00 | 9999-12-31 23:59:59 | 
+| TIMESTAMP | 4  | 1070-01-01 00:00:00 | 2038-01-19 03:14:07 | 
+| YEAR | 1  | 1901 | 2155 | 
+| TIME | 3  | -838:59:59 | 838:59:59 | 
+
+**DATE**
+
+If you only need to store the date, then the DATE type column is your best bet.
+
+**DATETIME**
+
+If you need to store both the date and time, then DATETIME and TIMESTAMP are the two options you have.
+
+**TIMESTAMP**
+
+If you only need to store time data within this range, TIMESTAMP is the more compact and efficient option.
+
+**YEAR**
+
+If you need to store a year between 1901 and 2155, YEAR would be the most compact way to do it. This type is not very commonly used.
+
+**TIME**
+
+The TIME data type is used to store hours, minutes, and seconds. It can store more than 24 hours, which is useful for storing intervals. This type is useful for a 10-day range denominated in hours, minutes, and seconds, but it's not commonly used.
+
+**DATETIME vs TIMESTAMP and Time zones**
+
+With DATETIME, MySQL does not handle time zones at all. Whatever you put in, you get back out. With TIMESTAMP, MySQL tries to help you by converting values to UTC when added to the database and back to your time zone when retrieved.
+
+This difference is essential to consider when choosing between these two data types, especially if your application requires handling different time zones.
+
+### JSON
+
+When working with JSON data, MySQL is much more strict than with other text data types. The JSON data must be valid according to the JSON specification, or MySQL will reject it. 
+
+Once you have valid JSON data in your MySQL database, you can use various functions and operators to retrieve and manipulate it.
+
+Suppose we want to retrieve just the key from this JSON object. We could use the -> operator
+
+When using JSON columns is that they can be **quite heavy**, especially if you're storing large amounts of JSON data. As with any data type in MySQL, only select the data you need when you're querying, and **avoid retrieving JSON data unnecessarily**.
+
+**Indexing JSON columns**
+
+One important consideration when using JSON columns in MySQL is that they cannot be directly indexed. Instead, MySQL supports indexing for generated columns on a specified JSON path. This means you can create an index on a specific key within a JSON object, but not on the entire object itself.
+
+```sql
+ALTER TABLE has_json ADD INDEX my_index ((`json`->>"$.key"));
+```
+
+Here, we're creating an index on the key field within the JSON object of our column. This allows MySQL to perform faster lookups for queries that involve this particular JSON path.
