@@ -97,6 +97,7 @@ export const docsConfig: DocsConfig = {
       items: [
         { title: "Introduction", href: "/docs/mysql" },
         { title: "Schema", href: "/docs/mysql/schema" },
+        { title: "Indexes", href: "/docs/mysql/indexes" },
       ],
     },
   ],

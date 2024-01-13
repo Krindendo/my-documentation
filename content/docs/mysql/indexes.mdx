@@ -1,0 +1,38 @@
+---
+title: Indexes
+description: The building blocks of database performance
+---
+
+Indexes are an entirely separate data structure that maintain a **copy of part of your data**. When you create an index, it creates a second data structure, which is different from your primary data structure (the table). It's crucial to understand that each index maintains a copy of part of your data, which means that if you have multiple indexes, **there will be multiple copies of different parts of your data.**
+
+Moreover, indexes have a pointer back to the row. It's necessary for an index to know how to get back to the table because it maintains a copy of part of your data.
+
+Unlike schema design, you cannot look at your data and decide what indexes to put on your table. Instead, you have to examine your queries to determine which indexes will perform the best. In other words, indexing should be driven by the access patterns of your application.
+
+**Rules for creating indexes**
+
+As far as the rules for creating indexes are concerned, you should aim to create as many indexes as you need. Indexes are the best tool for creating a performant query, which usually translates into a performant application. However, you should also create as few as you can get away with because creating too many indexes can impact the performance.
+
+It's essential to strike a balance between how many indexes you need and how few you can get away with. Establishing this balance depends on the size of your database, frequency of updates, and other factors that might influence the performance of your application. With that in mind, it's crucial to look at access patterns when deciding which indexes to create.
+
+### B+ trees 
+
+Indexes speed up data retrieval. Without an index, MySQL would have to read through the entire table to find a specific value.
+
+This data structure resembles a [tree structure with nodes](/algorithms/data-structures/trees), and it functions as a map for accessing specific data in a table. To demonstrate how B+ trees work, let's visualize an index on the people table. You can see that it looks like a tree, with the root node at the top and the leaf nodes at the bottom.
+
+The root node isn't very relevant to us right now, so we'll shift our focus to the leaf nodes. Each name in the table has its own corresponding node in the B+ tree. The leaf nodes contain the data that we have indexed, in this case, first names.
+
+<img src="/images/docs/BplusTrees.png" alt="Stack example" className="my-6" />
+
+**Searching**
+
+It is just [tree binary search](/algorithms/data-structures/trees).
+
+Let's assume we want to search for the name "Suzanne."
+
+Starting at the root node, we'll compare "Simon" to "Suzanne." As "Suzanne" is later in the alphabet than "Simon," we'll head down the right side of the tree. We'll then compare "Tyler" to "Suzanne." Since "Suzanne" comes before "Tyler," we'll head down the left side. We'll find the node with the name "Suzanne" and compare it to itself. Since the values match, we'll head down the right side of the tree and land where we want to be.
+
+**This algorithm allows us to skip over many of the leaf nodes at the bottom and only look at a few nodes. Without an index, we'd have to read through every single row to find the name "Suzanne."**
+
+B+ trees build up a secondary data structure that optimizes searching for specific values. By creating an index on the first name field, we've optimized this secondary data structure for searching first names.

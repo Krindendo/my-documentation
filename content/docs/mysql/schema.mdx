@@ -1,6 +1,6 @@
 ---
 title: Schema
-description: test
+description: Introduction to schema
 ---
 
 ## 3 guiding principles regardless of what the data type is:
@@ -79,7 +79,7 @@ DECIMAL(10,2)
 
 - SET
 
-Example: diference between CHAR and VARCHAR 
+#### Example: diference between CHAR and VARCHAR
 
 If we want to store name Dimitri, with char(100) it will store Dimitri with 3 white spaces and if we want to use varchar(100) it will only store Dimitri wihout white spaces.
 
@@ -91,7 +91,7 @@ Regardless of what you put in the column it is always going to take a 100 bytes.
 
 - Collations, on the other hand, determine how two or more strings are compared or sorted. A collation is a group of rules that decide whether two strings are equivalent or not. The default collation for MySQL 8 is utf8mb4_0900_ai_ci, with the ai indicating that the collation is accent-insensitive, and ci meaning that it is case-insensitive.
 
-Example: Best case use for BINARY is when you want to store hashes (passwords)
+#### Example: Best case use for BINARY is when you want to store hashes (passwords)
 
 MD5 hash of "hello" is "5d41402abc4b2a76b9719d911017c592". We can turn this hash into binary data using the UNHEX function. To get a readable version of the data back, we can use the HEX function. Also it can be useful if you want to find exact word or something
 
@@ -117,7 +117,7 @@ When using text or blob columns, it's important to consider two things: how much
 
 - Use VARCHAR columns for smaller amounts of data: If you only need to store a few hundred characters, consider using VARCHAR instead of text columns. This can help with indexing and sorting.
 
-Example: ENUM
+#### Example: ENUM
 
 ```sql
 CREATE TABLE orders (
@@ -200,3 +200,58 @@ ALTER TABLE has_json ADD INDEX my_index ((`json`->>"$.key"));
 ```
 
 Here, we're creating an index on the key field within the JSON object of our column. This allows MySQL to perform faster lookups for queries that involve this particular JSON path.
+
+### Unexpected types
+
+- MySQL Booleans
+
+MySQL doesn't actually have a native boolean type. Instead, MySQL uses a TINYINT column to simulate a boolean value. However, you can still use the keyword BOOLEAN in your table definition, which will be interpreted as a TINYINT column.
+
+- Zip codes
+
+When it comes to USA zip codes, they are always 5 digits long. As such, it's usually better to store zip codes as 5 character strings.
+
+- IP addresses
+
+While they usually appear as strings, you can also store them as integers for better organization and analysis. 
+
+MySQL has a built-in function INET_ATON() that converts an IPv4 address to an integer, and INET_NTOA() to convert an integer back to an IP address.
+
+If you need to support both IPv4 and IPv6 addresses, you may need to use a binary column that's 16 bytes long.
+
+### Generated columns
+
+Generated columns are a way to make MySQL do more work on your behalf, by allowing you to create columns that are based on other columns in your table. Essentially, a generated column is a column that is computed by an expression, rather than being explicitly stored in the table.
+
+The idea is that you can define a column using a formula or calculation, and MySQL will automatically calculate the values for that column based on the data in other columns.
+
+#### Example: email and domain
+
+We're going to create a table called emails, which will have two columns - email and domain.
+
+To create the generated column, we'll use the AS keyword and a function called substring index. The substring index function allows us to extract the domain from the email address.
+
+<Callout>It can't accept functions that will be changed overtime, because it need to be deterministic. Every time you run same proccess it need to have same result.</Callout> 
+
+```sql
+CREATE TABLE emails (
+  email varchar(255),
+  domain varchar(255) AS (substring_index(email, '@', -1))
+);
+```
+
+**Virtual vs. stored generated columns**
+
+A virtual column is calculated at runtime and does not take up any space on the disk. This means that it may take longer to calculate, but it doesn't impact the overall size of the table.
+
+A stored column, on the other hand, is calculated during data insertion or update and saved to disk, just like a regular column. This means that it might be faster to retrieve data from a stored column, but it will take up more space on the disk.
+
+When creating a generated column, you can specify whether it should be virtual or stored by using the VIRTUAL or STORED keyword. If you don't specify anything, the column will default to being virtual.
+
+**Use cases**
+
+- Extracting data from JSON objects - If you have a column that contains a big JSON blob, you can use a generated column to extract a specific key from the blob and create a new column with just that data. This can make it easier to query the data and improve performance.
+
+- Performing calculations - You can use generated columns to perform calculations such as converting units, and more. This can be useful for creating reports or performing other data analysis tasks.
+
+- Normalizing data - If you have a column that contains redundant data, you can use a generated column to extract that data and create a new table with just the unique values. This can make it easier to manage your data and eliminate redundancy.
