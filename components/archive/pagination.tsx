@@ -29,7 +29,7 @@ function listOfPagesNumber({ maximumPages }: { maximumPages: number }) {
   return pageNumber
 }
 
-export function Pagination({
+function Pagination({
   currentPage,
   maximumPages,
   perPage,

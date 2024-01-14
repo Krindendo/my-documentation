@@ -1,36 +1,36 @@
 import type { Meta, StoryObj } from "@storybook/react"
 
-import { Pagination } from "@/components/pagination"
+import { GuidesPagination } from "@/components/guides-pagination"
 
 const meta = {
-  title: "components/Pagination",
-  component: Pagination,
+  title: "components/GuidesPagination",
+  component: GuidesPagination,
   tags: ["autodocs"],
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Pagination>
+} satisfies Meta<typeof GuidesPagination>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const Main: Story = {
-  render: (args) => <Pagination {...args} />,
+  render: (args) => <GuidesPagination {...args} />,
   args: { currentPage: 1, perPage: 2, maximumLength: 9, maximumPages: 5 },
 }
 export const FisrtPage: Story = {
-  render: (args) => <Pagination {...args} />,
+  render: (args) => <GuidesPagination {...args} />,
   args: { currentPage: 1, perPage: 2, maximumLength: 19, maximumPages: 10 },
 }
 export const SecoundPage: Story = {
-  render: (args) => <Pagination {...args} />,
+  render: (args) => <GuidesPagination {...args} />,
   args: { currentPage: 2, perPage: 2, maximumLength: 19, maximumPages: 10 },
 }
 export const SecoundFromTheLastPage: Story = {
-  render: (args) => <Pagination {...args} />,
+  render: (args) => <GuidesPagination {...args} />,
   args: { currentPage: 9, perPage: 2, maximumLength: 19, maximumPages: 10 },
 }
 export const LastPage: Story = {
-  render: (args) => <Pagination {...args} />,
+  render: (args) => <GuidesPagination {...args} />,
   args: { currentPage: 10, perPage: 2, maximumLength: 19, maximumPages: 10 },
 }
