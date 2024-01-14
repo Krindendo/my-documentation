@@ -6,7 +6,7 @@ import { DocsPageHeader } from "@/components/docs-page-header"
 import { getGuides } from "@/components/guides-actions"
 import { GuidesComponent } from "@/components/guides-component"
 import { GuidesList } from "@/components/guides-list"
-import { Pagination } from "@/components/pagination"
+import { GuidesPagination } from "@/components/guides-pagination"
 
 export const metadata: Metadata = {
   title: "Guides",
@@ -33,7 +33,7 @@ export default async function GuidesPage({
         ) : (
           <>
             <GuidesList guides={guides.guides} />
-            <Pagination
+            <GuidesPagination
               currentPage={guides.currentPage}
               maximumLength={guides.guidesLength}
               maximumPages={guides.maximumPages}

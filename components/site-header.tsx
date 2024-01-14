@@ -8,7 +8,7 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import { docsConfig } from "@/config/docs"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
-import { ButtonLink } from "@/components/ui/button-link"
+import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 import { Logo } from "@/components/logo"
 import { ModeToggle } from "@/components/mode-toggle"
@@ -87,18 +87,17 @@ export const SiteHeader = React.forwardRef<HTMLDivElement, SiteHeaderProps>(
           </nav>
           <div className="hidden h-5 w-px bg-zinc-900/10 dark:bg-white/10 md:block" />
           <NavSearchMobile />
-          <div className="flex gap-4">
+          <div className="flex items-center gap-4">
             <ModeToggle />
-            <ButtonLink
-              variant="ghost"
-              size="sm"
-              className="w-9"
-              href={siteConfig.links.github}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <Icons.gitHub className="h-6 w-6" />
-            </ButtonLink>
+            <Button variant="ghost" className="w-9 px-0" asChild>
+              <a
+                href={siteConfig.links.github}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Icons.gitHub className="h-6 w-6" />
+              </a>
+            </Button>
           </div>
         </div>
       </motion.div>

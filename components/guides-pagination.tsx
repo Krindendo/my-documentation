@@ -1,16 +1,11 @@
-"use client"
-
 import { cn } from "@/lib/utils"
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationFirst,
   PaginationItem,
   PaginationLast,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "@/components/ui/pagination"
 
 interface GuidesPaginationProps {
@@ -162,16 +157,18 @@ interface PaginationItemsProps {
 function PaginationItems({ currentPage, maximumPages }: PaginationItemsProps) {
   const listOfArticles = listOfPagesNumber({ currentPage, maximumPages })
 
-  return listOfArticles.map((page) => {
-    return (
-      <PaginationItem key={`pagination_${page}`}>
-        <PaginationLink
-          isActive={currentPage.toString() === page}
-          href={{ pathname: "guides", query: { page } }}
-        >
-          {page}
-        </PaginationLink>
-      </PaginationItem>
-    )
-  })
+  return (
+    <>
+      {listOfArticles.map((page) => (
+        <PaginationItem key={`pagination_${page}`}>
+          <PaginationLink
+            isActive={currentPage.toString() === page}
+            href={{ pathname: "guides", query: { page } }}
+          >
+            {page}
+          </PaginationLink>
+        </PaginationItem>
+      ))}
+    </>
+  )
 }
