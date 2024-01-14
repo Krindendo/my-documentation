@@ -50,7 +50,7 @@ interface LinkType extends LinkProps, BaseType {
 
 type ButtonProps = ButtonType | LinkType
 
-const Button_old = ({ ...props }: ButtonProps) => {
+const Button = ({ ...props }: ButtonProps) => {
   if (props.asLink) {
     const { className, variant, size, asLink, ...rest } = props as LinkType
     return (
@@ -84,4 +84,4 @@ const Button_old = ({ ...props }: ButtonProps) => {
 // )
 // Button.displayName = "Button"
 
-export { Button_old }
+//export { Button }

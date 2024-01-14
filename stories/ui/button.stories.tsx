@@ -50,7 +50,11 @@ export const Ghost: Story = {
   },
 }
 export const Link: Story = {
-  render: (args) => <Button {...args}>Button</Button>,
+  render: (args) => (
+    <Button {...args} asChild>
+      <a href="#">Link</a>
+    </Button>
+  ),
   args: {
     variant: "link",
   },
