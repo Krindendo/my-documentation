@@ -181,6 +181,16 @@ With DATETIME, MySQL does not handle time zones at all. Whatever you put in, you
 
 This difference is essential to consider when choosing between these two data types, especially if your application requires handling different time zones.
 
+Example: update_at will update time on every update in that row??
+
+```sql
+create table users (
+  `id` serial
+  `created_at` timestamp default CURRENT_TIMESTAMP
+  `updated_at` timestamp default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
+)
+```
+
 ### JSON
 
 When working with JSON data, MySQL is much more strict than with other text data types. The JSON data must be valid according to the JSON specification, or MySQL will reject it. 

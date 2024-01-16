@@ -36,3 +36,31 @@ Starting at the root node, we'll compare "Simon" to "Suzanne." As "Suzanne" is l
 **This algorithm allows us to skip over many of the leaf nodes at the bottom and only look at a few nodes. Without an index, we'd have to read through every single row to find the name "Suzanne."**
 
 B+ trees build up a secondary data structure that optimizes searching for specific values. By creating an index on the first name field, we've optimized this secondary data structure for searching first names.
+
+### Primary keys
+
+A primary key is a unique identifier for each row in the table, and it plays an important role in how your data is stored and accessed.
+
+```sql
+create table users (
+    id bigint unsigned auto_increment primary key,
+    name varchar(155)
+)
+```
+
+Keep in mind that while this is the simplest method, there are some things to be aware of. For example, MySQL will automatically make the primary key column not nullable, and it will create a unique index for the column. This means that you don't need to create a separate index for the primary key, and doing so could result in duplicated indexes.
+
+**primary keys vs. secondary keys**
+
+A secondary key is any index that is not the primary key. It's used to improve performance when searching for specific data in your table.
+
+A primary key, on the other hand, is a unique identifier for each row in the table.
+
+**Why choosing the right primary key matters**
+
+The primary key determines how your data is stored on disk. In MySQL's InnoDB engine, the primary key is a "clustered index," which means that the data is physically ordered based on the values in the primary key column. This makes primary key lookups incredibly fast, but it also means that every time you insert a new row the tree structure has to be updated.
+
+Choosing a good primary key is important because it can impact the performance of your queries. For example, using a GUID or hash as a primary key can be slow because it requires more storage space and can lead to slower insert performance as the tree has to be rebalanced. On the other hand, using an auto-incrementing integer as a primary key can be more efficient because it requires less storage space and new values always go at the end.
+
+
+9:20
