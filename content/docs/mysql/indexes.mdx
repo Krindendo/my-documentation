@@ -63,4 +63,56 @@ The primary key determines how your data is stored on disk. In MySQL's InnoDB en
 Choosing a good primary key is important because it can impact the performance of your queries. For example, using a GUID or hash as a primary key can be slow because it requires more storage space and can lead to slower insert performance as the tree has to be rebalanced. On the other hand, using an auto-incrementing integer as a primary key can be more efficient because it requires less storage space and new values always go at the end.
 
 
-9:20
+### Secondary keys
+
+Secondary key (also known as indexes) is any key (or index) that is not the primary key. **It has a special relationship to the primary key.**
+
+A secondary key is simply any index that is not the primary key of a table. Every MySQL table has one primary key and can have multiple secondary keys. It is crucial to note that primary and secondary keys are still related to each other, and understanding this relationship is crucial to working with them effectively.
+
+Example: 
+
+Consider a people table with the columns id, name, and email. We can create a secondary key on name using the following MySQL query:
+
+```sql
+ALTER TABLE people ADD INDEX (name);
+```
+
+An index on the name column is now created, and we can use it to query the people table.
+
+Here is a sample query that retrieves all the rows of a person whose name is Suzanne using the secondary key:
+
+```sql
+SELECT * FROM people WHERE name = 'Suzanne';
+```
+
+**How the query works**
+
+When executed, MySQL uses the B-tree index created on the name column to locate the row with the specified name. It begins at the root node of the index and works its way down through the branches until it reaches the leaf node representing the row with the matching name.
+
+Now, since the name column is a secondary key, it does not store all the data required for the query. It only contains the indexed column name and a pointer to the rest of the row. MySQL must perform a second lookup to retrieve the rest of the data related for that row.
+
+Every secondary key has the primary key appended to it, as each leaf node in the secondary key contains a pointer back to the row. When you perform a query with a secondary key, MySQL first traverses the secondary index tree, finds the corresponding primary key, and then looks up that primary key in the primary index tree to retrieve all the data.
+
+**Importance of compact primary keys**
+
+As previously mentioned, each leaf node in a secondary key has the primary key appended to it. Therefore, it is crucial to choose compact primary keys that require a minimal amount of storage space.
+
+### Primary key data types
+
+**What data type you should use for primary keys in MySQL**
+
+An essential decision when designing a database schema is choosing the data type for the primary key. The primary key serves as a unique identifier for each record in a table, and it is a critical element in database design. As such, it is essential to choose the right data type that meets the database's requirements and avoid potential pitfalls that could lead to performance issues or other problems down the road.
+
+**The benefits of unsigned big integers**
+
+The recommended practice for primary keys is to use **unsigned big integers.** Unsigned big integers provide virtually infinite room to grow, which is essential because running out of primary key space is a significant issue for databases. Additionally, they allow for auto-incrementing, which preserves a natural order for the records, ensuring that the primary key B-tree isn't split unnecessarily.
+
+**Choosing strings as primary keys**
+
+Choosing a string data type, such as a UUID or a GUID, as a primary key can be tempting, but it has potential pitfalls. The problem with these types of data is their size, which means the indexes of the table grow enormously as a result of them. Additionally, the B-tree may have to be rebalanced if insertions occur in the middle of the table.
+
+If you want to use a string as a primary key, you should look for a UUID or GUID that is time-sorted, so all new records go to the end of the table, rather than in the middle. ULIDs are a new option for sorted GUIDs that are worth considering.
+
+**Obfuscation of the primary key**
+
+Some developers might use UUIDs or GUIDs to obfuscate the primary key when exposed in public APIs or URLs. This approach is not ideal, as the primary keys are better used for unique identification of each record in the database while leaving the obfuscation to a separate column.
