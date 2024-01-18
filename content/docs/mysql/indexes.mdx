@@ -116,3 +116,187 @@ If you want to use a string as a primary key, you should look for a UUID or GUID
 **Obfuscation of the primary key**
 
 Some developers might use UUIDs or GUIDs to obfuscate the primary key when exposed in public APIs or URLs. This approach is not ideal, as the primary keys are better used for unique identification of each record in the database while leaving the obfuscation to a separate column.
+
+### Where to add indexes
+
+We've said before that your queries should drive your indexes. What does this mean? It means that you should start by analyzing the access patterns of your application before deciding where to put indexes.
+
+Before adding an index, ask yourself, which queries are you running frequently and which tables are they accessing? By analyzing the access patterns of your queries, you can better determine which indexes will be most useful. Keep in mind that not all queries require indexes, and adding too many indexes can actually harm your database's performance.
+
+Here are some general rules of thumb to consider when deciding whether or not to use an index:
+
+- Do not assume that anything that shows up in the where clause of a query should have an index. Consider all queries being run and their respective access patterns.
+
+- Do not create an index on every column. This will slow down inserts by functionally duplicating your table. It also won't help reads as much as you'd hope.
+
+- Do consider the entire query when deciding which columns to index. This includes sorting, grouping, and joining.
+
+- Do not worry about trying to create the perfect index for every query. It may not always be possible, and sometimes you will have to rework the queries to take advantage of existing indexes.
+
+```sql
+alter table people add index birthday_index (birthday);
+```
+This creates an index named birthday_index on the birthday column of the people table.
+
+Example: 
+
+Let's take a closer look at how indexes can optimize specific queries. We will be using the people table we used in the previous section, which includes an id, first_name, last_name, state, email, and birthday column.
+
+```sql title="Equality"
+select * from people where birthday = '1989-02-14';
+```
+
+```sql title="Ranges"
+select * from people where birthday >= '2006-01-01';
+```
+
+```sql title="Ranges"
+select * from people where birthday between '2006-01-01' and '2006-12-31';
+```
+
+```sql title="Sorting"
+select * from people order by birthday limit 10;
+```
+This query will return the first 10 rows of the people table sorted by the birthday column. Since there is an index on the birthday column, MySQL can use this index for sorting instead of doing a full table scan.
+
+```sql title="Grouping"
+select birthday, count(*) from people group by birthday;
+```
+
+This query groups all people by their birthdays and returns a count of all people born on the same day. Once again, since there is an index on the birthday column, MySQL can use this index to group rows together instead of doing a full table scan.
+
+### Index selectivity
+
+Indexing is a crucial aspect of MySQL database optimization. It involves adding indexes to important columns to speed up query performance. The process of selecting the best index for specific database columns can be a bit tricky.
+
+Cardinality refers to the number of distinct values in a particular column that an index covers. When you use the SHOW INDEXES command in MySQL, the cardinality column in the output shows you the approximate total number of unique values in a given index column. 
+
+```sql title="Example of cardinality of column birthday"
+select count(distinct id) / count(*) from people
+select count(distinct birthday) / count(*) from people
+```
+
+Selectivity, on the other hand, refers to how unique the values in a column are. It is a measure of how selective an index can be in narrowing down results when queried. The higher the selectivity of an index, the better it is for optimizing query performance.
+
+Knowing the concepts of cardinality and selectivity can help us make informed decisions when optimizing database performance. For instance, we can use the information on the selective value of a column to determine whether or not to put an index on it.
+
+Suppose we have a table with a type column that has two possible values, user and admin, with most rows having the value user. In this case, putting an index on the type column may not be the best approach to find rows with type = "user" since most of the rows contain the same value. The index is not highly selective for user, but it is highly selective for admin!
+
+Furthermore, if we're stuck and can't figure out why an index isn't being used, we can check the selectivity of the index in question. **If the selectivity is low, it is most likely that MySQL decided to read the table, assuming the index would be slower than a full table scan.**
+
+### Prefix indexes
+
+By indexing just a part of a string column, you can make the index much smaller and faster. For example, indexing only the first four or five characters of a string reduces the size of the index while potentially maintaining the selectivity.
+
+Prefix indexing is especially suitable for long, evenly distributed, and unique strings, such as UUIDs and hashes.
+
+To create a prefix index in MySQL, you have to specify the prefix length you want to index. Suppose we have a people table with a string column for the first name, and we want to index the first five characters only:
+
+```sql
+ALTER TABLE people ADD INDEX (first_name(5));
+```
+
+**Determining prefix lengths**
+
+Now that we know how to create prefix indexes let's determine the ideal prefix length of a column. To determine the prefix length of a column to index, we have to calculate the overall selectivity of the column and compare it to the selectivity of the prefix.
+
+Example: 
+
+Let’s consider an example where we have a table with a column first_name, consisting of 3009 unique first names out of 500,000 people. In this case, the selectivity of the column is:
+
+```sql
+SELECT COUNT(DISTINCT first_name) / COUNT(*) as selectivity from people;
+```
+
+Running the above query gets a selectivity of 0.0060.
+
+Now, we can experiment with different lengths in the LEFT() function to determine the smallest prefix length that provides close to full selectivity. Here's a sample of prefixes you can test:
+
+```sql
+SELECT COUNT(DISTINCT LEFT(first_name, 4)) / COUNT(*) as left4 from people; -- 0.0037
+SELECT COUNT(DISTINCT LEFT(first_name, 5)) / COUNT(*) as left5 from people; -- 0.0048
+SELECT COUNT(DISTINCT LEFT(first_name, 6)) / COUNT(*) as left6 from people; -- 0.0054
+SELECT COUNT(DISTINCT LEFT(first_name, 7)) / COUNT(*) as left7 from people; -- 0.0058
+```
+
+As you increase the prefix length of columns values, we'll notice that the selectivity will also increase. Therefore, we can determine the ideal index for the column based on the minimum prefix length that achieves close to full selectivity. Ideal prefix length is 6.
+
+**Drawbacks of using prefix indexing**
+
+Prefix indexes are not suitable for ordering or grouping as the index does not contain the full string value, and therefore cannot be used. This makes it impossible to use a prefix index to sort results by the given column. (You can still sort by the column, but it will not use the index.)
+
+### Composite indexes
+
+Composite indexes cover multiple columns instead of having individual indexes on each column.
+
+```sql
+-- single indexs
+ALTER TABLE people ADD INDEX first_name (first_name);
+ALTER TABLE people ADD INDEX last_name (last_name);
+ALTER TABLE people ADD INDEX birthday (birthday);
+
+-- multi index
+ALTER TABLE people ADD INDEX multi (first_name, last_name, birthday);
+
+SHOW INDEXES FROM people;
+
+| Table  | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Index_type |
+|--------|------------|----------|--------------|-------------|-----------|-------------|------------|
+| people |          1 | multi    |            1 | first_name  | A         |        3107 | BTREE      |
+| people |          1 | multi    |            2 | last_name   | A         |      419540 | BTREE      |
+| people |          1 | multi    |            3 | birthday    | A         |      491583 | BTREE      |
+```
+
+
+When you inspect the indexes on the people table, you'll notice the multi index with a sequence in the index column. This sequence indicates the order of the columns in the index, which is crucial for how the index can be used.
+
+**Rules for composite indexes**
+
+1. Left-to-right, no skipping - MySQL can only access the index in order, starting from the leftmost column and moving to the right. It can't skip columns in the index.
+
+2. Stops at the first range - MySQL stops using the index after the first range condition encountered.
+
+**Analyzing index usage**
+
+To understand how MySQL uses composite indexes, you can use the **EXPLAIN** statement.
+
+```sql
+EXPLAIN SELECT * FROM people WHERE first_name = 'Aaron' AND last_name = 'Francis';
+
+| id | select_type | table  | type | possible_keys | key   | key_len | ref         | rows | filtered |
+|----|-------------|--------|------|---------------|-------|---------|-------------|------|----------|
+|  1 | SIMPLE      | people | ref  | multi         | multi | 404     | const,const |    1 |   100.00 |
+```
+
+The EXPLAIN output shows that the multi index is being used, with a key length of 404 bytes. This indicates that MySQL is using both the first_name and last_name parts of the index.
+If we add birthday to the mix, the key_len jumps to 407.
+
+```sql
+EXPLAIN SELECT * FROM people WHERE first_name = 'Aaron' AND last_name = 'Francis' and birthday = '1989-02-14';
+
+
+| id | select_type | table  | type | possible_keys | key   | key_len | ref               | rows | filtered |
+|----|-------------|--------|------|---------------|-------|---------|-------------------|------|----------|
+|  1 | SIMPLE      | people | ref  | multi         | multi | 407     | const,const,const |    1 |   100.00 |
+```
+
+However, if you change the query to include a range condition on last_name, then the key_len drops back down to 404.
+
+```sql
+EXPLAIN SELECT * FROM people WHERE first_name = 'Aaron' AND last_name < 'Francis' and birthday = '1989-02-14';
+
+
+| id | select_type | table  | type  | possible_keys | key   | key_len | ref | rows | filtered |
+|----|-------------|--------|-------|---------------|-------|---------|-----|------|----------|
+|  1 | SIMPLE      | people | range | multi         | multi | 404     |     |   55 |    10.00 |
+```
+
+The key length remains 404 bytes, meaning MySQL stops using the index at the first range condition (last_name in this case) and doesn't use the birthday part of the index.
+
+Choosing the right order for columns in a composite index depends on the access patterns of your application. Consider the following tips when defining composite indexes:
+
+1. Equality conditions that are commonly used would be good candidates for being first in a composite index.
+
+2. Range conditions or less frequently used columns would be better candidates for ordering later in the composite index.
+
+Composite indexes can significantly improve the performance of your database queries. Understanding and effectively using them is essential for advanced database users. Remember to consider your access patterns and carefully define the order of your columns to create efficient composite indexes.
