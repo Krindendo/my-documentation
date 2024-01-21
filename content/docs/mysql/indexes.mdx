@@ -300,3 +300,33 @@ Choosing the right order for columns in a composite index depends on the access 
 2. Range conditions or less frequently used columns would be better candidates for ordering later in the composite index.
 
 Composite indexes can significantly improve the performance of your database queries. Understanding and effectively using them is essential for advanced database users. Remember to consider your access patterns and carefully define the order of your columns to create efficient composite indexes.
+
+### Covering indexes
+
+A covering index is a regular index that provides all the data required for a query without having to access the actual table. When a query is executed, the database looks for the required data in the index tree, retrieves it, and returns the result. This eliminates the need for the engine to access the actual table, saving a secondary traversal to gather the rest of the data.
+
+For an index to be considered a covering index, it must have all the data needed for a particular query. This includes the columns being selected, the columns being filtered on, and the columns being used for sorting. If an index satisfies all of these requirements, it is said to be a "covering index" for that query.
+
+Covering indexes are powerful tools that can significantly improve query performance. However, they are not suitable for all situations.
+
+### Functional indexes
+
+Function-based indexes are used in cases where you need to create an index on a function rather than a column. 
+
+For example, consider a scenario where you need to retrieve all the records where the birth month is February. You might have a **birthday** column in your table, but applying a function such as **month()** to it will not allow you to use an index. This is where function-based indexes come in handy.
+
+Example: create an index to retrieve records where the birth month is February
+
+```sql
+CREATE TABLE people (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  first_name VARCHAR(50) NOT NULL,
+  last_name VARCHAR(50) NOT NULL,
+  birthday DATE NOT NULL,
+  PRIMARY KEY (id)
+);
+
+ALTER TABLE people ADD INDEX idx_month_birth ((MONTH(birthday)));
+```
+
+In the above SQL statement, we are creating an index called idx_month_birth on the results of the MONTH(birthday) function. The double parentheses are used to denote that we are creating a function-based index.
