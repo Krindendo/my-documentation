@@ -1,0 +1,151 @@
+---
+title: Axios
+description: Axios config
+date: 2024-01-23
+---
+
+```ts
+import axios, { AxiosRequestConfig, AxiosError } from "axios";
+import { getCustomCookie, putCustomCookie } from "./customCookies";
+
+const isDevEnv = import.meta.env.MODE === "development";
+const baseURL = import.meta.env.VITE_API_URL;
+
+function logWarning(...text: string[]) {
+  if (isDevEnv) {
+    console.log(text);
+  }
+}
+function logError(...text: string[]) {
+  if (isDevEnv) {
+    console.error(text);
+  }
+}
+
+export type requestConfig<T> = Exclude<
+  AxiosRequestConfig<T>,
+  "url" | "method" | "baseURL" | "data"
+>;
+
+export async function request<T>(options: AxiosRequestConfig<T>) {
+  try {
+    const response = await axios.request<T>(options);
+    return response.data;
+  } catch (error: unknown) {
+    console.log("error", error);
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("error data", error.response.data);
+        console.log("error status", error.response.status);
+        console.log("error headers", error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log("request", error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message);
+      }
+    }
+
+    console.log(error.config);
+  }
+}
+
+const requestWithAuth = <T>(options: AxiosRequestConfig<T> = {}) => {
+  const data = request<T>(options);
+
+  return data;
+};
+
+interface requestWithAuthProps {
+  method: AxiosRequestConfig["method"];
+  baseURL: AxiosRequestConfig["baseURL"];
+}
+
+export const fetchMiniObject = ({ method, baseURL }: requestWithAuthProps) => {
+  if (method === "get") {
+    return <T>(url: string, options?: requestConfig<T>) =>
+      requestWithAuth({ ...options, url, baseURL });
+  }
+  return <T>(url: string, data: T, options?: requestConfig<T>) =>
+    requestWithAuth({ ...options, url, data, baseURL });
+};
+
+export type IFetchData = {
+  get: <T>(
+    url: string,
+    options?: requestConfig<T>
+  ) => ReturnType<typeof requestWithAuth>;
+  post: <T>(
+    url: string,
+    data: T,
+    options?: requestConfig<T>
+  ) => ReturnType<typeof requestWithAuth>;
+  put: <T>(
+    url: string,
+    data: T,
+    options?: requestConfig<T>
+  ) => ReturnType<typeof requestWithAuth>;
+  patch: <T>(
+    url: string,
+    data: T,
+    options?: requestConfig<T>
+  ) => ReturnType<typeof requestWithAuth>;
+  delete: <T>(
+    url: string,
+    data: T,
+    options?: requestConfig<T>
+  ) => ReturnType<typeof requestWithAuth>;
+};
+
+export const fetchData: IFetchData = {
+  get: fetchMiniObject({ method: "get", baseURL }) as IFetchData["get"],
+  post: fetchMiniObject({ method: "post", baseURL }) as IFetchData["post"],
+  put: fetchMiniObject({ method: "put", baseURL }) as IFetchData["put"],
+  patch: fetchMiniObject({ method: "patch", baseURL }) as IFetchData["patch"],
+  delete: fetchMiniObject({
+    method: "delete",
+    baseURL,
+  }) as IFetchData["delete"],
+};
+```
+
+```ts title="Examples"
+interface IfetchGetPokemons {
+  limit: number;
+  offset: number;
+}
+interface IPokemons {
+  name: string;
+  url: string;
+}
+
+async function fetchGetPokemons({ limit, offset }: IfetchGetPokemons) {
+  const params = new URLSearchParams();
+  params.append("limit", limit.toString());
+  params.append("offset", offset.toString());
+  const response = await fetchData.get<IPokemons[]>("/v2/pokemon?" + params);
+
+  return response;
+}
+
+interface IfetchGetPokemon {
+  name: string;
+}
+interface IPokemon {
+  base_experience: number;
+  height: number;
+  id: number;
+  name: string;
+  weight: number;
+}
+async function fetchGetPokemon({ name }: IfetchGetPokemon) {
+  const response = await fetchData.get<IPokemon>(`/v2/pokemon/${name}`);
+
+  return response;
+}
+```
