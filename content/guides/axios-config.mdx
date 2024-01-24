@@ -4,7 +4,7 @@ description: Axios config
 date: 2024-01-23
 ---
 
-```ts
+```ts title="@package/core"
 import axios, { AxiosRequestConfig, AxiosError } from "axios";
 import { getCustomCookie, putCustomCookie } from "./customCookies";
 
@@ -22,19 +22,29 @@ function logError(...text: string[]) {
   }
 }
 
-const instance = axios.create({
-  baseURL: "https://some-domain.com/api/",
-  timeout: 10000,
-});
+interface ResponseSuccess<T> {
+  data: T;
+  error: null;
+}
 
-async function requestConstructor<T>(options: AxiosRequestConfig) {
+interface ResponseError {
+  data: null;
+  error: { status: number; data: string };
+}
+
+type ResponseData<T> = Promise<ResponseSuccess<T> | ResponseError>;
+
+async function requestConstructor<T>(
+  instance: AxiosInstance,
+  options: AxiosRequestConfig
+): ResponseData<T> {
   const token = getCustomCookie<string>("cookie_token");
   if (!token) {
     instance.defaults.headers.common["Authorization"] = token;
   }
   try {
-    const { data: responseData } = await instance.request<T>(options);
-    return { responseData, error: null };
+    const { data } = await instance.request<T>(options);
+    return { data, error: null };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
@@ -55,29 +65,51 @@ async function requestConstructor<T>(options: AxiosRequestConfig) {
     return { data: null, error: { status: 400, data: "Nesto ne radi" } };
   }
 }
-
-  type RequestConfig = Omit<
-    AxiosRequestConfig,
-    "url" | "data" | "baseUrl" | "method"
-  >;
-
-  async function get<T>(url: string, config: RequestConfig = {}) {
-    return requestConstructor<T>({ ...config, url, method: "get" });
-  }
-  async function post<T, K>(url: string, data: K, config: RequestConfig = {}) {
-    return requestConstructor<T>({ ...config, url, data, method: "post" });
-  }
-  async function put<T, K>(url: string, data: K, config: RequestConfig = {}) {
-    return requestConstructor<T>({ ...config, url, data, method: "put" });
-  }
-  async function remove<T, K>(url: string, data?: K, config: RequestConfig = {}) {
-    return requestConstructor<T>({ ...config, url, data, method: "delete" });
-  }
-
-  const fetchData = { get, post, put, delete: remove };
 ```
 
-```ts
+```ts title="fetchData.ts"
+const instance = axios.create({
+  baseURL: "https://some-domain.com/api/",
+  timeout: 10000,
+});
+
+type RequestConfig = Omit<
+  AxiosRequestConfig,
+  "url" | "data" | "baseUrl" | "method"
+>;
+
+async function get<T>(url: string, config: RequestConfig = {}) {
+  return requestConstructor<T>(instance, { ...config, url, method: "get" });
+}
+async function post<T, K>(url: string, data: K, config: RequestConfig = {}) {
+  return requestConstructor<T>(instance, {
+    ...config,
+    url,
+    data,
+    method: "post",
+  });
+}
+async function put<T, K>(url: string, data: K, config: RequestConfig = {}) {
+  return requestConstructor<T>(instance, {
+    ...config,
+    url,
+    data,
+    method: "put",
+  });
+}
+async function remove<T, K>(url: string, data?: K, config: RequestConfig = {}) {
+  return requestConstructor<T>(instance, {
+    ...config,
+    url,
+    data,
+    method: "delete",
+  });
+}
+
+const fetchData = { get, post, put, delete: remove };
+```
+
+```ts title="cookies.ts"
 export const getCustomCookie = <T>(name: string) => {
   const cookies = document.cookie.split(";");
 
@@ -98,7 +130,7 @@ export const getCustomCookie = <T>(name: string) => {
 export const putCustomCookie = () => {};
 ```
 
-```ts title="Examples"
+```ts title="books.ts"
 interface Book {
   name: string;
   author: string;
