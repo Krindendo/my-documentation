@@ -22,130 +22,91 @@ function logError(...text: string[]) {
   }
 }
 
-export type requestConfig<T> = Exclude<
-  AxiosRequestConfig<T>,
-  "url" | "method" | "baseURL" | "data"
->;
+const instance = axios.create({
+  baseURL: "https://some-domain.com/api/",
+  timeout: 10000,
+});
 
-export async function request<T>(options: AxiosRequestConfig<T>) {
+async function requestConstructor<T>(options: AxiosRequestConfig) {
+  const token = getCustomCookie<string>("cookie_token");
+  if (!token) {
+    instance.defaults.headers.common["Authorization"] = token;
+  }
   try {
-    const response = await axios.request<T>(options);
-    return response.data;
-  } catch (error: unknown) {
-    console.log("error", error);
+    const { data: responseData } = await instance.request<T>(options);
+    return { responseData, error: null };
+  } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log("error data", error.response.data);
-        console.log("error status", error.response.status);
-        console.log("error headers", error.response.headers);
+        return {
+          error: { status: error.response.status, data: error.response.data },
+          data: null,
+        };
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log("request", error.request);
+        return {
+          error: { status: error.request.status, data: error.request.data },
+          data: null,
+        };
       } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log("Error", error.message);
+        return { error: { status: 400, data: error.message }, data: null };
       }
     }
-
-    console.log(error.config);
+    console.log("Error", error?.config);
+    return { data: null, error: { status: 400, data: "Nesto ne radi" } };
   }
 }
 
-const requestWithAuth = <T>(options: AxiosRequestConfig<T> = {}) => {
-  const data = request<T>(options);
+  type RequestConfig = Omit<
+    AxiosRequestConfig,
+    "url" | "data" | "baseUrl" | "method"
+  >;
 
-  return data;
-};
-
-interface requestWithAuthProps {
-  method: AxiosRequestConfig["method"];
-  baseURL: AxiosRequestConfig["baseURL"];
-}
-
-export const fetchMiniObject = ({ method, baseURL }: requestWithAuthProps) => {
-  if (method === "get") {
-    return <T>(url: string, options?: requestConfig<T>) =>
-      requestWithAuth({ ...options, url, baseURL });
+  async function get<T>(url: string, config: RequestConfig = {}) {
+    return requestConstructor<T>({ ...config, url, method: "get" });
   }
-  return <T>(url: string, data: T, options?: requestConfig<T>) =>
-    requestWithAuth({ ...options, url, data, baseURL });
+  async function post<T, K>(url: string, data: K, config: RequestConfig = {}) {
+    return requestConstructor<T>({ ...config, url, data, method: "post" });
+  }
+  async function put<T, K>(url: string, data: K, config: RequestConfig = {}) {
+    return requestConstructor<T>({ ...config, url, data, method: "put" });
+  }
+  async function remove<T, K>(url: string, data?: K, config: RequestConfig = {}) {
+    return requestConstructor<T>({ ...config, url, data, method: "delete" });
+  }
+
+  const fetchData = { get, post, put, delete: remove };
+```
+
+```ts
+export const getCustomCookie = <T>(name: string) => {
+  const cookies = document.cookie.split(";");
+
+  for (let i = 0; i < cookies.length; i++) {
+    const cookiePair = cookies[i].split("=");
+    cookiePair[0] = cookiePair[0].trim();
+    if (cookiePair[0] === name) {
+      try {
+        return JSON.parse(cookiePair[1]) as T;
+      } catch (error) {
+        return cookiePair[1] as T;
+      }
+    }
+  }
+  return null;
 };
 
-export type IFetchData = {
-  get: <T>(
-    url: string,
-    options?: requestConfig<T>
-  ) => ReturnType<typeof requestWithAuth>;
-  post: <T>(
-    url: string,
-    data: T,
-    options?: requestConfig<T>
-  ) => ReturnType<typeof requestWithAuth>;
-  put: <T>(
-    url: string,
-    data: T,
-    options?: requestConfig<T>
-  ) => ReturnType<typeof requestWithAuth>;
-  patch: <T>(
-    url: string,
-    data: T,
-    options?: requestConfig<T>
-  ) => ReturnType<typeof requestWithAuth>;
-  delete: <T>(
-    url: string,
-    data: T,
-    options?: requestConfig<T>
-  ) => ReturnType<typeof requestWithAuth>;
-};
-
-export const fetchData: IFetchData = {
-  get: fetchMiniObject({ method: "get", baseURL }) as IFetchData["get"],
-  post: fetchMiniObject({ method: "post", baseURL }) as IFetchData["post"],
-  put: fetchMiniObject({ method: "put", baseURL }) as IFetchData["put"],
-  patch: fetchMiniObject({ method: "patch", baseURL }) as IFetchData["patch"],
-  delete: fetchMiniObject({
-    method: "delete",
-    baseURL,
-  }) as IFetchData["delete"],
-};
+export const putCustomCookie = () => {};
 ```
 
 ```ts title="Examples"
-interface IfetchGetPokemons {
-  limit: number;
-  offset: number;
-}
-interface IPokemons {
+interface Book {
   name: string;
-  url: string;
+  author: string;
 }
 
-async function fetchGetPokemons({ limit, offset }: IfetchGetPokemons) {
-  const params = new URLSearchParams();
-  params.append("limit", limit.toString());
-  params.append("offset", offset.toString());
-  const response = await fetchData.get<IPokemons[]>("/v2/pokemon?" + params);
-
-  return response;
-}
-
-interface IfetchGetPokemon {
-  name: string;
-}
-interface IPokemon {
-  base_experience: number;
-  height: number;
-  id: number;
-  name: string;
-  weight: number;
-}
-async function fetchGetPokemon({ name }: IfetchGetPokemon) {
-  const response = await fetchData.get<IPokemon>(`/v2/pokemon/${name}`);
-
-  return response;
-}
+const books = await fetchData.get<Book[]>("/book");
+const newBook = await fetchData.post<Book, Book>("/book", {
+  name: "",
+  author: "",
+});
 ```
