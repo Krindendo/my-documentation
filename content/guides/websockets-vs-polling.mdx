@@ -1,0 +1,46 @@
+---
+title: WebSocket vs Polling connection
+description: Difference between websocket and polling connection
+date: 2024-01-26
+---
+Source: https://www.youtube.com/watch?v=IVhwW1JkULo&t=749s
+
+**WebSockets** are used in real-time connections when the **frontend and backend are constantly exchanging data in both directions**, such as when a real-time system requires consistent communication back and forth.
+
+If you utilize a serverless stack, setting up websockets will be difficult since serverless apps do not have a long enough lifespan to send responses and maintain the server connection alive. Serverless is short-lived; you generate it and then kill it. 
+
+**Polling** can be used when we simply want a one-time response.
+
+Example: polling
+
+```ts
+const FIVE_MINUTS = 5 * 60 * 1000;
+const url = "https://example.com/api/v1/book";
+const delay = (ms: number) => new Promise(res => setTimeout(res,ms));
+
+setLoading(true);
+const startDate = Date.now();
+
+while(true){
+    if(Date.now() - startDate > FIVE_MINUTS){
+        alert("Time out");
+        setLoading(false);
+        return;
+    }
+    const delayPromise = delay(500);
+    try{
+        const res = await fetch(url);
+        if(!res.ok){
+            throw new Error("Not ok");
+        }
+        const data = await res.json();
+        console.log("data", data);
+    } catch(err) {
+        console.error(err);
+    } finally {
+        setLoading(false);
+        return;
+    }
+    await delayPromise;
+}
+```
