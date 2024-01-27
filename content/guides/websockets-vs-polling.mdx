@@ -30,8 +30,12 @@ while(true){
     const delayPromise = delay(500);
     try{
         const res = await fetch(url);
+        if(res.status === 404){
+            await delayPromise;
+            continue;
+        }
         if(!res.ok){
-            throw new Error("Not ok");
+            throw new Error(`Http request failed with status: ${res.status}`);
         }
         const data = await res.json();
         console.log("data", data);
