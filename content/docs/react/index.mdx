@@ -87,3 +87,79 @@ function BookStore{
 **key prop**
 
 ---
+
+
+## Typescript
+
+### ReactNode vs Element type
+
+React.ReactNode -> can accept: -> `<div />`, "Hello!", 123, undefined
+
+JSX.Element -> can accept only: -> `<div />`
+
+
+### It will call function when variable is dispose.
+
+```ts
+const mockSomething = () => {
+  // Mock the thing in here!
+  const myMock = "something";
+
+  return {
+    [Symbol.dispose]: () => {
+      // Dispose of the mock in here!
+    },
+    value: myMock,
+  }
+}
+
+it("Should log to the console", () => {
+  using mock = mockSomething();
+
+  console.log(mock.value);
+  // It gets automatically disposed each time!
+});
+
+```
+
+### Typescript tip:
+
+```ts
+type TODO = any;
+```
+
+### const Type
+
+```ts
+declare function useStatuses<T>(statuses: T[]): T;
+
+// ...it gets inferred as just string
+const loadingStatus = useStatuses(["loading", "idle"]);
+//const loadingStatus: string
+```
+
+```ts
+declare function useStatuses2<const T>(statuses: T[]): T;
+
+const loadingStatus2 = useStatuses2(["loading","idle"]);
+// const loadingStatus2: "loading" | "idle"
+```
+
+### get Type
+
+```ts
+const roles = ["user", "admin", "superadmin"] as const;
+
+type Role = (typeof roles)[number];
+// "user" | "admin" | "superadmin"
+```
+
+### 
+
+```tsx
+const Component = () => {
+  const audioRef = useRef<ElementRef<"audio">>(null);
+
+  return <audio ref={audioRef}>Hello</audio>;
+};
+```

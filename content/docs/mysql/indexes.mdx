@@ -330,3 +330,197 @@ ALTER TABLE people ADD INDEX idx_month_birth ((MONTH(birthday)));
 ```
 
 In the above SQL statement, we are creating an index called idx_month_birth on the results of the MONTH(birthday) function. The double parentheses are used to denote that we are creating a function-based index.
+
+### Indexing JSON columns
+
+MySQL doesn't support indexing JSON blobs.
+
+How to index JSON in MySQL:
+
+- generated columns 
+- function-based indexes
+
+We need to index email address inside the JSON blob.
+
+#### Method 1: generating a column
+
+This method works in MySQL 5.7 and 8. Here's how it works:
+
+- Alter the table to add a new generated column. We'll call it email and make it VARCHAR(255).
+- Index the new email column.
+
+**Step 1: Alter the table:**
+
+Here, we're using the GENERATED ALWAYS AS syntax to create a computed column that extracts the email key from the JSON blob.
+
+```sql
+ALTER TABLE json_data ADD COLUMN email VARCHAR(255) GENERATED ALWAYS AS (`json` ->> '$.email');
+```
+
+**Step 2: Index the new column**
+
+```sql
+ALTER TABLE json_data ADD INDEX (email);
+```
+
+Now that we have generated and indexed the new column, we can use it to quickly find rows based on their email value.
+
+#### Method 2: Function-based index
+
+This method only works in MySQL 8. Using this method we skip the intermediate column and put an index directly on the function itself.
+
+Here, we're using the CAST function to turn the JSON extract into a CHAR(255) value that can be indexed and setting the collation to **utf8mb4_bin**.
+
+If you do not collate, it may collate to something else, and you will not receive value with index. 
+
+```sql
+ALTER TABLE json_data ADD INDEX ((
+    CAST(`json`->>'$.email') AS CHAR(255) COLLATE utf8mb4_bin)
+));
+```
+
+### Indexing for wildcard searches
+
+Searching for part of a column using wildcard characters can be useful when you want to find all rows that contain specific words or phrases.
+
+Let's say we want to search for all rows where the email column starts with the name "aaron." We can use the LIKE operator and the % wildcard character to find all matches:
+
+```sql
+SELECT * FROM people WHERE email LIKE 'aaron%';
+```
+
+This query will return all rows where the email column starts with "aaron." The % character matches any sequence of characters, meaning that we don't care what comes after "aaron."
+
+If we plan on running this query frequently on a large table, we'll want to add an index to speed up the search. We can add an index to the email column by running the following command:
+
+```sql
+ALTER TABLE people ADD INDEX (email);
+```
+
+Now, if we run the same query and use the EXPLAIN command to see how MySQL is executing the query, we should see that MySQL is using our newly-created index:
+
+```sql
+SELECT * FROM people WHERE email LIKE 'aaron%';
+
+EXPLAIN SELECT * FROM people WHERE email LIKE 'aaron%';
+
+| id | select_type | table  | type  | possible_keys | key   | key_len | ref | rows | filtered |
+|----|-------------|--------|-------|---------------|-------|---------|-----|------|----------|
+|  1 | SIMPLE      | people | range | email         | email | 1022    |     |  180 |   100.00 |
+```
+
+**Querying for specific words or phrases**
+
+**It's important to note that MySQL can only use an index up until it reaches a wildcard character,** such as %. If we want to search for specific words or phrases within a larger column, we need to be careful with how we structure our queries.
+
+For example, let's say we want to find all rows where the email column contains the word "aaron" anywhere within the column:
+
+```sql
+SELECT * FROM people WHERE email LIKE '%aaron%';
+```
+
+This query will return all rows where the email column contains the word "aaron" anywhere within the column. However, since we have a wildcard character at the beginning of the search string, MySQL cannot use the index we created on the email column. This means the query will be slower than if we had used a wildcard character only at the end of the search string.
+
+**Searching by domain**
+
+If we want to search for rows based on the domain of the email address, we may be tempted to put the wildcard at the beginning of the string. However, as we mentioned earlier, MySQL cannot use an index when a wildcard character is at the beginning of a search string.
+
+To get around this limitation, we can create a generated column that stores only the domain of the email address, and then create an index on that column. This allows us to perform a strict equality check, rather than a wildcard search.
+
+For example, we can create a email_domain column that extracts the domain from the email address:
+
+```sql
+ALTER TABLE people ADD COLUMN email_domain VARCHAR(255) AS (SUBSTRING_INDEX(email, '@', -1));
+```
+
+Then, we can add an index on this column and perform a search like so:
+
+```sql
+ALTER TABLE people ADD INDEX (email_domain);
+
+SELECT * FROM people WHERE email_domain = 'example.com';
+```
+
+By creating a generated column and indexing it, we can perform more efficient searches on specific parts of larger columns.
+
+While B-tree indexes work well for wildcard searches at the end of a search string, they may not be sufficient for more complex text searches. In these cases, we can use a full text index.
+
+Full text indexes allow us to search for specific words or phrases within a larger text column with much greater efficiency than using a simple wildcard search
+
+### Fulltext indexes
+
+To add a full-text index to a table in MySQL, you can use an ALTER TABLE statement. In this example, we'll be adding a full-text index across the first_name, last_name, and bio columns in our people table.
+
+```sql
+ALTER TABLE people ADD FULLTEXT INDEX `fulltext`(first_name, last_name, bio);
+```
+Note the use of the FULLTEXT keyword to create a full-text index instead of a regular B-tree index.
+
+Creating a full-text index can take some time, so be prepared for it to take longer than a regular index. You can check that the index was created successfully by running SHOW INDEXES FROM people; which should display the new full-text index.
+
+With the full-text index in place, we can start implementing full-text searches.
+
+**Natural language mode**
+
+By default, full-text searches in MySQL are done in natural language mode. Natural language mode matches the search query against the indexed columns and returns the most relevant results.
+
+For example, to search for all people with the first name "Aaron," we can use the following query:
+
+```sql
+SELECT * FROM people WHERE MATCH(first_name, last_name, bio) AGAINST('Aaron');
+```
+
+This query will search across all three indexed columns and display all rows where "Aaron" appeared.
+
+**Boolean mode**
+
+For more advanced full-text searches, you can switch to boolean mode. Boolean mode allows you to use modifiers, like +, -, >, <, and parentheses in your search query.
+
+Here's an example of a boolean search query:
+
+```sql
+SELECT * FROM people
+  WHERE MATCH(first_name, last_name, bio) AGAINST('+Aaron -Francis' IN BOOLEAN MODE);
+```
+
+This query will search for all rows where "Aaron" appears and exclude any rows where "Francis" appears. The + indicates that "Aaron" is a required search term, and the - indicates that "Francis" is excluded.
+
+In boolean mode, you can also add quotation marks to search for an exact phrase or use the NEAR operator to search for words within a certain distance of each other.
+
+**Sorting results by relevancy**
+
+When using natural language mode, MySQL automatically orders the results by their relevancy score, with the most relevant result at the top. However, in Boolean mode, you need to manually sort the results.
+
+Luckily, MySQL returns the relevancy score as part of the search query results. You can use this score to sort the results using an ORDER BY statement.
+
+### Invisible indexes
+
+There are times when you need to drop an index due to its inefficiency or because it's no longer used by your queries. However, before you do so, you get nervous and start thinking, "What if I've missed something?" Making an index invisible allows you to monitor how your queries perform without the index without having to rebuild it. If everything goes well, you can drop the index. But if something goes wrong, you can quickly turn the index back on without any hassle. Thus, making an index invisible reduces the risks and potential complications of dropping an index.
+
+Making an index invisible enables you to test your queries without risking data loss or any adverse impact on system performance. Once you make an index invisible, MySQL will stop using it in any queries, but it will still maintain this index's integrity. If something goes wrong during testing, it's easy to revert back to the original index state.
+
+You can monitor your system's performance with minimal to no effect on your workflow. Once you are confident of your system's stability with the invisible index, you can fully drop the index.
+
+**Making an index invisible is a straightforward process in MySQL:**
+
+```sql
+ALTER TABLE people ALTER INDEX email_idx INVISIBLE;
+```
+
+This command makes the email_idx index invisible so that it is no longer used in any queries.
+
+To verify that the index is invisible, you can use the show indexes from [table] command again. This time, you'll notice that the email_idx index still exists, but its "Visible" column is set to "NO."
+
+```sql
+| Table  | Non_unique | Key_name  | Column_name | Collation | Cardinality | Index_type | Visible |
+|--------|------------|-----------|-------------|-----------|-------------|------------|---------|
+| people |          1 | email_idx | email       | A         |      468192 | BTREE      | NO      |
+```
+
+If you want to use the index again, you can revert it back to its visible state using the "alter index [index_name] visible" command.
+
+```sql
+ALTER TABLE people ALTER INDEX email_idx VISIBLE;
+```
+
+This command makes the index visible again so that MySQL uses it in queries.
