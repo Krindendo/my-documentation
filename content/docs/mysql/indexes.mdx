@@ -509,7 +509,7 @@ ALTER TABLE people ALTER INDEX email_idx INVISIBLE;
 
 This command makes the email_idx index invisible so that it is no longer used in any queries.
 
-To verify that the index is invisible, you can use the show indexes from [table] command again. This time, you'll notice that the email_idx index still exists, but its "Visible" column is set to "NO."
+To verify that the index is invisible, you can use the show indexes from `table` command again. This time, you'll notice that the email_idx index still exists, but its "Visible" column is set to "NO."
 
 ```sql
 | Table  | Non_unique | Key_name  | Column_name | Collation | Cardinality | Index_type | Visible |
@@ -517,10 +517,114 @@ To verify that the index is invisible, you can use the show indexes from [table]
 | people |          1 | email_idx | email       | A         |      468192 | BTREE      | NO      |
 ```
 
-If you want to use the index again, you can revert it back to its visible state using the "alter index [index_name] visible" command.
+If you want to use the index again, you can revert it back to its visible state using the "alter index `index_name` visible" command.
 
 ```sql
 ALTER TABLE people ALTER INDEX email_idx VISIBLE;
 ```
 
 This command makes the index visible again so that MySQL uses it in queries.
+
+### Duplicate indexes
+
+Not all indexes are created equal, and some may end up being redundant. To prevent duplicate indexes from occurring in the first place, it's important to keep an eye out for indexes that have overlapping leftmost prefixes.
+
+To start, let's take a look at an example of duplicate indexes. Suppose we have a table called people, and we create two indexes:
+
+```sql
+ALTER TABLE people ADD INDEX first_name (first_name);
+ALTER TABLE people ADD INDEX full_name (first_name, last_name, birthday);
+```
+
+If we run `SHOW INDEXES FROM` people, we'll see that we now have two indexes, `first_name` and `full_name`.
+
+Based on what we've learned so far about composite indexes, we know that the `full_name` index covers the `first_name` index, since the first key part of the `full_name` index is `first_name`. Therefore, the `first_name` index is redundant and can be safely removed.
+
+However, it's important to note that when we add an index on a column in InnoDB, we're really adding an index on `column_name` and `id`. Similarly, when we add an index on multiple columns, we're actually adding an index on `column_1_name`, `column_2_name`, `column_3_name`, and `id`. This is because InnoDB always appends the primary key to the leaf nodes of each index.
+
+**Handling redundant indexes**
+
+To remove a redundant index, we can use the following code:
+
+```sql
+ALTER TABLE people ALTER INDEX first_name INVISIBLE;
+```
+
+This makes the index invisible to the MySQL query planner, effectively removing it without deleting it. Now, when we run a query, MySQL will happily use the `full_name` index and won't even consider the `first_name` index.
+
+However, it's important to note that removing a redundant index can have unintended consequences, especially if you depend on the ordering of the rows in that index. For example, if you run a query like this:
+
+```sql
+SELECT * FROM people WHERE first_name = 'Aaron' ORDER BY id DESC;
+```
+
+MySQL will use the `full_name` index for the access pattern, but it will have to manually sort the rows because the id column is all the way at the end of the index. This can have a negative impact on performance, especially for large tables.
+
+### Foreign keys
+
+**A foreign key** is a column or set of columns in a table that references the primary key of another table. This enables related data to be linked together in separate tables.
+
+**A foreign key constraint** is a condition that ensures the referential integrity of the data by enforcing a relationship between the foreign key and the referenced primary key. This means that the constraint will guarantee that all data references are valid and consistent, preventing data from being added, updated, or deleted in a way that would break the relationships between tables.
+
+It's worth noting that foreign **keys can exist without constraints**, but constraints are helpful to maintain referential integrity. **Constraints also require additional computation to maintain**, so at a certain scale, you may need to consider dropping some constraints if they become too costly in terms of performance.
+
+**Creating tables with foreign keys**
+
+Let's take a look at a simple example of creating two tables with a foreign key constraint. We'll start with a parent table and a child table. Here's the code to create the parent table:
+
+```sql
+CREATE TABLE parent (
+  ID BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY
+);
+```
+
+This creates a table parent with a single column id as a primary key. Now let's create the child table with a foreign key constraint that references the parent table:
+
+```sql
+CREATE TABLE child (
+  ID BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  parent_id BIGINT UNSIGNED,
+
+  FOREIGN KEY (parent_id) REFERENCES parent(ID)
+);
+```
+
+This creates a table child with two columns, id and parent_id. The parent_id column references the primary key of the parent table using a foreign key constraint. This constraint enforces the referential integrity of the data, ensuring that any data added to the child table is consistent with the data in the parent table.
+
+However, it's important to note that when creating a foreign key constraint, the referenced column must be of the same data type as the referencing column. For instance, if the id column in the parent table is unsigned, the parent_id column in the child table must also be unsigned. Additionally, the length and character set of string columns used for referencing each other should match for optimal performance.
+
+**Modifying data with foreign keys**
+
+Now that we have our tables set up with a foreign key constraint, let's take a look at how data can be modified with this constraint in place.
+
+First, let's insert some data into the child table:
+
+```sql
+INSERT INTO child (parent_id) VALUES (1);
+```
+
+This code attempts to insert a record into the child table with a parent_id value of 1. However, since the parent table is currently empty, this will fail because there is no data to reference.
+
+Let's insert a record into the parent table to correct that:
+
+```sql
+INSERT INTO parent (ID) VALUES (1);
+```
+
+Now that we have a record in the parent table, we can successfully insert a record into the child table:
+
+```sql
+INSERT INTO child (parent_id) VALUES (1);
+```
+
+The foreign key constraint ensures that this data is consistent and reflects a valid relationship between the two tables.
+
+If we try to delete the record from the parent table, we would encounter another issue:
+
+```sql
+DELETE FROM parent WHERE ID = 1;
+```
+
+This code attempts to delete the record from the parent table with an ID of 1. Since there is still a record in the child table that references this ID, the foreign key constraint will prevent this deletion from taking place.
+
+To enable cascading deletes or nullifying deleted references, additional options can be set on the foreign key constraint. It is important to consider the scale and impact of these options to avoid unintended consequences such as excessive data deletion or corruption.
