@@ -1,0 +1,48 @@
+---
+title: Basics
+description: Basic stuff
+---
+
+### Access modifiers
+
+The main purpose of access modifiers is to control and restrict access to members of a class.
+
+- Public (default) - This means it can be accessed from anywhere in your code, including outside the class itself.
+
+- Private - are only accessible within the class itself. Private properties get created by using a hash `#` prefix and cannot be legally referenced outside of the class.
+
+- Protected - are accessible within the class and its subclasses.
+
+
+### Abstract class
+
+- You cannot use an abstract class to directly create an object. if we think of a class as a blueprint for constructing a house for example, then an abstract class is a type of blueprint that we cannot use to directly build a house. Instead, an abstract class is a class that another class can inherit from.
+
+```ts
+abstract class Shape {
+  name: string;
+  constructor(name: string) {
+     this.name = name;
+  }
+}
+
+class Circle extends Shape {
+  radius: number;
+  constructor(name: string, radius:number){
+     super(name);
+     this.radius = radius;
+  }
+    
+}
+
+const myShape = new Shape('My shape'); // This will throw an Error 
+const shortCircle = new Circle("Short Circle", 0.5); // This will work fine.
+```
+
+### Difference between class and interface
+
+### Partial interface
+
+### how to integrate typescript
+
+### Typeguard

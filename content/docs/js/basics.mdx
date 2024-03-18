@@ -240,21 +240,32 @@ JavaScript provides the rest parameter syntax to capture an indefinite number of
 
 - This is a secure version of HTTP. It adds a layer of encryption on top of the HTTP protocol using TLS (Transport Layer Security) or its predecessor SSL (Secure Sockets Layer). This encryption scrambles the data as it travels between the browser and server, making it unreadable to anyone who might intercept it
 
-### Access modifiers
-### Abstract class
 ### Promise
 ### async / await
 ### Callback hell
-### Difference between class and interface
+
+Callback Hell is essentially nested callbacks stacked below one another forming a pyramid structure. Every callback depends/waits for the previous callback, thereby making a pyramid structure that affects the readability and maintainability of the code. 
+
+```js
+    setTimeout(() => {
+        animate(words[0]);
+        setTimeout(() => {
+            animate(words[1]);
+            setTimeout(() => {
+                animate(words[2]);
+            }, 1000)
+        }, 1000)
+    }, 1000)
+```
+
 ### Difference between function and arrow function
-### Difference between restfull and graphql
-### how to integrate typescript
+
 ### Difference between requred and import
 ### Closure
-### Typeguard
 ### Shallow copy and deep copy
-### Partial interface
 ### Functions geter and setter
 ### Regex
 ### call, apply, bind
+
+### Difference between restfull and graphql
 ### cors

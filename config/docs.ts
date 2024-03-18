@@ -41,6 +41,7 @@ export const docsConfig: DocsConfig = {
       title: "Typescript",
       items: [
         { title: "Introduction", href: "/docs/ts" },
+        { title: "basics", href: "/docs/ts/basics" },
         { title: "Interface", href: "/docs/ts/interface" },
         { title: "Type", href: "/docs/ts/type" },
         { title: "Class", href: "/docs/ts/class" },
