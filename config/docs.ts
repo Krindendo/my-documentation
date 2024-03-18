@@ -32,6 +32,7 @@ export const docsConfig: DocsConfig = {
       title: "Javascript",
       items: [
         { title: "Introduction", href: "/docs/js" },
+        { title: "basics", href: "/docs/js/basics" },
         { title: "this", href: "/docs/js/this" },
         { title: "Class", href: "/docs/js/class" },
       ],

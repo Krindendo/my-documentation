@@ -1,0 +1,260 @@
+---
+title: Basics
+description: Basic stuff
+---
+
+### Difference between null and undefined
+
+Both null and undefined represent the absence of a value.
+
+`undefined` - indicates a variable has been declared but no value has been assigned.
+
+- Declaring a variable without initialization (e.g., let x;).
+- A function doesn't return a value explicitly (returns undefined by default).
+- Accessing a non-existent property on an object.
+
+`null` - Represents an intentional absence of value. It's a way to say "this variable should hold no value."
+
+Despite the difference, null == undefined evaluates to true due to JavaScript's type coercion rules (check for equality without strict type checking). However, null === undefined is false (strict comparison checks both type and value).
+
+ 
+### Array methods:
+
+**every**
+
+- tests whether all elements in the array pass the test implemented by the provided function
+```js
+array1.every((currentValue) => currentValue < 40)
+```
+
+**some**
+
+- tests whether at least one element in the array passes the test implemented by the provided function
+```js
+array1.some((element) => element % 2 === 0)
+```
+
+**reduce**
+
+- It allows you to iterate over each element in the array and accumulate them into a single value. It takes two arguments:
+
+1. Reducer Function: This is a custom function you define that specifies how each element should be processed and accumulated.
+
+    - Accumulator: This holds the accumulated value from previous iterations (initially the first element or a provided starting value).
+
+    - Current Element: This is the element from the array being processed in the current iteration.
+
+2. (Optional) Initial Value: This is an optional first argument that sets the starting value for the accumulator. If not provided, the first element of the array becomes the accumulator in the first iteration.
+
+Example:
+
+- Summing an array of numbers.
+- Finding the maximum or minimum value in an array.
+- Creating a new object from an array.
+- Filtering and transforming elements in an array.
+
+---
+
+**shift**
+
+- removes the first element from an array and returns that removed element.
+
+```js
+const array1 = [1, 2, 3];
+const firstElement = array1.shift();
+console.log(array1); 
+// Expected output: Array [2, 3]
+```
+
+**unshift**
+
+- adds the specified elements to the beginning of an array and returns the new length of the array.
+
+```js
+const array1 = [1, 2, 3];
+
+console.log(array1.unshift(4, 5));
+// Expected output: 5
+
+console.log(array1);
+// Expected output: Array [4, 5, 1, 2, 3]
+```
+
+**pop**
+
+- removes the last element from an array and returns that element.
+
+```js
+const plants = ['cabbage', 'kale', 'tomato'];
+
+console.log(plants.pop());
+// Expected output: "tomato"
+
+console.log(plants);
+// Expected output: Array ["cabbage", "kale"]
+```
+
+**push**
+
+- adds the specified elements to the end of an array and returns the new length of the array.
+
+```js
+const animals = ['pigs', 'goats', 'sheep'];
+
+const count = animals.push('cows');
+console.log(count);
+// Expected output: 4
+console.log(animals);
+// Expected output: Array ["pigs", "goats", "sheep", "cows"]
+```
+
+**slice**
+
+- returns a shallow copy of a portion of an array into a new array object selected from start to end (end not included) where start and end represent the index of items in that array.
+
+```js
+const animals = ['ant', 'bison', 'camel', 'duck', 'elephant'];
+
+console.log(animals.slice(2));
+// Expected output: Array ["camel", "duck", "elephant"]
+
+console.log(animals.slice(2, 4));
+// Expected output: Array ["camel", "duck"]
+```
+
+**splice**
+
+- changes the contents of an array by removing or replacing existing elements and/or adding new elements.
+
+```js
+const months = ['Jan', 'March', 'April', 'June'];
+months.splice(1, 0, 'Feb');
+// Inserts at index 1
+console.log(months);
+// Expected output: Array ["Jan", "Feb", "March", "April", "June"]
+
+months.splice(4, 1, 'May');
+// Replaces 1 element at index 4
+console.log(months);
+// Expected output: Array ["Jan", "Feb", "March", "April", "May"]
+```
+---
+
+**flat**
+
+- creates a new array with all sub-array elements concatenated into it recursively up to the specified depth.
+
+```js
+const arr1 = [0, 1, 2, [3, 4]];
+
+console.log(arr1.flat());
+// expected output: Array [0, 1, 2, 3, 4]
+```
+
+**flatMap**
+
+- returns a new array formed by applying a given callback function to each element of the array, and then flattening the result by one level. It is identical to a map() followed by a flat() of depth 1 (arr.map(...args).flat()), but slightly more efficient than calling those two methods separately.
+
+```js
+const arr1 = [1, 2, 1];
+
+const result = arr1.flatMap((num) => (num === 2 ? [2, 2] : 1));
+
+console.log(result);
+// Expected output: Array [1, 2, 2, 1]
+```
+
+**map**
+
+- creates a new array populated with the results of calling a provided function on every element in the calling array.
+
+```js
+const array1 = [1, 4, 9, 16];
+console.log(array1.map((x) => x * 2));
+// Expected output: Array [2, 8, 18, 32]
+```
+
+### Map (week Map)
+
+- Maps are collections of **key-value pairs**, similar to objects. However, unlike objects, Maps allow any data type to be used as a key, including strings, numbers, objects, or even other Maps. **Maps remembers the original insertion order of the keys.**
+
+`set(key, value)`: Adds a new key-value pair to the Map.
+
+`get(key)`: Retrieves the value associated with a specific key.
+
+`has(key)`: Checks if a particular key exists in the Map.
+
+`delete(key)`: Removes a key-value pair from the Map.
+
+`size`: Returns the number of key-value pairs in the Map.
+
+`clear()`: Removes all key-value pairs from the Map.
+
+Map vs WeekMap
+
+Map vs objects
+
+### Set (week Set)
+### How to iterate through object
+
+1. for...in loop:
+
+```js
+for (const key in person) {
+  console.log(key, person[key]);
+}
+```
+
+2. Object.keys(), Object.values(), and Object.entries()
+
+- `Object.keys(object)`: Returns an array of all enumerable string property names of the object.
+- `Object.values(object)`: Returns an array of all enumerable property values of the object.
+- `Object.entries(object)`: Returns an array of key-value pairs as sub-arrays.
+
+
+### How to define functions, how to have dynamic arguments?
+
+1. Function Declaration
+
+```js
+function functionName(parameter1, parameter2) {
+    // Function body containing statements to be executed
+    return value; // Optional return statement
+}
+```
+
+2. Function Expression
+
+```js
+const functionName = function(parameter1, parameter2) {
+    // Function body
+    return value;
+};
+```
+
+JavaScript provides the rest parameter syntax to capture an indefinite number of arguments passed to a function
+
+### Difference between HTTP and HTTPS
+
+- HTTP (Hypertext Transfer Protocol): This is the foundation of web communication. It dictates how data is formatted and transmitted between a web browser and a server.
+
+- This is a secure version of HTTP. It adds a layer of encryption on top of the HTTP protocol using TLS (Transport Layer Security) or its predecessor SSL (Secure Sockets Layer). This encryption scrambles the data as it travels between the browser and server, making it unreadable to anyone who might intercept it
+
+### Access modifiers
+### Abstract class
+### Promise
+### async / await
+### Callback hell
+### Difference between class and interface
+### Difference between function and arrow function
+### Difference between restfull and graphql
+### how to integrate typescript
+### Difference between requred and import
+### Closure
+### Typeguard
+### Shallow copy and deep copy
+### Partial interface
+### Functions geter and setter
+### Regex
+### call, apply, bind
+### cors
