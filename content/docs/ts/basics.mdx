@@ -41,8 +41,109 @@ const shortCircle = new Circle("Short Circle", 0.5); // This will work fine.
 
 ### Difference between class and interface
 
+Class:
+
+- **A blueprint for creating objects.** It defines the properties (data) and methods (functions) that objects of that class will have.
+
+- You can instantiate a class using the new keyword, which creates a new object with the properties and methods defined in the class.
+
+- Classes can have constructors to initialize properties during object creation.
+
+- A class can inherit from another class, acquiring its properties and methods.
+
+Interface:
+
+- Defines the structure or shape of an object and specify the properties and methods that an object has or should have.
+
 ### Partial interface
 
-### how to integrate typescript
+for c# this is 
 
-### Typeguard
+- A key reason to use partial classes is to organize code related to different functionalities of the same class across multiple files.
+
+for typescript:
+
+- Constructs a type with all properties of Type set to optional.
+
+### How to integrate typescript
+
+1. install TypeScript
+
+2. add a tsconfig.json - It differs for different project types.
+
+3. change a files to .ts or .tsx
+
+### Type guard
+
+- A type guard is a mechanism that allows you to refine the type of a variable within a specific code block. It essentially performs a check to determine the exact type of the variable at runtime.
+
+TypeScript uses built-in JavaScript operators like typeof, instanceof, and in to determine if an object contains a property.
+
+- instanceof is a built-in type guard that can be used to check if a value is an instance of a given constructor function or class.
+
+```ts
+  interface Accessory {
+      brand: string;
+    }
+    class Necklace implements Accessory{
+      kind: string;
+      brand: string;
+      constructor(brand: string, kind: string) {    
+        this.brand = brand;
+        this.kind = kind;
+      }
+    }
+    class bracelet implements Accessory{
+      brand: string;
+      year: number;
+      constructor(brand: string, year: number) {    
+        this.brand = brand;
+        this.year = year;
+      }
+    }
+    const getRandomAccessory = () =>{
+      return Math.random() < 0.5 ?
+        new bracelet('cartier', 2021) :
+        new Necklace('choker', 'TASAKI');
+    }
+    let Accessory = getRandomAccessory();
+    if (Accessory instanceof bracelet) {
+      console.log(Accessory.year);
+    }
+    if (Accessory instanceof Necklace) {
+      console.log(Accessory.brand);    
+    }
+  ```
+
+  - The typeof type guard is used to determine the type of a variable.
+
+  ```ts
+  typeof v === "boolean"
+  ```
+
+  - The `in` type guard checks if an object has a particular property
+
+  ```ts
+  "house" in { name: "test", house: { parts: "door" } }; // => true
+  ```
+
+  - The `is` operator checks if a value or variable is of a specific type. 
+
+  ```ts
+  interface Cat {
+      meow(): void;
+  }
+  interface Dog {
+      bark(): void;
+  }
+  function isCat(pet: Dog | Cat): pet is Cat {
+      return (pet as Cat).meow !== undefined;
+  }
+  let pet: Dog | Cat;
+  // Using the 'is' keyword
+  if (isCat(pet)) {
+      pet.meow();
+  } else {
+      pet.bark();
+  }
+  ```

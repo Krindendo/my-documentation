@@ -92,7 +92,10 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "Node.js",
-      items: [{ title: "Introduction", href: "/docs/node" }],
+      items: [
+        { title: "Introduction", href: "/docs/node" },
+        { title: "basics", href: "/docs/node/basics" },
+      ],
     },
     {
       title: "MySql",
