@@ -55,6 +55,43 @@ Example:
 
 ---
 
+```js title="Summing an array of numbers"
+const numbers = [1, 2, 3, 4, 5];
+
+const sum = numbers.reduce(function(accumulator, currentValue) {
+  return accumulator + currentValue;
+}, 0);
+
+console.log(sum); // Outputs: 15
+```
+
+```js title="Summing an array of numbers"
+const pets = ['Dog', 'Cat', 'Fish'];
+
+const petObject = pets.reduce(function(obj, pet) {
+  obj[pet] = pet;
+  return obj;
+}, {});
+
+console.log(petObject); 
+// Outputs: { 'Dog': 'Dog', 'Cat': 'Cat', 'Fish': 'Fish' }
+```
+
+```js title="Filtering and transforming elements in an array"
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+// Filter out odd numbers and square the even numbers
+let result = numbers.reduce(function(accumulator, currentValue) {
+  if (currentValue % 2 === 0) {
+    accumulator.push(currentValue * currentValue);
+  }
+  return accumulator;
+}, []);
+
+console.log(result); 
+// Outputs: [4, 16, 36, 64, 100]
+```
+
 **shift**
 
 - removes the first element from an array and returns that removed element.
@@ -271,5 +308,19 @@ Callback Hell is essentially nested callbacks stacked below one another forming 
 ### Closure
 ### Shallow copy and deep copy
 ### Functions geter and setter
-### Regex
+### RegExp
+
+The RegExp `regular expressions` object is used for matching text with a pattern.
+
+These patterns are used with the `exec()` and `test()` methods of RegExp, and with the `match()`, `matchAll()`, `replace()`, `replaceAll()`, `search()`, and `split()` methods of String. This chapter describes JavaScript regular expressions.
+
+```js
+const re = /ab+c/i;
+// OR
+const re = new RegExp("ab+c", "i"); 
+// OR
+const re = new RegExp(/ab+c/, "i"); 
+```
+
+
 ### call, apply, bind
