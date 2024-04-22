@@ -67,3 +67,128 @@ The **index** access method indicates that MySQL is scanning the entire index to
 **All**
 
 The **all** access method means that MySQL is scanning the entire table to locate the necessary data. All is the slowest and least efficient access method, so it's one that you want to avoid as much as possible. MySQL may choose to scan the entire table when there is no suitable index, so this is an excellent opportunity to audit your indexing strategy.
+
+### Different formats of explain
+
+The explain statement provides several formats that you can use to analyze your queries in more detail. Some of the commonly used explain formats are **tree**, **JSON**, and **EXPLAIN ANALYZE**.
+
+#### Explain tree format
+
+The tree format is useful for providing more detail into the execution plan in a nested tree structure. You can specify this format by adding format=tree at the beginning of the explain statement.
+
+```sql
+explain format=tree select * from people where first_name = "Aaron"
+```
+
+We're providing with the following output, which estimates the cost of each part of the query. (This query only has one part, so it doesn't look too much like a tree!)
+
+```txt
+-> Index lookup on people using multi (first_name='Aaron')  (cost=198.00 rows=180)
+```
+
+#### Explain JSON format
+
+The JSON format provides a more detailed view of the same information as provided in the tree format. You can specify this format by adding format=json at the beginning of the explain statement.
+
+In the JSON format, MySQL provides information about the query's index usage, key parts, and query cost in a machine-readable, JSON format.
+
+
+#### Explain analyze format
+
+EXPLAIN ANALYZE actually runs the query and provides detailed statistics on the query's execution plan. **It's important to note that this format actually runs the query, so it should be used with caution.**
+
+If you use the EXPLAIN ANALYZE format, MySQL will provide the detailed statistics that include the actual execution time and number of records read. If you're working with queries involving joins or subqueries, these statistics can be invaluable for understanding where the query is spending its time.
+
+## Index obfuscation
+
+**Efficiently querying your data: best practices**
+
+As data sets grow in size and complexity, it becomes essential to query that data efficiently. One of the most crucial ways to achieve this is by using indexes. Indexes help to optimize data retrieval, and while they are derived from your access patterns, it is possible to obfuscate them.
+
+**Index obfuscation**
+
+Imagine you have a table full of movies, and you want to filter out movies that are under two hours long. The length of each movie is in minutes, so you need to divide the length column by 60 to convert it to hours before running your query. However, by doing this, you've obfuscated your column and made it difficult for MySQL to use your index.
+
+To understand this better, let's look at how to avoid index obfuscation. First, always leave your column alone as much as possible! Any changes you make to it, such as dividing or combining it with other columns, make it more difficult to use an index effectively. Instead, move everything to the other side of the operator when possible.
+
+In our case, instead of dividing the length column by 60, we should multiply it by 60 on the other side of the operator. By doing this, we allow the MySQL engine to calculate the result once and compare it against the index more efficiently.
+
+For example, instead of this:
+
+```sql
+    SELECT * FROM film WHERE length / 60 < 2;
+```
+
+We should write it like this:
+
+```sql
+    SELECT * FROM film WHERE length < 2 * 60;
+```
+
+This simple change can lead to a significant improvement in query performance because it allows MySQL to potentially utilize an index on the length column.
+
+## Redundant and approximate conditions
+
+### Unlocking indexes with redundant and approximate conditions in MySQL
+
+When it comes to database optimization, finding ways to improve query performance is crucial. One approach to unlocking indexes without making changes to the table structure is to use redundant and approximate conditions. Although not a common occurrence, these types of conditions have the potential to make a significant impact on performance once identified. In this video, we'll explore what redundant and approximate conditions are, why they're valuable, and how to use them to improve query performance.
+
+**Understanding redundant conditions**
+
+Redundant conditions refer to query conditions that logically cannot change the result set. Even though they don't produce any changes in the result, they're still valuable because they can help optimize the query. For instance, consider the following example of querying a people table:
+
+```sql
+    SELECT * FROM people WHERE id <= 5
+```
+
+This query returns the first five rows from the people table based on the given condition. However, if we modify the query as shown below, we still get the same result.
+
+```sql
+SELECT * FROM people
+  WHERE
+    id <= 5
+    AND
+    id <= 10
+```
+
+The second condition is redundant because it doesn't change the result of the query at all. The key benefit of redundant conditions lies in the fact that they help unlock indexes without any changes to the table. So, it's worth looking out for these types of conditions when optimizing your database. In this example we're not getting any benefit from the redundant condition, but there are times when we can get huge benefits.
+
+### Redundant condition example
+
+Consider a scenario where you have a to-do list and want to find all the to-do's that are due in the next 24 hours. You may have an index on the due date, but not the due date combined with due time. In this case, you can make use of the redundant condition, which logically cannot change the results and can help you use the available index more efficiently.
+
+Query without the redundant condition:
+
+```sql
+SELECT * FROM todos
+  WHERE
+  ADDTIME(due_date, due_time) BETWEEN NOW() AND NOW() + INTERVAL 1 DAY
+```
+
+The above query retrieves all the to-do's that are due within the next 24 hours based on the due_date and due_time columns. Unfortunately we've obfuscated the index on the due_date column.
+
+In this case we can add a redundant condition that is broader than our original condition, but is not index-obfuscated.
+
+```sql
+SELECT * FROM todos
+  WHERE
+  ADDTIME(due_date, due_time) BETWEEN NOW() AND NOW() + INTERVAL 1 DAY
+  AND
+  due_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL 1 DAY
+```
+
+Using the approximate condition helps to narrow down the result set even though it may include a few false positives. After narrowing down the result set, you can then use the expensive filtering, which is not indexable, to remove the false positives and get the correct result set.
+
+## Select only what you need
+
+### Best practices for querying: select only what you need
+
+**The importance of only selecting what you need**
+
+Let's start with why you should only select what you need. Suppose you run a SELECT * statement on a database table. In that case, you’ll retrieve all the data in that table, including every row and column. Retrieving all this data can lead to significant performance issues, especially if you're dealing with large columns like JSON or TEXT.
+
+There's no need to retrieve all the data if you're not going to use it! It's essential only to pull back the columns you plan on actually using. Doing this will reduce network utilization, disk access, and memory usage.
+
+### The Active Record exception
+
+One caveat to the "select only what you need" principle is when you are partially populating an Active Record style model.
