@@ -181,6 +181,10 @@ Using the approximate condition helps to narrow down the result set even though 
 
 ## Select only what you need
 
+The "select only what you need" principle is a best practice for a reason! It allows you to retrieve only the data that you require, which in turn leads to better performance and memory usage. However, at the application layer, you must be careful not to access columns that you didn't retrieve. You can use "safety mechanisms" in most frameworks to overcome this problem.
+
+By being mindful of these principles and leveraging the solutions provided, you can use "select only what you need" efficiently and safely in your database queries in the future.
+
 ### Best practices for querying: select only what you need
 
 **The importance of only selecting what you need**
@@ -192,3 +196,280 @@ There's no need to retrieve all the data if you're not going to use it! It's ess
 ### The Active Record exception
 
 One caveat to the "select only what you need" principle is when you are partially populating an Active Record style model.
+
+Suppose your framework issues a SELECT * statement that then populates an Active Record type model. It will assign every column to a property in the model. You might want to select only a particular set of columns, but in doing so, you might miss essential columns unintentionally. If your framework doesn't protect you from accessing the properties that weren't selected, you might be dealing with a partially populated model and not be aware of it!
+
+The good news is that most frameworks have protections against this problem. You can turn on "safety mechanisms" that prevent you from accessing attributes that haven't been pulled from the database. If your framework has this protection, you can limit your select statements and feel safe that you won't accidentally access any column that you didn't retrieve.
+
+## Limiting rows
+
+By using indexes and limiting the number of rows returned, we can greatly optimize our queries and improve the performance of our relational databases. We should always strive to only request the data that we need and minimize the amount of unnecessary data that we send back and forth between the database and our application.
+
+### Limiting the number of rows returned in MySQL
+
+As we continue our discussion of efficient querying, we will now focus on the importance of limiting the number of rows returned in a query. The principle remains the same: do not bring back data that you do not need and will simply throw away.
+
+### Using indexes to eliminate data
+
+Indexes play a crucial role in optimizing queries in a relational database. When querying a table, we want our indexes to narrow down to just the data that we need so that we can minimize the amount of data that we request from the actual table. Sometimes, even when using indexes, we may still need to do some additional elimination on a column that was not indexed!
+
+### Only return necessary rows
+
+When querying a table, we should only request the rows that we need instead of requesting all of the rows and then discarding most of them. Here are a few scenarios where we should only return the necessary rows:
+
+**Counting rows in a table**
+
+If we want to count the number of rows in a table, we should not select all of the data and send it back to our application. Instead, we should push this down to the database and have the database do the counting. This way, the database does not need to access every row in the table and send it back over the wire. To count rows, we can use the following
+
+```sql
+SELECT COUNT(*) FROM table_name;
+```
+
+**Minimums, maximums, averages**
+
+Calculations such as minimums, maximums, and averages should be done in the database instead of in our application. By doing these calculations in the database, we eliminate the need to look at all of the rows and send them back. To find the minimum in a column, we can use the following
+
+```sql
+SELECT MIN(column_name) FROM table_name
+```
+
+Likewise, to find the maximum or average in a column, we can use **SELECT MAX(column_name) FROM table_name**. To find the average in a column, we can use **SELECT AVG(column_name) FROM table_name**.
+
+**Distinct lists**
+
+If we want to get a distinct list of values for a particular column, we should use **SELECT DISTINCT column_name FROM table_name**. By doing this in the database, we can avoid sending back unnecessary rows to our application. However, if we want to get a distinct list of values for multiple columns, we will need to issue multiple queries.
+
+### Pagination
+
+Pagination refers to the technique of only returning a specific page of results that our users might be interested in. For example, if we return 500,000 results but only show 10 to our users, we have wasted a lot of processing. Thus, it is important to limit the number of rows returned and only return as many rows as will be useful.
+
+When using pagination queries such as **LIMIT 10 OFFSET 20**, it is important to note that there are specific rules and best practices to follow. We should always put an **ORDER BY** clause in our limits, even if it is simply **ORDER BY id**. Otherwise, MySQL gets to decide how to order the rows, which can cause inconsistencies. We will explore how to perform pagination in an index-assisted way to minimize the amount of data that we request from the actual table.
+
+## An overview of joins
+
+Inner joins return only rows that have matches in both tables, left joins return all rows from the left table and any matching rows from the right table, and right joins return all rows from the right table and any matching rows from the left table. Full outer joins are not available in MySQL, but you can approximate them if necessary.
+
+If you're working with large tables, it's important to index your data properly to avoid long processing times when joining tables together.
+
+### Setting up the basic tables
+
+We'll use the **store** and **staff** tables as examples. Here's how we'll query them:
+
+```sql
+SELECT * FROM store;
+
+| id | manager_staff_id | name     | address_id | last_update         |
+|----|------------------|----------|------------|---------------------|
+|  1 |                1 | Downtown |          1 | 2023-02-10 17:39:41 |
+|  2 |                2 | Uptown   |          2 | 2023-02-10 17:39:41 |
+|  3 |                  | Kiosk    |          3 | 2023-02-10 19:17:42 |
+```
+
+This returns three stores: a downtown store, an uptown store, and a kiosk.
+
+```sql
+SELECT * FROM staff;
+
+| id | first_name | last_name | store_id | last_update         |
+|----|------------|-----------|----------|---------------------|
+|  1 | Mike       | Hillyer   |        1 | 2023-02-15 03:57:16 |
+|  2 | Jon        | Stephens  |        2 | 2023-02-15 03:57:16 |
+|  3 | Aaron      | Francis   |        1 | 2023-02-10 19:17:50 |
+```
+
+This returns three staff people: Mike, Jon, and Aaron.
+
+Looking at the **store** table, we see that there is a **manager_staff_id** column. This column tells us which staff person is the manager of the store. The downtown store is managed by employee number one, the uptown store by employee number two, and the kiosk has no manager.
+
+### Inner joins
+
+Let's start with an inner join. An inner join takes the left table and the right table and matches them up together based on the criteria you specify. It only returns results that have a link in both tables.
+
+```sql
+SELECT * FROM store -- left table
+  INNER JOIN staff -- right table
+  ON store.manager_staff_id = staff.id;
+
+| id | manager_staff_id | name     | last_update         | id | first_name | last_name | store_id | active | username | last_update         |
+|----|------------------|----------|---------------------|----|------------|-----------|----------|--------|----------|---------------------|
+|  1 |                1 | Downtown | 2023-02-10 17:39:41 |  1 | Mike       | Hillyer   |        1 |      1 | Mike     | 2023-02-15 03:57:16 |
+|  2 |                2 | Uptown   | 2023-02-10 17:39:41 |  2 | Jon        | Stephens  |        2 |      1 | Jon      | 2023-02-15 03:57:16 |
+```
+
+This query does not return the kiosk because it has no manager, and it doesn't return Aaron because they're not a manager. It only returns the downtown and uptown stores, and their respective managers.
+
+### Left joins
+
+Now let's try a left join. A left join returns all the records from the left table, and any matching records from the right table.
+
+```sql
+SELECT * FROM store -- left table
+  LEFT JOIN staff -- right table
+  ON store.manager_staff_id = staff.id;
+
+| id | manager_staff_id | name     | last_update         | id | first_name | last_name | store_id | active | username | last_update         |
+|----|------------------|----------|---------------------|----|------------|-----------|----------|--------|----------|---------------------|
+|  1 |                1 | Downtown | 2023-02-10 17:39:41 |  1 | Mike       | Hillyer   |        1 |      1 | Mike     | 2023-02-15 03:57:16 |
+|  2 |                2 | Uptown   | 2023-02-10 17:39:41 |  2 | Jon        | Stephens  |        2 |      1 | Jon      | 2023-02-15 03:57:16 |
+|  3 |                  | Kiosk    | 2023-02-10 19:17:42 |    |            |           |          |        |          |                     |
+```
+
+This query returns all the stores, including the kiosk (which has no manager), and the downtown and uptown stores with their respective managers.
+
+### Right joins
+
+What if we want to see all the employees, whether or not they are managers? That's where a right join comes in.
+
+```sql
+SELECT * FROM store -- left table
+  RIGHT JOIN staff -- right table
+  ON store.manager_staff_id = staff.id;
+
+| id | manager_staff_id | name     | last_update         | id | first_name | last_name | store_id | active | username | last_update         |
+|----|------------------|----------|---------------------|----|------------|-----------|----------|--------|----------|---------------------|
+|  1 |                1 | Downtown | 2023-02-10 17:39:41 |  1 | Mike       | Hillyer   |        1 |      1 | Mike     | 2023-02-15 03:57:16 |
+|  2 |                2 | Uptown   | 2023-02-10 17:39:41 |  2 | Jon        | Stephens  |        2 |      1 | Jon      | 2023-02-15 03:57:16 |
+|    |                  |          |                     |  3 | Aaron      | Francis   |        1 |      1 | Aaron    | 2023-02-10 19:17:50 |
+```
+
+This query returns all the employees, including the author of the blog post, and the downtown and uptown store managers. However, it only returns two store rows, and the kiosk row is missing because it has no manager.
+
+### Full outer joins
+
+Some databases have a full outer join, which returns all rows from both tables, whether or not there's a match. MySQL doesn't have this feature. You can approximate it by using a left join and a union all, and then adding a right join, but this can lead to duplicates and may not be efficient for large tables.
+
+## Indexing joins
+
+Indexing is critical when it comes to joins in MySQL. By properly indexing the related columns between tables, you can significantly improve the performance of your queries. Always use explain to analyze query execution plans and optimize your queries for performance.
+
+### How does MySQL join tables?
+
+When MySQL joins tables together, it needs to figure out which rows from one table match which rows from the other table. One way to do this is by doing a full table scan, which is slow and inefficient. The better way is to use an index on the related columns, which allows MySQL to quickly retrieve the matching rows and combine them.
+
+### Many-to-many relationships
+
+Sometimes you'll come across a many-to-many relationship between tables. For example, in a film database, an actor can be in many movies and a movie can have many actors. To link these two entities, you need a joining table with composite primary keys.
+
+Let's take a look at an example. We have a **film** table full of movies and an **actor** table full of actors. To get a list of all the movies and the actors that were in those movies, we need to use the **film_actor** table as the joining table. This table has a composite primary key made up of **actor_id** and **film_id**.
+
+### Example query
+
+To illustrate the impact of indexing, let's run some queries with and without indexes. We'll use the **explain** statement to see the query execution plan and the cost of each query. Let's say we want to get a list of the first 10 films and all the actors that were in those movies. Here's the query we'll use:
+
+```sql
+SELECT
+  film.title, actor.first_name, actor.last_name
+FROM film
+  LEFT JOIN film_actor ON film_actor.film_id = film.id
+  LEFT JOIN actor ON actor.id = film_actor.actor_id
+WHERE
+  film.id <= 10
+LIMIT 10;
+```
+
+We'll start by adding indexes to the joining table (film_actor) on the film_id columns:
+
+```sql
+ALTER TABLE film_actor ADD INDEX idx_fk_film_id (film_id);
+```
+
+### Query with indexes
+
+```sql
+SELECT
+  film.title, actor.first_name, actor.last_name
+FROM film
+  LEFT JOIN film_actor ON film_actor.film_id = film.id
+  LEFT JOIN actor ON actor.id = film_actor.actor_id
+WHERE
+  film.id <= 10
+```
+
+Using the explain format=tree statement, we can see that MySQL is using the added indexes to join the tables and the cost of the query is only 29 cost units.
+
+```txt
+-> Nested loop left join  (cost=29.42 rows=55)
+    -> Nested loop left join  (cost=10.25 rows=55)
+        -> Filter: (film.id <= 10)  (cost=2.82 rows=10)
+            -> Index range scan on film using PRIMARY  (cost=2.82 rows=10)
+        -> Covering index lookup on film_actor using idx_fk_film_id (film_id=film.id)  (cost=1.06 rows=5)
+    -> Single-row index lookup on actor using PRIMARY (id=film_actor.actor_id)  (cost=0.84 rows=1)
+```
+
+### Query without indexes
+
+Turn the index off (by making it invisible) and run the same query again:
+
+```sql
+ALTER TABLE film_actor ALTER INDEX idx_film_id INVISIBLE;
+```
+
+```sql
+SELECT
+  film.title, actor.first_name, actor.last_name
+FROM film
+  LEFT JOIN film_actor ON film_actor.film_id = film.id
+  LEFT JOIN actor ON actor.id = film_actor.actor_id
+WHERE
+  film.id <= 10
+```
+
+This time, using the explain statement, we can see that MySQL is doing a full table scan and the cost of the query is now 12,000 units.
+
+```txt
+-> Nested loop left join  (cost=12347.65 rows=54620)
+    -> Left hash join (film_actor.film_id = film.id)  (cost=5519.98 rows=54620)
+        -> Filter: (film.id <= 10)  (cost=3.02 rows=10)
+            -> Index range scan on film using PRIMARY  (cost=3.02 rows=10)
+        -> Hash
+            -> Index scan on film_actor using PRIMARY  (cost=54.93 rows=5462)
+    -> Single-row index lookup on actor using PRIMARY (id=film_actor.actor_id)  (cost=0.08 rows=1)
+```
+
+## Subqueries
+
+Subqueries in MySQL are a powerful tool for filtering data efficiently. MySQL can optimize your subqueries using the semi-join and anti-join optimization techniques. It's important to optimize your queries and test them with your dataset to ensure they perform well under various conditions!
+
+If you want to learn more about subqueries in MySQL, check out Chapter 8 on optimizations in the MySQL documentation. This resource is a treasure trove of information that can help you become an expert in MySQL.
+
+### Exploring subqueries in MySQL
+
+Let's take a look at an example to better understand subqueries. Suppose you are working with customer data and payments data, and you need to find a list of customers who have made payments greater than $5.99. To achieve this, you can join the two tables and filter down to customers who have spent more than $5.99. However, after trimming down the data, you might find duplicate customer records in the results. Here is the code to join customer and payment tables:
+
+```sql
+SELECT * FROM
+  customer
+  INNER JOIN payment ON customer.id = payment.customer_id
+WHERE
+  payment.amount > 5.99;
+```
+
+To remove the duplicate records, you can use a DISTINCT statement as follows:
+
+```sql
+SELECT
+  DISTINCT customer.first_name, customer.last_name
+FROM
+  customer
+  INNER JOIN payment ON customer.id = payment.customer_id
+WHERE
+  payment.amount > 5.99;
+```
+
+This method works, but it can be a pain to use DISTINCT, and you might end up creating a lot of data just to remove it.
+
+### Using subqueries in MySQL
+
+Instead of a join, we will use a subquery in this case. Here is the code:
+
+```sql
+SELECT * FROM customer
+WHERE
+  id IN (
+    SELECT customer_id FROM payment WHERE amount > 5.99
+  );
+```
+
+The subquery returns only the customer IDs who match this criterion of having spent more than 5.99, and the outer query returns all of the corresponding customer data for the IDs that match the inner query.
+
+One advantage of using subqueries is that you don't have to join all the data together and perform a DISTINCT operation after trimming it down. This approach can also improve the overall performance of your queries, as MySQL can use a semi-join optimization technique to process the data more efficiently.
