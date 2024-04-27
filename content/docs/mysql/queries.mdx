@@ -473,3 +473,287 @@ WHERE
 The subquery returns only the customer IDs who match this criterion of having spent more than 5.99, and the outer query returns all of the corresponding customer data for the IDs that match the inner query.
 
 One advantage of using subqueries is that you don't have to join all the data together and perform a DISTINCT operation after trimming it down. This approach can also improve the overall performance of your queries, as MySQL can use a semi-join optimization technique to process the data more efficiently.
+
+## Common table expressions (CTEs)
+
+Common Table Expressions offer a powerful tool for composing complex queries in MySQL. By breaking down queries into smaller, more reusable parts, you can make your code more readable and maintainable. Furthermore, by using CTEs, you can reduce the number of times that MySQL needs to execute a query, resulting in faster and more efficient queries. If you haven't already, give CTEs a try in your next project, and see how much simpler your queries can become!
+
+### What are common table expressions (CTEs)?
+
+At their core, a Common Table Expression is a SQL statement that can be referenced within the context of a larger query. CTEs are supported in MySQL 8. CTEs allow queries to be broken down into smaller parts that can be more easily comprehended by us mere humans. By doing so, it becomes simpler to reason about and compose complex queries.
+
+### How to use CTEs in MySQL
+
+In MySQL, CTEs can be created using the **WITH** keyword. For example:
+
+```sql
+with cte_name as (
+    select ...
+)
+select ...
+from cte_name
+```
+
+The WITH keyword is followed by the name of the CTE and the query that generates it in parentheses. After defining the CTE, we can reference it in another query. Here's an example that uses CTEs to find customers who have spent more than the average on purchases at a particular store:
+
+```sql
+with spend_last_6 as (
+  select
+    customer_id,
+    sum(amount) as total_spend
+  from
+    payment
+    inner join customer on customer.id = payment.customer_id
+  where
+    store_id = 1
+    and payment_date > CURRENT_DATE - INTERVAL 6 MONTH
+  group by
+    cusomter_id
+)
+
+select * from spend_last_6
+
+--
+
+select * from spend_last_6
+where total_spend > (select avg(total_spend) from spend_last_6)
+```
+
+This query uses CTEs to define a temporary table called spend_last_6 which encapsulates all the logic required to calculate the amount a customer has spent in the last six months at store number one. Then we can select from it as if it were a normal table!
+
+## Recursive CTEs
+
+Recursive CTEs can be used to generate data or work with data that you already have. They are a powerful tool to fill gaps in missing data or generate hierarchical data structures.
+
+### Recursive CTEs in MySQL
+
+In SQL, Common Table Expressions (CTEs) are often used to combine multiple SQL queries into a single result set. However, there's a lesser-known type of CTE called a Recursive CTE, which can be used for generating data and manipulating hierarchical data structures.
+
+To get started with Recursive CTEs, it's important first to understand the basics of CTEs themselves. A CTE is essentially a temporary result set that can be referred to within a SQL statement. CTEs allow you to break complex queries into more manageable, modular components.
+
+Recursive CTEs, on the other hand, refer to themselves repeatedly to build up data. This simple fact enables Recursive CTEs to perform tasks that would be impossible with regular CTEs.
+
+### Building a sample recursive CTE
+
+Example of how to use a Recursive CTE to build a simple list of numbers in SQL. We'll create a table called "numbers" and define our Recursive CTE to generate a sequence of numbers from 1 to 10.
+
+```sql
+WITH RECURSIVE numbers AS (
+  SELECT 1 AS n -- Initial Condition
+  UNION ALL
+  SELECT n + 1 FROM numbers WHERE n < 10 -- Recursive Condition
+)
+
+SELECT * FROM numbers;
+```
+
+Here's what's happening in this code:
+
+- We define a CTE called **numbers** using the WITH keyword and specify the **RECURSIVE** modifier.
+
+- We define our initial condition, which selects the number 1 and assigns it the alias **n**.
+
+- We define our recursive condition, which selects the value of n + 1 from the table **numbers**. This incrementally generates the sequence of numbers from 1 to 10.
+
+If we run this code, we get a list of numbers from 1 to 10:
+
+```txt
+ n
+---
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+ 10
+(10 rows)
+```
+
+### Working with dates in recursive CTEs
+
+Recursive CTEs are not limited to generating lists of numbers. They can also work with dates and timestamps by generating sequences of dates.
+
+Here's an example of how to use a Recursive CTE to generate a sequence of dates throughout the year 2023:
+
+```sql
+WITH RECURSIVE all_dates AS (
+  SELECT '2023-01-01' AS dt -- Initial Condition
+  UNION ALL
+  SELECT dt + INTERVAL 1 DAY FROM all_dates WHERE dt < '2023-12-31' -- Recursive Condition
+)
+SELECT * FROM all_dates;
+```
+
+If we run this code, we get a sequence of dates from January 1, 2023, to December 31, 2023:
+
+```txt
+    dt
+------------
+ 2023-01-01
+ 2023-01-02
+ 2023-01-03
+ 2023-01-04
+ 2023-01-05
+ ...
+```
+
+Using Recursive CTEs, we can generate date sequences and use them to fill in gaps in our data. Let's see how we can use this generated sequence to fill in dates with missing data.
+
+### Filling in gaps in data
+
+One of the benefits of Recursive CTEs is that they can be used to fill in gaps in data. Let's say we have a table of payments with missing data on certain dates:
+
+```txt
+payment_date | amount
+-------------+--------
+ 2023-01-02  |  23.51
+ 2023-01-03  | 150.23
+ 2023-01-04  | 120.00
+ ...
+```
+
+We can fill in these missing dates using a Recursive CTE. Here's an example of how it might look:
+
+```sql
+WITH RECURSIVE all_dates AS (
+  SELECT '2023-01-01' AS dt -- Initial Condition
+  UNION ALL
+  SELECT dt + INTERVAL 1 DAY FROM all_dates WHERE dt < '2023-12-31' -- Recursive Condition
+)
+
+SELECT
+  dt,
+  sum(ammount)
+FROM
+  all_dates
+  LEFT JOIN payments ON all_dates.dt = payments.date;
+```
+
+Here's what's happening in this code:
+
+- We define a CTE called "all_dates" using the WITH keyword and specify the RECURSIVE modifier. This generates a sequence of dates throughout the year 2023.
+
+- We join the "all_dates" CTE to the "payments" table on their date columns.
+
+- We select all dates from "all_dates" and the amount from "payments."
+
+Now, we have a complete list of dates with the total amount for each date, even those without payment records:
+
+```txt
+    date     | amount
+-------------+--------
+ 2023-01-01  |   NULL
+ 2023-01-02  |  23.51
+ 2023-01-03  | 150.23
+ 2023-01-04  | 120.00
+```
+
+## Unions
+
+A UNION query is used to combine the results of two or more SELECT statements into a single result set. Specifically, it takes the values from one table or query, and instead of putting them side-by-side with another table or another query, it puts them together over-under.
+
+```sql
+SELECT 1
+UNION
+SELECT 2;
+```
+
+This will output the result set of 1 and 2, as if they were in a single column.
+
+```txt
+| 1   |
+| --- |
+| 1   |
+| 2   |
+```
+
+Notice how I used the **UNION** keyword to combine the two results. Also, bear in mind that the number of columns in all SELECT statements must be the same, with the same data types, or else you'll get an error.
+
+Looking at the above query, you'll see that this could be achieved with a simple **SELECT** statement. UNIONs are best used when we need to combine two queries that would otherwise be difficult to create in one query.
+
+For example, let's say you have two tables, **customers** and **staff**, both with similar column names. You want to combine the results of both tables into a single result set, to produce a mailing list.
+
+```sql
+  SELECT
+    first_name,
+    last_name,
+    email_address
+  FROM customers
+
+  UNION ALL
+
+  SELECT
+    first_name,
+    last_name,
+    email_address
+  FROM staff;
+```
+
+Notice that we use **UNION ALL** instead of **UNION** to prevent MySQL from eliminating duplicate rows, which can be computationally expensive when we have a large result set. Instead, we simply combine the result sets, knowing that duplicates may exist.
+
+### Where to use?
+
+This results in a single list of all staff and customers, with a shared data structure. Besides mailing lists, other applications for unions include when combining archived data with active data or comparing data in different tables that share a similar structure.
+
+```sql
+  select * from customer
+  union all
+  select * from customer_archived
+```
+
+## Window functions
+
+Window functions help you do aggregations, rankings, distributions, and more without collapsing the entire result set down to a single row. Instead, you can put all of that information on every row. In this guide, we'll explore what window functions are, how to use them, and some real-world scenarios in which they're useful.
+
+The primary advantage of using window functions is that they enable you to compute values on a per-row basis while summarizing data across groups. You can partition your result set by one or more columns, and then perform calculations within each partition. With window functions, you can calculate running totals, cumulative sums, ranks, percentiles, and more.
+
+### How to use window functions in MySQL
+
+```sql
+SELECT
+  customer_id, rental_id, amount, payment_date
+FROM
+  payment
+ORDER BY
+  customer_id, payment_date ASC;
+```
+
+This query returns all rentals sorted by customer ID and payment date. But what if we want to add a row number to each rental? We can use the ROW_NUMBER() window function to add a sequential number to each rental within the same partition:
+
+```sql
+SELECT
+  customer_id, rental_id, amount, payment_date
+  ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY payment_date ASC) AS num,
+FROM
+  payment
+ORDER BY customer_id, payment_date ASC;
+```
+
+```sql
+SELECT
+  customer_id, rental_id, amount, payment_date
+  ROW_NUMBER() OVER(w_asc) AS num,
+  FIRST_VALUE(rental_id) OVER(w_asc) as first_rental
+  FIRST_VALUE(rental_id) OVER(w_desc) as last_rental
+  sum(amount) OVER(w_asc) as running_total
+  LAG(rental_id) OVER(w_asc) as prev_rental
+  LEAD(rental_id) OVER(w_asc) as next_rental
+FROM
+  payment
+
+window
+  w_asc as (PARTITION BY customer_id ORDER BY payment_date ASC),
+  w_desc as (PARTITION BY customer_id ORDER BY payment_date DESC)
+
+ORDER BY customer_id, payment_date ASC;
+```
+
+By including the OVER() clause and specifying the partition and sort order, we can add a sequence number number to each rental.
+
+### Consider performance when working with large result sets
+
+While window functions can be powerful, they can also be resource-intensive, especially when working with large result sets. Consider the performance implications of using window functions before including them in your queries.
