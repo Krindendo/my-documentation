@@ -227,11 +227,72 @@ console.log(array1.map((x) => x * 2));
 
 `clear()`: Removes all key-value pairs from the Map.
 
-Map vs WeekMap
+#### Map vs Weak Map
 
-Map vs objects
+There are no ways to enumerate a `Weak Map` or to get all it's values. In `Weak Map`, you can store the data based on a key and when the key gets garbage collected so do the values.
+
+- Keys must be objects or functions.
+
+- Object presence as a key in a `Weak Map` does not prevent from being garbage collected.
+
+```ts
+
+var k1 = {a:1};
+var k2 = {b:2};
+
+var map = new Map();
+var weakMap = new WeakMap();
+
+map.set(k1, "k1");
+weakMap.set(k2, "k2");
+
+k1 = k2 = null;
+
+console.log(map.get(k1)) // {a: 1}
+console.log(weakMap.get(k2)) // undefined
+
+```
+
+#### Map vs objects
+
+**Map:**
+
+1. Map can have keys of any data type, including objects, functions, and primitive values.
+2. Map keys are ordered based on their insertion order.
+3. Maps have built-in methods for iteration, such as forEach, keys, values, and entries.
+
+**Objects:**
+
+1. Object keys are always strings or symbols. If other data types are used as keys, they are automatically converted to strings.
+2. Object properties do not have a guaranteed order.
+3. Objects have a prototype chain and inherit properties and methods from their prototype objects.
+
 
 ### Set (week Set)
+
+The **Set** objects are collections of values. A value in the set **may occur once**. It can store any type of values.
+
+Example:
+
+- When you need to store a collection of unique values and the order of insertion matters.
+
+- When you want to use objects, arrays as keys.
+
+- When you want to maintain strong references to the values in collection
+
+#### Set vs Weak Set
+
+The **Weak Set** can only store objects and does not prevent those objects from being garbage collected when they are no longer in use. 
+
+Examples: 
+
+- You want to store a collection of objects and don't want to prevent them from being garbage collected.
+
+- You need to associate metadata or additional information with objects.
+
+- You want to create relationships between objects without preventing them from being released when they are no longer needed.
+
+
 ### How to iterate through object
 
 1. for...in loop:
