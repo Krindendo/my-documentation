@@ -332,10 +332,50 @@ const functionName = function(parameter1, parameter2) {
 
 JavaScript provides the rest parameter syntax to capture an indefinite number of arguments passed to a function
 
-
+```js
+function functionName(...parameter){
+  return parameter;
+}
+```
 
 ### Promise
+
+A **Promise** is an object returned by an a synchronous function, witch represents the current state of the operation. It have two properties: `state` and `result`.
+
+**Promise** is can be one of these `states`:
+
+- **Prending** -> initial state, neither fulfilled nor rejected.
+
+- **Fullfilled** -> meaning that the operation was completed succesful.
+
+- **Rejected** -> meaning that the operation failed.
+
+Deeper explanation:
+
+```js
+new Promise((resolve, rejected) => {}).then((result) => {console.log("result", result)})
+```
+
+When new Promise constructor is executed a new Promise object is created in memory. That object have properties like: PromiseState, PromiseResult, PromiseFulfillReactions, PromiseRejectReactions, PromiseIsHandled.
+
+We can resolve this Promise by calling resolve(). By doing that PromiseState is set to fulfilled and PromisResult is set to the value that we pass to resolve.
+
+If we call reject(). PromiseState will be set to rejected and the PromiseResult is set to value we pass to the reject function.
+
+When we call `resolve`, `resolve` is added to the call stack, `promis state` is set to **fulfilled**, `promis result` is set to the value that we pass to resolve and `promise reactions handler` reaceives that promise result. After that handler will be added to the microtask.
+
+In Promise reaction handler will be set all function that were added in then method `.then((result) => {console.log("result", result)})`.
+
+Microtask Queue is always get priority over Task Queue. Task from Microtask Queue will be transfer to the Call Stack only when Call Stack is empty.
+
 ### async / await
+
+There's a special syntax to work with promises in a more comfortable fashion.
+
+**async** -> ensures that the function returns a promise.
+
+**await** -> only works inside async functions.
+
 ### Callback hell
 
 Callback Hell is essentially nested callbacks stacked below one another forming a pyramid structure. Every callback depends/waits for the previous callback, thereby making a pyramid structure that affects the readability and maintainability of the code. 
