@@ -4,7 +4,7 @@ import * as React from "react"
 import { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { allGuides } from "@/.contentlayer/generated"
+import { allGuides } from "content-collections"
 
 import { getTableOfContents } from "@/lib/toc"
 import { cn, getAbsoluteUrl, getBaseUrl } from "@/lib/utils"

@@ -2,7 +2,7 @@ import "@/styles/mdx.css"
 
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { allAlgorithms } from "contentlayer/generated"
+import { allAlgorithms } from "content-collections"
 
 import { getTableOfContents } from "@/lib/toc"
 import { getAbsoluteUrl, getBaseUrl } from "@/lib/utils"

@@ -2,7 +2,7 @@ import "@/styles/mdx.css"
 
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { allDocs } from "contentlayer/generated"
+import { allDocs } from "content-collections"
 
 import { getTableOfContents } from "@/lib/toc"
 import { getAbsoluteUrl, getBaseUrl } from "@/lib/utils"
@@ -17,8 +17,10 @@ interface DocPageProps {
 }
 
 async function getDocFromParams({ params }: DocPageProps) {
-  const slug = params.slug?.join("/") || ""
+  const slug = params.slug?.join("/") || "index"
   const doc = allDocs.find((doc) => doc.slugAsParams === slug)
+
+  console.log("params.slug", slug);
 
   if (!doc) {
     return null
