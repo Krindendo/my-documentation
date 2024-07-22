@@ -414,6 +414,45 @@ Scopes: **block scope**, **function scope**, **global scope**
 
 ### Shallow copy and deep copy
 ### Functions geter and setter
+
+Getter methods are used to access the properties of an object.
+
+```js
+const student = {
+
+    // data property
+    firstName: 'Monica',
+    
+    // accessor property(getter)
+    get getName() {
+        return this.firstName;
+    }
+};
+
+// accessing getter methods
+console.log(student.getName); // Monica
+```
+
+Setter methods are used to change the values of an object
+
+```js
+const student = {
+    firstName: 'Monica',
+    
+    //accessor property(setter)
+    set changeName(newName) {
+        this.firstName = newName;
+    }
+};
+
+console.log(student.firstName); // Monica
+
+// change(set) object property using a setter
+student.changeName = 'Sarah';
+
+console.log(student.firstName); // Sarah
+```
+
 ### RegExp
 
 The RegExp `regular expressions` object is used for matching text with a pattern.

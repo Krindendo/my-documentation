@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Guide } from "@/.contentlayer/generated"
+import { Guide } from "content-collections"
 
 import { formatDate } from "@/lib/utils"
 
@@ -30,7 +30,7 @@ export function GuidesCard({ guide }: GuidesCardProps) {
           </p>
         )}
       </div>
-      <Link href={guide.slug} className="absolute inset-0">
+      <Link href={`/guides/${guide.slug}`} className="absolute inset-0">
         <span className="sr-only">View</span>
       </Link>
     </article>

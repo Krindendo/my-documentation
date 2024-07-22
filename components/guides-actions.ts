@@ -1,4 +1,4 @@
-import { Guide } from "@/.contentlayer/generated"
+import { Guide } from "content-collections"
 
 import { fetcher, getBaseUrl } from "@/lib/utils"
 

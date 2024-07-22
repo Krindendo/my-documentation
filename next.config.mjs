@@ -1,6 +1,6 @@
 //require("./env.mjs")
 
-const { withContentCollections } = require("@content-collections/next")
+import { withContentCollections } from "@content-collections/next"
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -8,4 +8,4 @@ const nextConfig = {
   swcMinify: true,
 }
 
-module.exports = withContentCollections(nextConfig)
+export default withContentCollections(nextConfig)

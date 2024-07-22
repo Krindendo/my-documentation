@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server"
-import { allGuides } from "@/.contentlayer/generated"
+import { allGuides } from "content-collections"
 import { compareDesc } from "date-fns"
 
 import { safeStringToInteger } from "@/lib/utils"

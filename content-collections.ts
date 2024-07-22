@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs"
-import path from "path"
 import { defineCollection, defineConfig } from "@content-collections/core"
 import { compileMDX } from "@content-collections/mdx"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
@@ -7,6 +5,7 @@ import rehypePrettyCode, { type Options } from "rehype-pretty-code"
 import rehypeSlug from "rehype-slug"
 import { codeImport } from "remark-code-import"
 import remarkGfm from "remark-gfm"
+import { createHighlighter } from "shiki"
 import { visit } from "unist-util-visit"
 
 const prettyCodeOptions: Options = {
@@ -18,6 +17,10 @@ const prettyCodeOptions: Options = {
       node.children = [{ type: "text", value: " " }]
     }
   },
+  getHighlighter: (options) =>
+    createHighlighter({
+      ...options,
+    }),
   onVisitHighlightedLine(node) {
     node.properties.className ??= []
     node.properties.className.push("line--highlighted")
@@ -69,6 +72,7 @@ const options: any = {
 
           preElement.properties["__withMeta__"] =
             node.children.at(0).tagName === "div"
+          preElement.properties["__rawString__"] = node.__rawString__
 
           if (node.__src__) {
             preElement.properties["__src__"] = node.__src__
@@ -96,10 +100,6 @@ const options: any = {
   ],
 }
 
-
-
-
-
 const doc = defineCollection({
   name: "Doc",
   directory: "content/docs",
@@ -110,7 +110,10 @@ const doc = defineCollection({
     published: z.boolean().default(true),
   }),
   transform: async (document, context) => {
-    const body = await compileMDX(context, document, options);
+    const body = await compileMDX(context, document, options)
+
+    console.log("document", document)
+
     return {
       ...document,
       slug: `/${document._meta.path}`,
@@ -120,8 +123,7 @@ const doc = defineCollection({
         code: body,
       },
     }
-  
-  }
+  },
 })
 
 const guide = defineCollection({
@@ -136,7 +138,7 @@ const guide = defineCollection({
     featured: z.boolean().default(false),
   }),
   transform: async (document, context) => {
-    const body = await compileMDX(context, document, options);
+    const body = await compileMDX(context, document, options)
     return {
       ...document,
       slug: `/${document._meta.path}`,
@@ -146,8 +148,7 @@ const guide = defineCollection({
         code: body,
       },
     }
-  
-  }
+  },
 })
 
 const algorithms = defineCollection({
@@ -160,7 +161,7 @@ const algorithms = defineCollection({
     published: z.boolean().default(true),
   }),
   transform: async (document, context) => {
-    const body = await compileMDX(context, document, options);
+    const body = await compileMDX(context, document, options)
     return {
       ...document,
       slug: `/${document._meta.path}`,
@@ -170,8 +171,7 @@ const algorithms = defineCollection({
         code: body,
       },
     }
-  
-  }
+  },
 })
 
 export default defineConfig({

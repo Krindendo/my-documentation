@@ -1,4 +1,4 @@
-import { Guide } from "@/.contentlayer/generated"
+import { Guide } from "content-collections"
 
 import { GuidesCard, GuidesCardSkeleton } from "./guides-card"
 
@@ -10,7 +10,7 @@ export async function GuidesList({ guides }: GuidesListProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 md:gap-6">
       {guides.map((guide) => (
-        <GuidesCard key={guide._id} guide={guide} />
+        <GuidesCard key={guide.slug} guide={guide} />
       ))}
     </div>
   )
