@@ -44,7 +44,7 @@ function NavLink({
 
   return (
     <Link
-      href={href}
+      href={href ?? "#"}
       onClick={handleChangeRoute}
       aria-current={active ? "page" : undefined}
       className={cn(
