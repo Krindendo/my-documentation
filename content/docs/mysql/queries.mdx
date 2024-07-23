@@ -3,14 +3,11 @@ title: Queries
 description: Introduction to queries
 ---
 
-### EXPLAIN overview
-
+## EXPLAIN overview
 
 The **EXPLAIN** statement is a powerful tool that developers can use to analyze and optimize MySQL queries. It provides valuable information on how the MySQL engine accesses the table data, and can help you identify issues with slow query performance.
 
 When we run an **EXPLAIN** statement, MySQL provides us with an overview of how the query is going to be executed, including the type of access it uses to reach the data, the index used, and the estimated number of rows accessed. With this information, we can determine which queries need optimization to improve performance.
-
-
 
 ```sql
     EXPLAIN SELECT * FROM people;
