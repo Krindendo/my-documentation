@@ -1,0 +1,37 @@
+---
+title: Tokens
+description: ID tokens(jwt) and access tokens.
+date: 2024-07-24
+---
+
+## ID tokens
+
+ID tokens are JSON web tokens (JWTs) meant for use by the application only.
+
+It have 3 parts that is divided by dot. When you decode that jwt you will see content of these parts. There are header, payload and verify signature.
+
+Verify signature is made by adding header, payload and secret key. If you want to check if jwt is valid you need to encrypt header, payload and secret key and to check if that key is equal to key that user provided.
+
+```json title="example of payload"
+{
+  "iss": "http://{yourDomain}/",
+  "sub": "auth0|123456",
+  "aud": "{yourClientId}",
+  "exp": 1311281970,
+  "iat": 1311280970,
+  "name": "Jane Doe",
+  "given_name": "Jane",
+  "family_name": "Doe",
+  "gender": "female",
+  "birthdate": "0000-10-31",
+  "email": "janedoe@example.com",
+  "picture": "http://example.com/janedoe/me.jpg"
+}
+```
+
+
+## Access tokens
+
+## Specialized tokens
+
+- Refresh tokens: A token used to obtain a renewed access token without having to re-authenticate the user.
