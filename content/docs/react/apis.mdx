@@ -21,4 +21,10 @@ description: APIs that are useful for defining components.
 
 ## memo
 
+[memo](https://react.dev/reference/react/memo) is a wrapper that will memoize the version of that component. This memoized version of your component will usually not be re-rendered when its parent component is re-rendered as long as its props have not changed. But React may still re-render it: memoization is a performance optimization, not a guarantee.
+
+- Component: The component that you want to memoize. The memo does not modify this component, but returns a new, memoized component instead.
+
+TODO: Nije gotovo.
+
 ## startTransition
