@@ -1,0 +1,61 @@
+---
+title: Advanced guides
+description: Description test
+---
+
+## Compound Pattern
+
+
+<a href="/docs/react/context-hooks#example-complext-component">Example of complext component</a>
+
+## Higher-Order Components (HOC)
+
+One way of being able to reuse the same logic in multiple components, is by using the higher order component pattern.
+
+If we want to apply a certain styling to components, requiring authorization, or adding a global state.
+
+A Higher Order Component (HOC) is a component that receives another component. The HOC contains certain logic that we want to apply to the component that we pass as a parameter. After applying that logic, the HOC returns the element with the additional logic.
+
+In some cases, we can replace the HOC pattern with React Hooks.
+
+Example:
+
+```tsx title="withAuth.tsx"
+const withAuth = <P extends Record<string, unknown>>(
+  Component: React.ComponentType<P>
+): React.FC<P> => {
+  const Auth: React.FC<P> = (props) => {
+    const router = useRouter();
+    const { status } = useSession({
+      required: true,
+      onUnauthenticated() {
+        router.push('/welcome/login');
+      },
+    });
+
+    if (status === 'loading') {
+      return 'Loading ...';
+    }
+
+    return <Component {...props} />;
+  };
+
+  return Auth;
+};
+
+export default withAuth;
+```
+
+```tsx title="dashboard.tsx"
+function DashboardPage() {
+    const user = useUser();
+    return (
+        <div>
+            Hello Admin
+        </div>
+    );
+}
+
+export default withAuth(Control);
+
+```

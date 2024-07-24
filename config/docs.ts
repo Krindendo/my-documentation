@@ -58,6 +58,7 @@ export const docsConfig: DocsConfig = {
         { title: "Performance Hooks", href: "/docs/react/performance-hooks" },
         { title: "Other Hooks", href: "/docs/react/other-hooks" },
         { title: "APIs", href: "/docs/react/apis" },
+        { title: "Advanced guides", href: "/docs/react/advanced-guides" },
       ],
     },
     {

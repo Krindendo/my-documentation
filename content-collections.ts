@@ -72,7 +72,7 @@ const options: any = {
 
           preElement.properties["__withMeta__"] =
             node.children.at(0).tagName === "div"
-          preElement.properties["__rawString__"] = node.__rawString__
+          //preElement.properties["__rawString__"] = node.__rawString__
 
           if (node.__src__) {
             preElement.properties["__src__"] = node.__src__
@@ -112,7 +112,7 @@ const doc = defineCollection({
   transform: async (document, context) => {
     const body = await compileMDX(context, document, options)
 
-    console.log("document", document)
+    console.log("document", document._meta)
 
     return {
       ...document,
