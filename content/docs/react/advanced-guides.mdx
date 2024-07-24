@@ -10,6 +10,8 @@ description: Description test
 
 ## Higher-Order Components (HOC)
 
+<Callout type="danger">Higher-order components are not commonly used in modern React code.</Callout>
+
 One way of being able to reuse the same logic in multiple components, is by using the higher order component pattern.
 
 If we want to apply a certain styling to components, requiring authorization, or adding a global state.
@@ -58,4 +60,36 @@ function DashboardPage() {
 
 export default withAuth(Control);
 
+```
+
+## Custom hooks 
+
+```jsx
+function useKeyPress(targetKey) {
+  const [keyPressed, setKeyPressed] = React.useState(false);
+
+  function handleDown({ key }) {
+    if (key === targetKey) {
+      setKeyPressed(true);
+    }
+  }
+
+  function handleUp({ key }) {
+    if (key === targetKey) {
+      setKeyPressed(false);
+    }
+  }
+
+  React.useEffect(() => {
+    window.addEventListener("keydown", handleDown);
+    window.addEventListener("keyup", handleUp);
+
+    return () => {
+      window.removeEventListener("keydown", handleDown);
+      window.removeEventListener("keyup", handleUp);
+    };
+  }, []);
+
+  return keyPressed;
+}
 ```

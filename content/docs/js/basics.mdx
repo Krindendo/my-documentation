@@ -413,6 +413,32 @@ Closure give you access to an outer functions scope from inner function.
 Scopes: **block scope**, **function scope**, **global scope**
 
 ### Shallow copy and deep copy
+
+Primitive types in JavaScript include Undefined, Null, Boolean, Number, String, and Symbol. When you assign a variable with a primitive data type to another variable, JavaScript stores the value directly and any changes to one variable do not affect the other.
+
+Reference types, on the other hand, include Object, Array, and Function. When you assign a variable with a reference data type to another variable, JavaScript stores not the value itself, but a reference to that value. Any changes made through this reference will affect the original value because they both refer to the same place in memory.
+
+To create a shallow copy, we can use the following methods:
+
+- Spread syntax `[…] {…}`
+
+- Object.assign()
+
+- Array.from()
+
+- Object.create()
+
+- Array.prototype.concat()
+
+To create a deep copy, we can use:
+
+- JSON.parse(JSON.stringify())
+
+- structuredClone()
+
+- Third party libraries like Lodash
+
+
 ### Functions geter and setter
 
 Getter methods are used to access the properties of an object.
@@ -469,3 +495,11 @@ const re = new RegExp(/ab+c/, "i");
 
 
 ### call, apply, bind
+
+While functions in JavaScript are powerful on their own, the **call**, **apply**, and **bind** methods further extend their capabilities. These methods are associated with functions and allow you to manipulate how a function is invoked and the context in which it executes.
+
+**call**: The call method invokes a function with a specified this value and individual arguments passed as separate arguments. It allows you to borrow functions from one object and invoke them in the context of another.
+
+**apply**: Similar to call, the apply method invokes a function with a specified this value, but it takes an array or an array-like object as its second argument, allowing you to pass a variable number of arguments to the function.
+
+**bind**: The bind method creates a new function that, when called, has its this value set to a specific value and prepends any provided arguments to the original function's arguments list. It is often used to create functions with preset contexts or partially applied arguments.
