@@ -1,0 +1,45 @@
+{
+  "topNavigation": {
+    "docs": {
+      "link": "/docs",
+      "label": "Documentation"
+    }
+  },
+  "footerLinks": [
+    {
+      "link": "https://openjsf.org/",
+      "text": "components.containers.footer.links.openJS"
+    }
+  ],
+  "socialLinks": [
+    {
+      "icon": "github",
+      "link": "https://github.com/Krindendo/next-mdx",
+      "alt": "GitHub"
+    },
+    {
+      "icon": "linkedin",
+      "link": "https://rs.linkedin.com/in/marko-milo%C5%A1evi%C4%87-934766224",
+      "alt": "LinkedIn"
+    }
+  ],
+  "sideNavigation": {
+    "docs": {
+      "label": "Docs",
+      "items": {
+        "Introduction": {
+          "link": "/docs",
+          "label": "Introduction"
+        },
+        "context-hooks": {
+          "link": "/docs/context-hooks",
+          "label": "Context hooks"
+        },
+        "state-hooks": {
+          "link": "/docs/state-hooks",
+          "label": "State hooks"
+        }
+      }
+    }
+  }
+}
