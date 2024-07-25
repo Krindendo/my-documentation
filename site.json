@@ -1,0 +1,13 @@
+{
+  "title": "Next MDX",
+  "description": "Tamplete for using MDX with Next.",
+  "favicon": "/static/images/favicons/favicon.png",
+  "accentColor": "#333",
+  "twitter": {
+    "username": "",
+    "card": "summary",
+    "img": "/static/images/logo-hexagon-card.png",
+    "imgAlt": "The Nextjs mdx Logo"
+  },
+  "websiteBadges": {}
+}

@@ -1,17 +1,23 @@
 {
   "name": "my-documentation",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"content-collections watch\" \"next dev\"",
-    "build": "content-collections build && next build",
+    "dev": "cross-env NODE_NO_WARNINGS=1 next dev --turbo",
+    "build": "cross-env NODE_NO_WARNINGS=1 next build",
+    "start": "cross-env NODE_NO_WARNINGS=1 next start",
     "clean": "rm -rf .content-collections .next node_modules",
-    "clean:windows": "powershell -File .\\scripts\\clean.ps1",
-    "start": "next start",
-    "lint": "next lint",
-    "preview": "next build && next start",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "deploy": "cross-env NEXT_PUBLIC_STATIC_EXPORT=true npm run build",
+    "lint:js": "eslint \"**/*.{js,mjs,ts,tsx}\" --cache --cache-strategy=content --cache-location=.eslintjscache",
+    "lint:md": "eslint \"**/*.md?(x)\" --cache --cache-strategy=content --cache-location=.eslintmdcache",
+    "lint:css": "stylelint \"**/*.css\" --allow-empty-input --cache --cache-strategy=content --cache-location=.stylelintcache",
+    "lint": "npm run lint:js && npm run lint:md && npm run lint:css",
+    "lint:fix": "npm run lint:js -- --fix && npm run lint:md -- --fix && npm run lint:css -- --fix",
+    "prettier": "prettier \"**/*.{js,mjs,ts,tsx,md,mdx,json,yml,css}\" --check --cache --cache-strategy=content --cache-location=.prettiercache",
+    "prettier:fix": "npm run prettier -- --write",
+    "format": "npm run lint:fix && npm run prettier:fix",
+    "storybook": "cross-env NODE_NO_WARNINGS=1 storybook dev -p 6006 --quiet --no-open",
+    "storybook:build": "cross-env NODE_NO_WARNINGS=1 storybook build --quiet --webpack-stats-json"
   },
   "dependencies": {
     "@headlessui/react": "^2.1.2",
@@ -28,7 +34,6 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
-    "concurrently": "^8.2.2",
     "date-fns": "^3.6.0",
     "framer-motion": "^11.3.8",
     "lucide-react": "^0.414.0",
@@ -44,10 +49,6 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
-    "@content-collections/cli": "^0.1.2",
-    "@content-collections/core": "^0.6.2",
-    "@content-collections/mdx": "^0.1.3",
-    "@content-collections/next": "^0.2.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
     "@storybook/addon-essentials": "8.2.5",
     "@storybook/addon-interactions": "8.2.5",
@@ -63,6 +64,7 @@
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "autoprefixer": "10.4.19",
+    "cross-env": "^7.0.3",
     "eslint": "9.7.0",
     "eslint-config-next": "14.2.5",
     "eslint-config-prettier": "^9.1.0",
@@ -82,6 +84,7 @@
     "remark-gfm": "^4.0.0",
     "storybook": "8.2.5",
     "tailwindcss": "3.4.6",
+    "turbo": "^2.0.9",
     "typescript": "5.5.3",
     "unist-util-visit": "^5.0.0"
   }
