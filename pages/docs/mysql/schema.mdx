@@ -1,0 +1,267 @@
+---
+title: Schema
+description: Introduction to schema
+---
+
+## 3 guiding principles regardless of what the data type is:
+
+- Columns should be small
+
+- Simples data type
+
+- It should be honest - schema should reflect reality
+
+More compact data is the faster database will be able to access it.
+
+### Integers
+
+| Type | Storage (bytes) | Minimum Signed | Maximum Signed | Minimum Unsigned | Maximum Unsigned |
+| --- | ----: | ----: | --- | ----: | --- |
+| TINYINT | 1  | -128 | 127 | 0 | 255 |
+| SMALLINT | 2  | -32768 | 32767 | 0 | 65535 |
+| MEDIUMINT | 3  | -8388608 | 8388607 | 0 | 16777215 |
+| INT | 4  | -2147483648 | 2147483647 | 0 | 4294967295 |
+| BIGINT | 8  | -2^63 | 2^63-1 | 0 | 2^64-1 |
+
+TINYINT can have negative numbers, then it need to have range from -128 to +127, thats because with negative number it shift bits to 1:
+
+0 1111111 - -128
+
+0 0000000 - -1
+
+1 0000000 - +0
+
+1 1111111 - +127
+
+### Decimals
+
+- DECIMAL: a fixed-precision data type that stores **exact values**.
+
+- FLOAT: a floating-point data type that stores **approximate values**.
+
+- DOUBLE: a floating-point data type that stores larger and more precise values than FLOAT.
+
+To define DECIMAL it need to be define how many digits there are and how many digits should occur after the decimal point.
+
+For example, suppose you want to store a maximum of 10 digits, with two digits after the decimal, the syntax would be:
+
+```sql
+DECIMAL(10,2)
+```
+
+### Strings
+
+- CHAR - fixed lenght character  example: two-digit prefixes, MD5 hashes, something that will always going to be same size
+
+- VARCHAR - variable character
+---
+- TINYTEXT
+
+- TEXT - columns are used to store character data, such as strings of text
+
+- MEDIUMTEXT
+
+- LONGTEXT - it can store up to 4gb of data
+---
+- BINARY - It is similar to the CHAR. CHAR store characters but BINARY only store bytes.
+
+- VARBINARY - It is similar to the VARCHAR. VARCHAR store characters but VARBINARY only store bytes. 
+---
+- TINYBLOB
+
+- BLOB - are used to store binary data
+
+- MEDIUMBLOB
+
+- LONGBLOB - it can store up to 4gb of data
+---
+- ENUM - look like strings, but under the hood, they're stored as integers
+
+- SET
+
+#### Example: diference between CHAR and VARCHAR
+
+If we want to store name Dimitri, with char(100) it will store Dimitri with 3 white spaces and if we want to use varchar(100) it will only store Dimitri wihout white spaces.
+
+Regardless of what you put in the column it is always going to take a 100 bytes. but with varchar, it's only going to take 7 bytes to store characters and 1 byte for prefix to tell how long string is.
+
+**Character sets and collations**
+
+- A character set defines what characters are allowed to go into a column. MySQL supports a wide range of character sets, which you can view from the information_schema database. utf8 and utf8mb4 are the character sets you will likely use, with the latter being the default in MySQL 8.
+
+- Collations, on the other hand, determine how two or more strings are compared or sorted. A collation is a group of rules that decide whether two strings are equivalent or not. The default collation for MySQL 8 is utf8mb4_0900_ai_ci, with the ai indicating that the collation is accent-insensitive, and ci meaning that it is case-insensitive.
+
+#### Example: Best case use for BINARY is when you want to store hashes (passwords)
+
+MD5 hash of "hello" is "5d41402abc4b2a76b9719d911017c592". We can turn this hash into binary data using the UNHEX function. To get a readable version of the data back, we can use the HEX function. Also it can be useful if you want to find exact word or something
+
+```sql 
+select * from bins where bin_hash = UNHEX("something")
+```
+
+**Text columns**
+
+TEXT columns are used to store character data, such as strings of text. Unlike other string data types we've talked about, TEXT columns allow you to store much larger amounts of data, making them a great option for storing long blocks of text. However, it's important to note that text columns are not indexable (without using full text indexes) and cannot be sorted on their full values.
+
+**Blob columns**
+
+BLOB columns, on the other hand, are used to store binary data. They are similar to TEXT columns in that they allow you to store much larger amounts of data compared to other data types. However, BLOB columns do not have a character set or a collation like TEXT columns do.
+
+**Best practices for TEXT and BLOB**
+
+When using text or blob columns, it's important to consider two things: how much data you need to store and how you will access that data. Here are some best practices to keep in mind:
+
+- **Only select the columns that you need**: Because of how large TEXT and BLOB columns are stored on the disk, it's best to only select them when you need them. Refactor your data so that BLOB columns can be joined in when necessary.
+
+- Don't index or sort entire columns: Because of the size of TEXT and BLOB columns, it's not feasible to index or sort on the entire column. You should only index or sort on a prefix of the column.
+
+- Use VARCHAR columns for smaller amounts of data: If you only need to store a few hundred characters, consider using VARCHAR instead of text columns. This can help with indexing and sorting.
+
+#### Example: ENUM
+
+```sql
+CREATE TABLE orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  size ENUM('extra small', 'small', 'medium', 'large', 'extra large')
+);
+
+
+INSERT INTO orders (size) VALUES ('small'), ('medium'), ('large');
+```
+
+**Benefits of enums**
+
+- Data validation - When attempting to enter an invalid value, an error is thrown, preventing the data from being inserted into the database.
+
+- Readability - Since enums allow you to store readable values in your database, it's easier to read the stored data at a glance. You don't need to memorize integers to understand the data;
+
+- Compact data type - Enums are compact data types, which means they take up less storage space than other data types, such as strings. 
+
+**Downsides of enums**
+
+- Changes to the schema - If a business requirement changes, and you need to add another option to the allowable values, you'll have to alter the schema of your table to add a new enum.
+
+- Ordering - When sorting data using enums, MySQL sorts by the underlying integer value rather than the actual string.
+
+- Using integer enums - It can be confusing and should be avoided if possible. If you must use integer enums, it's best to use a TINYINT column instead.
+
+### Dates
+
+| Type | Storage (bytes) | Min | Max |
+| --- | --- | --- | --- | 
+| DATE | 3  | 1000-01-01 | 9999-12-31 | 
+| DATETIME | 8  | 1000-01-01 00:00:00 | 9999-12-31 23:59:59 | 
+| TIMESTAMP | 4  | 1070-01-01 00:00:00 | 2038-01-19 03:14:07 | 
+| YEAR | 1  | 1901 | 2155 | 
+| TIME | 3  | -838:59:59 | 838:59:59 | 
+
+**DATE**
+
+If you only need to store the date, then the DATE type column is your best bet.
+
+**DATETIME**
+
+If you need to store both the date and time, then DATETIME and TIMESTAMP are the two options you have.
+
+**TIMESTAMP**
+
+If you only need to store time data within this range, TIMESTAMP is the more compact and efficient option.
+
+**YEAR**
+
+If you need to store a year between 1901 and 2155, YEAR would be the most compact way to do it. This type is not very commonly used.
+
+**TIME**
+
+The TIME data type is used to store hours, minutes, and seconds. It can store more than 24 hours, which is useful for storing intervals. This type is useful for a 10-day range denominated in hours, minutes, and seconds, but it's not commonly used.
+
+**DATETIME vs TIMESTAMP and Time zones**
+
+With DATETIME, MySQL does not handle time zones at all. Whatever you put in, you get back out. With TIMESTAMP, MySQL tries to help you by converting values to UTC when added to the database and back to your time zone when retrieved.
+
+This difference is essential to consider when choosing between these two data types, especially if your application requires handling different time zones.
+
+Example: update_at will update time on every update in that row??
+
+```sql
+create table users (
+  `id` serial
+  `created_at` timestamp default CURRENT_TIMESTAMP
+  `updated_at` timestamp default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
+)
+```
+
+### JSON
+
+When working with JSON data, MySQL is much more strict than with other text data types. The JSON data must be valid according to the JSON specification, or MySQL will reject it. 
+
+Once you have valid JSON data in your MySQL database, you can use various functions and operators to retrieve and manipulate it.
+
+Suppose we want to retrieve just the key from this JSON object. We could use the -> operator
+
+When using JSON columns is that they can be **quite heavy**, especially if you're storing large amounts of JSON data. As with any data type in MySQL, only select the data you need when you're querying, and **avoid retrieving JSON data unnecessarily**.
+
+**Indexing JSON columns**
+
+One important consideration when using JSON columns in MySQL is that they cannot be directly indexed. Instead, MySQL supports indexing for generated columns on a specified JSON path. This means you can create an index on a specific key within a JSON object, but not on the entire object itself.
+
+```sql
+ALTER TABLE has_json ADD INDEX my_index ((`json`->>"$.key"));
+```
+
+Here, we're creating an index on the key field within the JSON object of our column. This allows MySQL to perform faster lookups for queries that involve this particular JSON path.
+
+### Unexpected types
+
+- MySQL Booleans
+
+MySQL doesn't actually have a native boolean type. Instead, MySQL uses a TINYINT column to simulate a boolean value. However, you can still use the keyword BOOLEAN in your table definition, which will be interpreted as a TINYINT column.
+
+- Zip codes
+
+When it comes to USA zip codes, they are always 5 digits long. As such, it's usually better to store zip codes as 5 character strings.
+
+- IP addresses
+
+While they usually appear as strings, you can also store them as integers for better organization and analysis. 
+
+MySQL has a built-in function INET_ATON() that converts an IPv4 address to an integer, and INET_NTOA() to convert an integer back to an IP address.
+
+If you need to support both IPv4 and IPv6 addresses, you may need to use a binary column that's 16 bytes long.
+
+### Generated columns
+
+Generated columns are a way to make MySQL do more work on your behalf, by allowing you to create columns that are based on other columns in your table. Essentially, a generated column is a column that is computed by an expression, rather than being explicitly stored in the table.
+
+The idea is that you can define a column using a formula or calculation, and MySQL will automatically calculate the values for that column based on the data in other columns.
+
+#### Example: email and domain
+
+We're going to create a table called emails, which will have two columns - email and domain.
+
+To create the generated column, we'll use the AS keyword and a function called substring index. The substring index function allows us to extract the domain from the email address.
+
+<Callout>It can't accept functions that will be changed overtime, because it need to be deterministic. Every time you run same proccess it need to have same result.</Callout> 
+
+```sql
+CREATE TABLE emails (
+  email varchar(255),
+  domain varchar(255) AS (substring_index(email, '@', -1))
+);
+```
+
+**Virtual vs. stored generated columns**
+
+A virtual column is calculated at runtime and does not take up any space on the disk. This means that it may take longer to calculate, but it doesn't impact the overall size of the table.
+
+A stored column, on the other hand, is calculated during data insertion or update and saved to disk, just like a regular column. This means that it might be faster to retrieve data from a stored column, but it will take up more space on the disk.
+
+When creating a generated column, you can specify whether it should be virtual or stored by using the VIRTUAL or STORED keyword. If you don't specify anything, the column will default to being virtual.
+
+**Use cases**
+
+- Extracting data from JSON objects - If you have a column that contains a big JSON blob, you can use a generated column to extract a specific key from the blob and create a new column with just that data. This can make it easier to query the data and improve performance.
+
+- Performing calculations - You can use generated columns to perform calculations such as converting units, and more. This can be useful for creating reports or performing other data analysis tasks.
+
+- Normalizing data - If you have a column that contains redundant data, you can use a generated column to extract that data and create a new table with just the unique values. This can make it easier to manage your data and eliminate redundancy.

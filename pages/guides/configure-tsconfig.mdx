@@ -1,0 +1,77 @@
+---
+title: Configure tsconfig
+description: All you need to know about tsconfig
+date: 2023-09-15
+---
+
+The `tsconfig.json` file provides the project's root files as well as the compiler options needed to compile it.
+
+The full list of options may be seen at [typescriptlang.org/tsconfig](https://www.typescriptlang.org/tsconfig).
+
+### TSConfig Bases
+
+There may be a base configuration available at [github.com/tsconfig/bases](https://github.com/tsconfig/bases/) that you can utilize.
+
+if you were writing a project which uses Bun, then you could use the npm module
+
+```json
+{
+  "extends": "@tsconfig/bun/tsconfig.json",
+  "compilerOptions": {
+    "preserveConstEnums": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["**/*.spec.ts"]
+}
+```
+
+### Quickstart
+
+```json
+{
+  "compilerOptions": {
+    /* Base Options: */
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "es2022",
+    "verbatimModuleSyntax": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+
+    /* If transpiling with TypeScript: */
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "outDir": "dist",
+
+    /* If NOT transpiling with TypeScript: */
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "noEmit": true,
+
+    /* If your code runs in the DOM: */
+    "lib": ["es2022", "dom", "dom.iterable"],
+
+    /* If your code doesn't run in the DOM: */
+    "lib": ["es2022"],
+
+    /* If you're building for a library: */
+    "declaration": true,
+
+    /* If you're building for a library in a monorepo: */
+    "composite": true,
+    "sourceMap": true,
+    "declarationMap": true
+  }
+}
+```
+
+## Compiler Options - popular
+
+- [esModuleInterop](https://www.typescriptlang.org/tsconfig#esModuleInterop) Helps mend a few of the fences between CommonJS and ES Modules.
+
+  Default: true if module is node16 or nodenext; false otherwise.

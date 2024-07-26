@@ -1,0 +1,56 @@
+---
+title: Abort Fetch
+description: How to control Fetch
+date: 2023-10-18
+---
+
+## AbortController
+
+AbortController is a web API that allows to abort one or more web requests as and when desired.
+
+### signal
+
+Returns an AbortSignal object instance, which can be used to communicate with, or to abort, a DOM request.
+
+### abort()
+
+Aborts a DOM request before it has completed. This is able to abort fetch requests, consumption of any response bodies, and streams.
+
+If fetch lasts more than 2 seconds, it will abort fetch.
+
+```jsx
+export default function Component () {
+  const controller = new AbortController()
+
+  const fetchData = async () => {
+    setTimeout(() => {
+      controller.abort()
+    }, 2000)
+    await fetch("/api/example", { signal: controller.signal })
+  }
+
+  return <button onClick={fetchData}>fetch data</button>
+}
+```
+
+
+After ten seconds, it will show an error that the fetch is rejected, but it will not abort other fetches; it will show a result after the fetch succeeds.
+
+```jsx
+export default function Home () {
+  const fetchData = async () => {
+    try {
+      await Promise.race([
+        fetch("/api/example").then(() => console.log("fetched")),
+        fetch("/api/example1").then(() => console.log("fetched1")),
+        fetch("/api/example2").then(() => console.log("fetched2")),
+        new Promise((_, reject) => setTimeout(reject, 10000))
+      ])
+    } catch (err) {
+      console.log("promise rejected");
+    }
+  }
+
+  return <button onClick={fetchData}>fetch data</button>
+}
+```
