@@ -1,6 +1,6 @@
-"use strict"
+'use strict';
 
-import { siteRedirects } from "./next.json.mjs"
+import { siteRedirects } from './next.json.mjs';
 
 /**
  * These are external redirects that happen before we check dynamic routes and rewrites
@@ -11,13 +11,13 @@ import { siteRedirects } from "./next.json.mjs"
  */
 const redirects = async () => {
   return siteRedirects.external.map(({ source, destination }) => ({
-    source: source.replace("/:locale", "en"),
+    source: source.replace('/:locale', "en"),
     // We prevent permanent redirects as in general the redirects are safeguards
     // of legacy or old pages or pages that moved, and in general we don't want permanent redirects
     permanent: false,
     destination,
-  }))
-}
+  }));
+};
 
 /**
  * These are rewrites that happen before we check dynamic routes and after we check regular redirects
@@ -30,12 +30,12 @@ const redirects = async () => {
 const rewrites = async () => {
   const mappedRewrites = siteRedirects.internal.map(
     ({ source, destination }) => ({
-      source: source.replace("/:locale", "en"),
+      source: source.replace('/:locale', "en"),
       destination,
     })
-  )
+  );
 
-  return { afterFiles: mappedRewrites }
-}
+  return { afterFiles: mappedRewrites };
+};
 
-export { rewrites, redirects }
+export { rewrites, redirects };
