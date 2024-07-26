@@ -1,9 +1,9 @@
-"use strict"
+'use strict';
 
 /**
  * This is used to verify if the current Website is running on a Development Environment
  */
-export const IS_DEVELOPMENT = process.env.NODE_ENV === "development"
+export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 
 /**
  * This is used for telling Next.js if the Website is deployed on Vercel
@@ -12,7 +12,7 @@ export const IS_DEVELOPMENT = process.env.NODE_ENV === "development"
  *
  * @see https://vercel.com/docs/concepts/projects/environment-variables/system-environment-variables#framework-environment-variables
  */
-export const VERCEL_ENV = process.env.NEXT_PUBLIC_VERCEL_ENV || undefined
+export const VERCEL_ENV = process.env.NEXT_PUBLIC_VERCEL_ENV || undefined;
 
 /**
  * This is used for defining a default time of when `next-data` and other dynamically generated
@@ -22,7 +22,7 @@ export const VERCEL_ENV = process.env.NEXT_PUBLIC_VERCEL_ENV || undefined
  */
 export const VERCEL_REVALIDATE = Number(
   process.env.NEXT_PUBLIC_VERCEL_REVALIDATE_TIME || 300
-)
+);
 
 /**
  * This is used for telling Next.js to to a Static Export Build of the Website
@@ -33,8 +33,8 @@ export const VERCEL_REVALIDATE = Number(
  * Note that this is a manual Environment Variable defined by us during `npm run deploy`
  */
 export const ENABLE_STATIC_EXPORT =
-  process.env.NEXT_PUBLIC_STATIC_EXPORT === "true" ||
-  process.env.NEXT_PUBLIC_STATIC_EXPORT === true
+  process.env.NEXT_PUBLIC_STATIC_EXPORT === 'true' ||
+  process.env.NEXT_PUBLIC_STATIC_EXPORT === true;
 
 /**
  * This is used for any place that requires the full canonical URL path for the Node.js Website (and its deployment), such as for example, the Node.js RSS Feed.
@@ -48,7 +48,7 @@ export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
   ? process.env.NEXT_PUBLIC_BASE_URL
   : process.env.NEXT_PUBLIC_VERCEL_URL
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-    : "https://my-documentation-omega.vercel.app/"
+    : 'https://my-documentation-omega.vercel.app/';
 
 /**
  * This is used for any place that requires the Node.js distribution URL (which by default is nodejs.org/dist)
@@ -56,7 +56,7 @@ export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
  * Note that this is a custom Environment Variable that can be defined by us when necessary
  */
 export const DIST_URL =
-  process.env.NEXT_PUBLIC_DIST_URL || "https://nodejs.org/dist/"
+  process.env.NEXT_PUBLIC_DIST_URL || 'https://my-documentation-omega.vercel.app/dist/';
 
 /**
  * This is used for any place that requires the Node.js API Docs URL (which by default is nodejs.org/docs)
@@ -64,7 +64,7 @@ export const DIST_URL =
  * Note that this is a custom Environment Variable that can be defined by us when necessary
  */
 export const DOCS_URL =
-  process.env.NEXT_PUBLIC_DOCS_URL || "https://nodejs.org/docs/"
+  process.env.NEXT_PUBLIC_DOCS_URL || 'https://my-documentation-omega.vercel.app/docs/';
 
 /**
  * Supports a manual override of the base path of the Website
@@ -74,7 +74,7 @@ export const DOCS_URL =
  *
  * Note that this is a custom Environment Variable that can be defined by us when necessary
  */
-export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || ""
+export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 /**
  * This is used for fetching static next-data through the /en/next-data/ endpoint
@@ -88,7 +88,7 @@ export const NEXT_DATA_URL = process.env.NEXT_PUBLIC_DATA_URL
   ? process.env.NEXT_PUBLIC_DATA_URL
   : VERCEL_ENV
     ? `${BASE_URL}${BASE_PATH}/en/next-data/`
-    : `http://localhost:3000/en/next-data/`
+    : `http://localhost:3000/en/next-data/`;
 
 /**
  * This ReGeX is used to remove the `index.md(x)` suffix of a name and to remove
@@ -97,32 +97,32 @@ export const NEXT_DATA_URL = process.env.NEXT_PUBLIC_DATA_URL
  * This RegEx is used to transform the file system pathnames into acceptable
  * Route Segments for Next.js Dynamic Routes on `pages/[...path].tsx`
  */
-export const MD_EXTENSION_REGEX = /((\/)?(index))?\.mdx?$/i
+export const MD_EXTENSION_REGEX = /((\/)?(index))?\.mdx?$/i;
 
 /**
  * This defines how many blog posts each pagination page should have
  */
-export const BLOG_POSTS_PER_PAGE = 6
+export const BLOG_POSTS_PER_PAGE = 6;
 
 /**
  * The `localStorage` key to store the theme choice of `next-themes`
  *
  * This is what allows us to store user preference for theming
  */
-export const THEME_STORAGE_KEY = "theme"
+export const THEME_STORAGE_KEY = 'theme';
 
 /**
  * This is a list of all external links that are used on website sitemap.
  * @see https://github.com/nodejs/nodejs.org/issues/5813 for more context
  */
-export const EXTERNAL_LINKS_SITEMAP = ["https://terms-of-use.openjsf.org/"]
+export const EXTERNAL_LINKS_SITEMAP = [];
 
 /**
  * These are the default Orama Query Parameters that are used by the Website
  * @see https://docs.oramasearch.com/open-source/usage/search/introduction
  */
 export const DEFAULT_ORAMA_QUERY_PARAMS = {
-  mode: "fulltext",
+  mode: 'fulltext',
   limit: 8,
   threshold: 0,
   boost: {
@@ -133,4 +133,4 @@ export const DEFAULT_ORAMA_QUERY_PARAMS = {
   facets: {
     siteSection: {},
   },
-}
+};

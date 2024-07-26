@@ -1,7 +1,7 @@
-"use strict"
+"use strict";
 
-import { BASE_PATH, ENABLE_STATIC_EXPORT } from "./next.constants.mjs"
-import { redirects, rewrites } from "./next.rewrites.mjs"
+import { BASE_PATH, ENABLE_STATIC_EXPORT } from "./next.constants.mjs";
+import { redirects, rewrites } from "./next.rewrites.mjs";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -72,9 +72,9 @@ const nextConfig = {
       test: /\.m?js$/,
       type: "javascript/auto",
       resolve: { fullySpecified: false },
-    })
+    });
 
-    return config
+    return config;
   },
   experimental: {
     // Some of our static pages from `getStaticProps` have a lot of data
@@ -92,6 +92,6 @@ const nextConfig = {
     // Removes the warning regarding the WebPack Build Worker
     webpackBuildWorker: false,
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;
