@@ -1,0 +1,26 @@
+---
+title: MySQL
+description: MySQL is a relational database management system based on SQL
+---
+
+## One-to-one Relationship
+
+This relationship exists when every row in table A can only be linked with another one row in table B.
+
+For example, a country has only one capital city, and a capital city only belongs to one country.
+
+Mother and Child relationship. Perhaps it exists when a mother has only one child, but the relationship is one-to-many relationship, as mothers could have more than one child.
+
+## One to Many Relationship
+
+This relationship exists when every row in table A may be linked with many rows in table B, but row in table B can be linked to only one row in table A.
+
+Author and Book relationship. Perhaps it exists when an author has many books, and each book is only written by one author, but the relationship here is many-to-many relationship, as books could be co-authored.
+
+## Many to Many Relationship
+
+If you have a many-to-many relationship between two entities, the standard way to represent them is with three tables.
+
+Two of the tables are entity tables, with a primary key. A junction table lies between them (logically) and contains two foreign keys, one that references each entity table. Often, these two foreign keys will be the only two columns in the junction table.
+
+Let’s take an example. MoviesCategories serve as the junction table / relation table. The primary key of Movie and Category serves as foreign keys of MoviesCategories

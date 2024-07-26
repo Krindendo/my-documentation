@@ -1,0 +1,23 @@
+---
+title: Linear Search
+description: Simplest search
+---
+
+<h3 className="text-lg font-semibold">- How it works</h3>
+
+It is walking linearly until it finds the value.
+
+<h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
+
+It is **O(N)**.
+
+```ts
+export default function linear_search(haystack: number[], needle: number): boolean {
+  for(let i=0; i < haystack.length; ++i){
+    if(haystack[i] === needle){
+      return true
+    }
+  }
+  return false
+}
+```
