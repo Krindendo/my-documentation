@@ -23,4 +23,4 @@ const LogoEarth: FC<SVGProps<SVGSVGElement>> = props => (
   </svg>
 );
 
-export default LogoEarth;
+export { LogoEarth };

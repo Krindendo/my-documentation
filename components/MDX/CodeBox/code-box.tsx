@@ -23,4 +23,4 @@ const MDXCodeBox: FC<PropsWithChildren<CodeBoxProps>> = ({
   );
 };
 
-export default MDXCodeBox;
+export { MDXCodeBox };
