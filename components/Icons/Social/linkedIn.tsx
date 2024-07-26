@@ -29,4 +29,4 @@ const LogoLinkedIn: FC<SVGProps<SVGSVGElement>> = props => (
   </svg>
 );
 
-export default LogoLinkedIn;
+export { LogoLinkedIn };

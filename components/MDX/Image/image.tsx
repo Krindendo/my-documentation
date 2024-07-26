@@ -22,4 +22,4 @@ const MDXImage: FC<ImageProps> = ({ width, height, alt, ...props }) => {
   return <Image {...props} alt={alt} width={width} height={height} />;
 };
 
-export default MDXImage;
+export { MDXImage };

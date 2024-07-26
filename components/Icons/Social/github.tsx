@@ -13,4 +13,4 @@ const LogoGitHub: FC<SVGProps<SVGSVGElement>> = props => (
   </svg>
 );
 
-export default LogoGitHub;
+export { LogoGitHub };

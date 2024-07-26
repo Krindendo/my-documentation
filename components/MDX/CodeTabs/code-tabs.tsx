@@ -49,4 +49,4 @@ const MDXCodeTabs: FC<MDXCodeTabsProps> = ({
   );
 };
 
-export default MDXCodeTabs;
+export { MDXCodeTabs };

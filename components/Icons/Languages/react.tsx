@@ -29,4 +29,4 @@ const LogoReact: FC<SVGProps<SVGSVGElement>> = props => (
   </svg>
 );
 
-export default LogoReact;
+export { LogoReact };
