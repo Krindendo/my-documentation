@@ -21,4 +21,4 @@ const Link: FC<LinkProps> = ({ children, href, ...props }) => {
   );
 };
 
-export default Link;
+export { Link };
