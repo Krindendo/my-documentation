@@ -1,11 +1,12 @@
 {
-  "title": "Next MDX",
-  "description": "Tamplete for using MDX with Next.",
+  "title": "My Documentation",
+  "description": "The site is made to serve as documentation that will facilitate programming. It contains examples and definitions of the various functions that are used.",
   "favicon": "/static/images/favicons/favicon.png",
   "accentColor": "#333",
+  "url": "https://my-documentation-omega.vercel.app",
   "twitter": {
     "username": "",
-    "card": "summary",
+    "card": "article",
     "img": "/static/images/logo-hexagon-card.png",
     "imgAlt": "The Nextjs mdx Logo"
   },
