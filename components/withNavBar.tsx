@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import NavBar from '@/components/Containers/NavBar';
+import { NavBar } from '@/components/Containers/NavBar';
 import navigation from '@/navigation.json';
 
 const WithNavBar: FC = () => {

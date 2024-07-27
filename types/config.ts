@@ -19,5 +19,6 @@ export interface SiteConfig {
   lightAccentColor: string;
   darkAccentColor: string;
   og: OGConfig;
+  url: string;
   twitter: TwitterConfig;
 }
