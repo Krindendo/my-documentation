@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { toString } from 'hast-util-to-string';
 import { visit } from 'unist-util-visit';
 
-import { getShiki, highlightToHast } from './util/getHighlighter';
+import { getShiki, highlightToHast } from '@/util/getHighlighter';
 
 // This is what Remark will use as prefix within a <pre> className
 // to attribute the current language of the <pre> element

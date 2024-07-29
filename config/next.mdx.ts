@@ -1,12 +1,9 @@
-'use strict';
-
 import remarkHeadings from '@vcarl/remark-headings';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import readingTime from 'remark-reading-time';
 
-import rehypeShikiji from './next.mdx.shiki.mjs';
+import rehypeShikiji from '@/config/next.mdx.shiki';
 
 /**
  * Provides all our Rehype Plugins that are used within MDX

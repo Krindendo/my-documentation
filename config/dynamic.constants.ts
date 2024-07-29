@@ -1,7 +1,5 @@
-'use strict';
-
-import { BASE_PATH, BASE_URL } from './next.constants.mjs';
-import { siteConfig } from './next.json.mjs';
+import { BASE_PATH, BASE_URL } from '@/config/constants';
+import { siteConfig } from '@/config/site';
 
 /**
  * This is a list of all static routes or pages from the Website that we do not
@@ -11,7 +9,7 @@ import { siteConfig } from './next.json.mjs';
  */
 export const IGNORED_ROUTES = [
   // This is used to ignore all blog routes except for the English language
-  ({ pathname }) => /^blog/.test(pathname),
+  ({ pathname }: any) => /^blog/.test(pathname),
 ];
 
 /**
@@ -35,7 +33,7 @@ export const PAGE_METADATA = {
   robots: { index: true, follow: true },
   twitter: {
     card: siteConfig.twitter.card,
-    title: siteConfig.twitter.title,
+    title: siteConfig.title,
     creator: siteConfig.twitter.username,
     images: {
       url: siteConfig.twitter.img,

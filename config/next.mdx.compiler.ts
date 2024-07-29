@@ -1,11 +1,9 @@
-'use strict';
-
 import { evaluate } from '@mdx-js/mdx';
 import { Fragment, jsx, jsxs } from 'react/jsx-runtime';
 import { matter } from 'vfile-matter';
 
-import { NEXT_REHYPE_PLUGINS, NEXT_REMARK_PLUGINS } from './next.mdx.mjs';
-import { createGitHubSlugger } from './util/gitHubUtils';
+import { NEXT_REHYPE_PLUGINS, NEXT_REMARK_PLUGINS } from '@/config/next.mdx';
+import { createGitHubSlugger } from '@/util/gitHubUtils';
 
 // Defines the React Runtime Components
 const reactRuntime = { Fragment, jsx, jsxs };
