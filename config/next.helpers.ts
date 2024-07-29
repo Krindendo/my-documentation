@@ -1,8 +1,6 @@
-"use strict";
+import { fileURLToPath } from 'node:url';
 
-import { fileURLToPath } from "node:url";
-
-import { glob } from "glob";
+import { glob } from 'glob';
 
 /**
  * We create a locale cache of Glob Promises
@@ -13,8 +11,8 @@ import { glob } from "glob";
  * @type {Map<string, Promise<string>>} */
 const globCacheByPath = new Map();
 
-export const getMatchingRoutes = (route = "", matches = []) =>
-  matches.some((match) => route === match);
+export const getMatchingRoutes = (route = '', matches = []) =>
+  matches.some(match => route === match);
 
 /**
  * This method is responsible for reading all immediate subdirectories of a directory
@@ -24,9 +22,9 @@ export const getMatchingRoutes = (route = "", matches = []) =>
  * @returns {Promise<Array<string>>} a promise containing an array of directories
  */
 export const getDirectories = async (root, cwd) => {
-  return glob("*", { root, cwd, withFileTypes: true })
-    .then((d) => d.filter((e) => e.isDirectory()))
-    .then((d) => d.map((e) => e.name));
+  return glob('*', { root, cwd, withFileTypes: true })
+    .then(d => d.filter(e => e.isDirectory()))
+    .then(d => d.map(e => e.name));
 };
 
 /**
@@ -35,7 +33,7 @@ export const getDirectories = async (root, cwd) => {
  * @param {string} path the current import path
  * @returns {string} the relative path from import
  */
-export const getRelativePath = (path) => fileURLToPath(new URL(".", path));
+export const getRelativePath = path => fileURLToPath(new URL('.', path));
 
 /**
  * This method is responsible for retrieving a glob of all files that exist
@@ -50,10 +48,10 @@ export const getRelativePath = (path) => fileURLToPath(new URL(".", path));
  * @returns {Promise<Array<string>>} a promise containing an array of paths
  */
 export const getMarkdownFiles = async (root, cwd, ignore = []) => {
-  const cacheKey = `${root}${cwd}${ignore.join("")}`;
+  const cacheKey = `${root}${cwd}${ignore.join('')}`;
 
   if (!globCacheByPath.has(cacheKey)) {
-    globCacheByPath.set(cacheKey, glob("**/*.{md,mdx}", { root, cwd, ignore }));
+    globCacheByPath.set(cacheKey, glob('**/*.{md,mdx}', { root, cwd, ignore }));
   }
 
   return globCacheByPath.get(cacheKey);

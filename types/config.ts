@@ -7,8 +7,8 @@ export interface TwitterConfig {
 
 export interface OGConfig {
   imgType: string;
-  imgWidth: string;
-  imgHeight: string;
+  imgWidth: number;
+  imgHeight: number;
 }
 
 export interface SiteConfig {

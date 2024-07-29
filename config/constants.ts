@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * This is used to verify if the current Website is running on a Development Environment
  */
@@ -33,8 +31,7 @@ export const VERCEL_REVALIDATE = Number(
  * Note that this is a manual Environment Variable defined by us during `npm run deploy`
  */
 export const ENABLE_STATIC_EXPORT =
-  process.env.NEXT_PUBLIC_STATIC_EXPORT === 'true' ||
-  process.env.NEXT_PUBLIC_STATIC_EXPORT === true;
+  process.env.NEXT_PUBLIC_STATIC_EXPORT === 'true';
 
 /**
  * This is used for any place that requires the full canonical URL path for the Node.js Website (and its deployment), such as for example, the Node.js RSS Feed.
@@ -56,7 +53,8 @@ export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
  * Note that this is a custom Environment Variable that can be defined by us when necessary
  */
 export const DIST_URL =
-  process.env.NEXT_PUBLIC_DIST_URL || 'https://my-documentation-omega.vercel.app/dist/';
+  process.env.NEXT_PUBLIC_DIST_URL ||
+  'https://my-documentation-omega.vercel.app/dist/';
 
 /**
  * This is used for any place that requires the Node.js API Docs URL (which by default is nodejs.org/docs)
@@ -64,7 +62,8 @@ export const DIST_URL =
  * Note that this is a custom Environment Variable that can be defined by us when necessary
  */
 export const DOCS_URL =
-  process.env.NEXT_PUBLIC_DOCS_URL || 'https://my-documentation-omega.vercel.app/docs/';
+  process.env.NEXT_PUBLIC_DOCS_URL ||
+  'https://my-documentation-omega.vercel.app/docs/';
 
 /**
  * Supports a manual override of the base path of the Website

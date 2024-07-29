@@ -1,5 +1,3 @@
-'use strict';
-
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { join, normalize, sep } from 'node:path';
@@ -8,15 +6,15 @@ import matter from 'gray-matter';
 import { cache } from 'react';
 import { VFile } from 'vfile';
 
-import { BASE_URL, BASE_PATH, IS_DEVELOPMENT } from './next.constants.mjs';
+import { BASE_URL, BASE_PATH, IS_DEVELOPMENT } from '@/config/constants';
 import {
   IGNORED_ROUTES,
   DYNAMIC_ROUTES,
   PAGE_METADATA,
-} from './next.dynamic.constants.mjs';
-import { getMarkdownFiles } from './next.helpers.mjs';
-import { siteConfig } from './next.json.mjs';
-import { compileMDX } from './next.mdx.compiler.mjs';
+} from '@/config/dynamic.constants';
+import { getMarkdownFiles } from '@/config/next.helpers';
+import { siteConfig } from '@/config/site';
+import { compileMDX } from '@/config/next.mdx.compiler';
 
 // This is the combination of the Application Base URL and Base PATH
 const baseUrlAndPath = `${BASE_URL}${BASE_PATH}`;

@@ -1,7 +1,5 @@
-import type { clientMdxComponents } from '@/next.mdx.use.client.mjs';
-import type { mdxComponents } from '@/next.mdx.use.mjs';
+import type { clientMdxComponents } from '@/config/next.mdx.components';
 
 declare global {
-  type MDXProvidedComponents = typeof mdxComponents &
-    typeof clientMdxComponents;
+  type MDXProvidedComponents = typeof clientMdxComponents;
 }
