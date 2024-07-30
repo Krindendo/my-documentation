@@ -12,7 +12,7 @@ interface SearchButtonProps {
   className?: string;
 }
 
-export const SearchButton: FC<SearchButtonProps> = className => {
+const SearchButton: FC<SearchButtonProps> = className => {
   const [isOpen, setIsOpen] = useState(false);
   const openSearchBox = () => setIsOpen(true);
   const closeSearchBox = () => setIsOpen(false);
@@ -60,3 +60,5 @@ export const SearchButton: FC<SearchButtonProps> = className => {
     </>
   );
 };
+
+export { SearchButton };

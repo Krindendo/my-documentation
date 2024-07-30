@@ -38,4 +38,4 @@ const MdxCard: FC<MdxCardProps> = ({
   );
 };
 
-export default MdxCard;
+export { MdxCard };
