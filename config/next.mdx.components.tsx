@@ -42,34 +42,28 @@ export const clientMdxComponents = {
  */
 export const htmlComponents = {
   // Renders a CodeBox Component for `pre` tags
-  pre: MDXCodeBox,
+  //pre: MDXCodeBox,
   // Renders an Image Component for `img` tags
-  img: MDXImage,
+  //img: MDXImage,
   // Renders a Link Component for `a` tags
-  a: ({ className, ...props }) => (
+  a: ({ ...props }) => (
     <Link
-      className={cn('font-medium underline underline-offset-4', className)}
+      className={cn('font-medium underline underline-offset-4')}
       {...props}
     />
   ),
-  blockquote: ({ className, ...props }) => (
+  blockquote: ({ ...props }) => (
     <blockquote
-      className={cn(
-        'mt-6 border-l-2 pl-6 italic [&>*]:text-muted-foreground',
-        className
-      )}
+      className={cn('mt-6 border-l-2 pl-6 italic [&>*]:text-muted-foreground')}
       {...props}
     />
   ),
-  table: ({ className, ...props }) => (
+  table: ({ ...props }) => (
     <div className="my-6 w-full overflow-y-auto">
-      <table className={cn(className)} {...props} />
+      <table {...props} />
     </div>
   ),
-  tr: ({ className, ...props }) => (
-    <tr
-      className={cn('m-0 border-t p-0 even:bg-muted', className)}
-      {...props}
-    />
+  tr: ({ ...props }) => (
+    <tr className={cn('m-0 border-t p-0 even:bg-muted')} {...props} />
   ),
 };

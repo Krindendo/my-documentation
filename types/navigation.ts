@@ -15,8 +15,8 @@ export type NavigationKeys = 'docs' | 'guides' | 'algorithms';
 
 export interface NavigationEntry {
   label: string;
-  link: string;
-  items?: Record<string, NavigationEntry>;
+  link?: string;
+  items?: NavigationEntry[];
   target?: HTMLAttributeAnchorTarget | undefined;
 }
 
