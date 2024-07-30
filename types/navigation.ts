@@ -14,8 +14,8 @@ export interface SocialConfig {
 export type NavigationKeys = 'docs' | 'guides' | 'algorithms';
 
 export interface NavigationEntry {
-  label?: string;
-  link?: string;
+  label: string;
+  link: string;
   items?: Record<string, NavigationEntry>;
   target?: HTMLAttributeAnchorTarget | undefined;
 }
