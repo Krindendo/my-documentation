@@ -11,6 +11,5 @@ export interface FrontMatter extends Record<string, any> {
 export interface DocsFrontMatter extends FrontMatter {}
 
 export interface GuidesFrontMatter extends FrontMatter {
-  author: string;
   published: boolean;
 }
