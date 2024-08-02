@@ -7,6 +7,8 @@ import { createStore } from 'zustand';
 import { useVisibleSections } from '@/hooks/react-client';
 import { TableOfContents } from '@/util/toc';
 
+import { type NavigationKeys } from '@/types';
+
 export interface SidebarState {
   sections: TableOfContents;
   visibleSections: string[];
@@ -14,6 +16,8 @@ export interface SidebarState {
 }
 
 export type SidebarAction = {
+  sectionPath: NavigationKeys;
+  setSectionPath: (sectionPath: NavigationKeys) => void;
   setSections: (sections: SidebarState['sections']) => void;
   setVisibleSections: (
     visibleSections: SidebarState['visibleSections']
@@ -27,6 +31,8 @@ type SectionStore = ReturnType<typeof createSectionStore>;
 
 const createSectionStore = () => {
   return createStore<SidebarState & SidebarAction>()(set => ({
+    sectionPath: 'docs',
+    setSectionPath: sectionPath => set(() => ({ sectionPath })),
     sections: [],
     setSections: sections => set(() => ({ sections })),
     visibleSections: [],
