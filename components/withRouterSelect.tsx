@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import type { ComponentProps, FC } from 'react';
 
-import Select from '@/components/Common/Select';
+import { Select } from '@/components/Common/Select';
 
 type WithSidebarSelectProps = Pick<
   ComponentProps<typeof Select>,

@@ -1,28 +1,29 @@
 import { type ComponentProps, type FC } from 'react';
 
-import SidebarGroup from '@/components/Containers/Sidebar/SidebarGroup';
+import { SidebarGroup } from '@/components/Containers/Sidebar/SidebarGroup';
 import { cn } from '@/util/cn';
 import { Separator } from '@/components/ui/separator';
 import SelectSitePath from './SelectSitePath';
 import { Logo } from '@/components/Common/Logo';
+import { NavigationEntry } from '@/types';
 
 interface SidebarProps {
-  groups: ComponentProps<typeof SidebarGroup>[];
+  groups: NavigationEntry[];
   className?: string;
 }
 
-const SideBar: FC<SidebarProps> = ({ groups, className }) => {
+const Sidebar: FC<SidebarProps> = ({ groups, className }) => {
   return (
     <aside className={cn('mb-5', className)}>
       <Logo className="mb-12" />
       <SelectSitePath className="ml-1" />
       <Separator orientation="horizontal" className="my-6" />
       <ul role="list">
-        {groups.map(({ groupName, items }) => (
+        {groups.map(group => (
           <SidebarGroup
-            key={groupName.toString()}
-            groupName={groupName}
-            items={items}
+            key={group.label}
+            groupName={group.label}
+            items={group.items ?? []}
           />
         ))}
       </ul>
@@ -30,7 +31,7 @@ const SideBar: FC<SidebarProps> = ({ groups, className }) => {
   );
 };
 
-export default SideBar;
+export { Sidebar };
 
 // export function SiteSidebar({ className, ...props }: SiteSidebarProps) {
 //   const segment = useSelectedLayoutSegment();

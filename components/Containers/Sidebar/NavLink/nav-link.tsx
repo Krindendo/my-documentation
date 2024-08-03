@@ -43,4 +43,4 @@ const NavLink: FC<NavLinkProps> = ({
   );
 };
 
-export default NavLink;
+export { NavLink };

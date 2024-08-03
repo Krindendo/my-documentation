@@ -1,22 +1,18 @@
 import type { Heading } from '@vcarl/remark-headings';
 
-interface Item {
-  depth?: number;
-  title: string;
-  url: string;
-  items?: Item[];
-}
-
 export interface TableOfContents {
-  items: Item[];
+  depth?: number;
+  title?: string;
+  url?: string;
+  items?: TableOfContents[];
 }
 
 function transformHeadingsToTOC(headings: Heading[]): TableOfContents {
   const toc: TableOfContents = { items: [] };
-  const stack: Item[] = [];
+  const stack: TableOfContents[] = [];
 
   for (const heading of headings) {
-    const newItem: Item = {
+    const newItem: TableOfContents = {
       title: heading.value,
       url: `#${heading.data.id}`,
     };
@@ -26,7 +22,7 @@ function transformHeadingsToTOC(headings: Heading[]): TableOfContents {
     }
 
     if (stack.length === 0) {
-      toc.items.push(newItem);
+      toc.items?.push(newItem);
     } else {
       const parent = stack[stack.length - 1];
       if (!parent.items) {
@@ -40,14 +36,14 @@ function transformHeadingsToTOC(headings: Heading[]): TableOfContents {
   }
 
   // Remove temporary depth property
-  const removeDepthProperty = (item: Item) => {
+  const removeDepthProperty = (item: TableOfContents) => {
     delete item.depth;
     if (item.items) {
       item.items.forEach(removeDepthProperty);
     }
   };
 
-  toc.items.forEach(removeDepthProperty);
+  toc.items?.forEach(removeDepthProperty);
 
   return toc;
 }
