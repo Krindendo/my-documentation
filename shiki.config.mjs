@@ -9,6 +9,7 @@ import powershellLanguage from 'shiki/langs/powershell.mjs';
 import shellScriptLanguage from 'shiki/langs/shellscript.mjs';
 import shellSessionLanguage from 'shiki/langs/shellsession.mjs';
 import TSXLanguage from 'shiki/langs/tsx.mjs';
+import vueLanguage from 'shiki/langs/vue.mjs';
 import typeScriptLanguage from 'shiki/langs/typescript.mjs';
 import shikiDarkPlusTheme from 'shiki/themes/dark-plus.mjs';
 
@@ -69,6 +70,12 @@ export const LANGUAGES = [
     ...TSXLanguage[0],
     scopeName: 'source.tsx',
     displayName: 'TSX',
+  },
+  {
+    ...vueLanguage[0],
+    scopeName: 'source.vue',
+    aliases: ['vue'],
+    displayName: 'Vue',
   },
 ];
 

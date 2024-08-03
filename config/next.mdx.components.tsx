@@ -42,9 +42,9 @@ export const clientMdxComponents = {
  */
 export const htmlComponents = {
   // Renders a CodeBox Component for `pre` tags
-  //pre: MDXCodeBox,
+  pre: MDXCodeBox,
   // Renders an Image Component for `img` tags
-  //img: MDXImage,
+  img: MDXImage,
   // Renders a Link Component for `a` tags
   a: ({ ...props }) => (
     <Link

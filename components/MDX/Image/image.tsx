@@ -1,8 +1,17 @@
 import type { ImageProps } from 'next/image';
 import Image from 'next/image';
-import type { FC } from 'react';
+import type { DetailedHTMLProps, FC, ImgHTMLAttributes } from 'react';
 
-const MDXImage: FC<ImageProps> = ({ width, height, alt, ...props }) => {
+const MDXImage: FC<
+  DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
+> = ({ width, height, alt, src, ...props }) => {
+  if (src === undefined) {
+    throw new Error('src in image is missing');
+  }
+  if (alt === undefined) {
+    throw new Error('alt in image is missing');
+  }
+
   if (!width || !height) {
     // Since `width` and `height` are not provided in the Markdown image format,
     // we provide the height and width automatically.
@@ -10,6 +19,7 @@ const MDXImage: FC<ImageProps> = ({ width, height, alt, ...props }) => {
     return (
       <Image
         {...props}
+        src={src}
         alt={alt}
         width={0}
         height={0}
