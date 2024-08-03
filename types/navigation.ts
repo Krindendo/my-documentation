@@ -18,6 +18,7 @@ export interface NavigationEntry {
   link?: string;
   items?: NavigationEntry[];
   target?: HTMLAttributeAnchorTarget | undefined;
+  disabled?: boolean;
 }
 
 export interface SiteNavigation {
