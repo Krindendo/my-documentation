@@ -6,7 +6,7 @@ description: test
 Graph is a series of nodes with some amount of connections. There is no rules. It's just, there's a lot of connections between nodes or some connections or no connections.
 
 
-<img src="/images/algorithms/graph-example.png" alt="Graph dag" className="my-6" />
+<img src="/static/images/algorithms/graph-example.png" alt="Graph dag" className="my-6" />
 
 ### Terminology
 
@@ -28,7 +28,7 @@ weighted: The edges have a weight associated with them. Think Google Maps -> In 
 
 dag: Directed, acyclic graph - example below - Is when you can't quite make it to any other node, everything has a terminus. So B could go all the way to C but it can't go any furher.
 
-<img src="/images/algorithms/graph-dag.png" alt="Graph dag" className="my-6" />
+<img src="/static/images/algorithms/graph-dag.png" alt="Graph dag" className="my-6" />
 
 #### Implementation Terms
 
@@ -55,16 +55,16 @@ There are two ways to represent a graphs:
 
 adj list will be a list but node zero will have list of edges.
 
-<img src="/images/algorithms/graph-adj-list.png" alt="Graph adj list" className="my-6" />
+<img src="/static/images/algorithms/graph-adj-list.png" alt="Graph adj list" className="my-6" />
 
 adj matrix have problem with memory you need to have O(V)^2 memory to represent data. If you had 100 nodes, you'd have to create 100 by 100 matrix to represent it all.
 
-<img src="/images/algorithms/graph-adj-matrix.png" alt="Graph adj matrix" className="my-6" />
+<img src="/static/images/algorithms/graph-adj-matrix.png" alt="Graph adj matrix" className="my-6" />
 
 
 ### Search
 
-<img src="/images/algorithms/graph-search.png" alt="Graph search" className="my-6" />
+<img src="/static/images/algorithms/graph-search.png" alt="Graph search" className="my-6" />
 
 Breadth first search
 
@@ -188,7 +188,7 @@ If the distance to me plus the distance to you is shorter than any other distanc
 
 <Callout>Must not have negative weights</Callout>
 
-<img src="/images/algorithms/graphs-dijkstra.png" alt="Graph search" className="my-6" />
+<img src="/static/images/algorithms/graphs-dijkstra.png" alt="Graph search" className="my-6" />
 
 ```ts
 function hasUnvisited(seen: boolean[], dists: number[]): boolean{

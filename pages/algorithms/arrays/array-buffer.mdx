@@ -22,7 +22,7 @@ this.tail % length
 
 if you have array size 10 and you have tail that is 12, then 12 % 10 = 2 so tail will point to index 2.
 
-<img src="/images/algorithms/array-buffer-point.png" alt="Queue example" className="my-6" />
+<img src="/static/images/algorithms/array-buffer-point.png" alt="Queue example" className="my-6" />
 
 The only problem is when tail exceeds head. Then we need to resize array. Main thing in ring buffer is they also maintain order. If this happend you only need to do is start from head go the length and write that into a new larger capacity buffer.
 
