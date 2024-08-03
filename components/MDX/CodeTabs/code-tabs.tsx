@@ -3,7 +3,7 @@
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 import type { ComponentProps, FC, ReactElement } from 'react';
 
-import CodeTabs from '@/components/Common/CodeTabs';
+import { CodeTabs } from '@/components/Common/CodeTabs';
 
 type MDXCodeTabsProps = Pick<
   ComponentProps<typeof CodeTabs>,

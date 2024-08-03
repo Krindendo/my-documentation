@@ -24,6 +24,7 @@ interface NavbarProps extends React.HtmlHTMLAttributes<HTMLDivElement> {
     label: string;
     link: string;
     target?: HTMLAttributeAnchorTarget | undefined;
+    disabled?: boolean;
   }[];
 }
 

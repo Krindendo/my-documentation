@@ -2,7 +2,7 @@ import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import type { ComponentProps, FC, PropsWithChildren } from 'react';
 
-import Tabs from '@/components/Common/Tabs';
+import { Tabs } from '@/components/Common/Tabs';
 
 import styles from './index.module.css';
 
