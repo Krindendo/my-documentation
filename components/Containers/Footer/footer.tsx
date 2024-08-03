@@ -12,7 +12,7 @@ const footerSocialIcons: Record<string, React.FC<SVGProps<SVGSVGElement>>> = {
 
 const Footer: FC = () => {
   return (
-    <footer className="gap-6border-t flex flex-col items-center border-neutral-200 bg-white px-8 py-4 dark:border-neutral-900 dark:bg-neutral-950 md:flex-row md:justify-between md:py-5">
+    <footer className="flex flex-col items-center gap-6 border-t border-zinc-900/10 px-8 py-4 dark:border-white/10 md:flex-row md:justify-between md:py-5">
       <div className="flex flex-wrap content-start items-center justify-center gap-1 self-stretch">
         {footerLinks.slice(0, -1).map(item => (
           <NavItem type="footer" href={item.link} key={item.link}>
