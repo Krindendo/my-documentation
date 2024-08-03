@@ -17,7 +17,7 @@ const DefaultLayout: FC<PropsWithChildren> = ({ children }) => (
           <WithNavBar />
         </header>
 
-        <div className="relative flex-1 px-4 pt-14 sm:px-6">
+        <div className="relative flex-1 px-4 pb-6 pt-1 md:pt-14">
           <main className="flex flex-col py-16">{children}</main>
         </div>
 

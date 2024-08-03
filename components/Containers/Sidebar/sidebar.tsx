@@ -3,7 +3,7 @@ import { type ComponentProps, type FC } from 'react';
 import { SidebarGroup } from '@/components/Containers/Sidebar/SidebarGroup';
 import { cn } from '@/util/cn';
 import { Separator } from '@/components/ui/separator';
-import SelectSitePath from './SelectSitePath';
+import { SelectSitePath } from '@/components/Containers/Sidebar/SelectSitePath';
 import { Logo } from '@/components/Common/Logo';
 import { NavigationEntry } from '@/types';
 
