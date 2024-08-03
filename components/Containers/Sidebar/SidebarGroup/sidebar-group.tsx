@@ -6,18 +6,17 @@ import { type ComponentProps, type FC } from 'react';
 import { useStore } from 'zustand';
 
 import ActivePageMarker from '@/components/Containers/Sidebar/ActivePageMarker';
-import NavLink from '@/components/Containers/Sidebar/NavLink';
-import Tree from '@/components/Containers/Sidebar/Tree';
+import { NavLink } from '@/components/Containers/Sidebar/NavLink';
+import { Tree } from '@/components/Containers/Sidebar/Tree';
 import VisibleSectionHighlight from '@/components/Containers/Sidebar/VisibleSectionHighlight';
 import { useSectionStore } from '@/providers/sidebarProvider';
 import { cn } from '@/util/cn';
-
-import type SidebarItem from '@/components/Containers/Sidebar/SidebarItem';
 import { useSetTOC } from '@/hooks';
+import { NavigationEntry } from '@/types';
 
 type SidebarGroupProps = {
   groupName: string;
-  items: ComponentProps<typeof SidebarItem>[];
+  items: NavigationEntry[];
   className?: string;
 };
 
@@ -76,4 +75,4 @@ const SidebarGroup: FC<SidebarGroupProps> = ({
   );
 };
 
-export default SidebarGroup;
+export { SidebarGroup };

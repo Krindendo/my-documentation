@@ -19,7 +19,7 @@ const SidebarMobile: FC<SidebarMobileProps> = ({ className }) => {
           </Button>
         </SheetTrigger>
         <SheetContent className="w-[400px] sm:w-[540px]" side="left">
-          <WithSidebar navKeys={['docs']} />
+          <WithSidebar />
         </SheetContent>
       </Sheet>
     </div>

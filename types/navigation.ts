@@ -24,5 +24,5 @@ export interface SiteNavigation {
   topNavigation: Record<NavigationKeys, NavigationEntry>;
   footerLinks: FooterConfig[];
   socialLinks: SocialConfig[];
-  sideNavigation: Record<NavigationKeys, NavigationEntry>;
+  sideNavigation: Record<NavigationKeys, NavigationEntry[]>;
 }
