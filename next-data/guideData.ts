@@ -4,6 +4,10 @@ import {
   NEXT_DATA_URL,
   VERCEL_ENV,
 } from '@/config/constants';
+import {
+  provideGuidePosts,
+  providePaginatedGuidePosts,
+} from '@/next-data/providers/guideData';
 import type { GuidePostsRSC } from '@/types';
 
 // Prevents React from throwing an Error when not able to fulfil a request
@@ -11,15 +15,15 @@ import type { GuidePostsRSC } from '@/types';
 const parseGuideDataResponse = (data: string): GuidePostsRSC =>
   data.startsWith('{') ? JSON.parse(data) : { posts: [], pagination: {} };
 
-const getBlogData = (cat: string, page?: number): Promise<GuidePostsRSC> => {
+const getGuideData = (cat: string, page?: number): Promise<GuidePostsRSC> => {
   // When we're using Static Exports the Next.js Server is not running (during build-time)
   // hence the self-ingestion APIs will not be available. In this case we want to load
   // the data directly within the current thread, which will anyways be loaded only once
   // We use lazy-imports to prevent `provideBlogData` from executing on import
   if (ENABLE_STATIC_EXPORT || (!IS_DEVELOPMENT && !VERCEL_ENV)) {
     return import('@/next-data/providers/guideData').then(
-      ({ provideBlogPosts, providePaginatedBlogPosts }) =>
-        page ? providePaginatedBlogPosts(cat, page) : provideBlogPosts(cat)
+      ({ provideGuidePosts, providePaginatedGuidePosts }) =>
+        page ? providePaginatedGuidePosts(cat, page) : provideGuidePosts(cat)
     );
   }
 
@@ -34,4 +38,4 @@ const getBlogData = (cat: string, page?: number): Promise<GuidePostsRSC> => {
   return fetch(fetchURL).then(r => r.text().then(parseGuideDataResponse));
 };
 
-export default getBlogData;
+export { getGuideData };

@@ -1,20 +1,21 @@
 import { cache } from 'react';
 
 import generateGuideData from '@/next-data/generators/guidesData.mjs';
-import { BLOG_POSTS_PER_PAGE } from '@/config/constants';
+import { GUIDE_POSTS_PER_PAGE } from '@/config/constants';
 import type { GuidePostsRSC } from '@/types';
 
 const { categories, posts } = await generateGuideData();
 
-export const provideBlogCategories = cache(() => categories);
+export const provideGuideCategories = cache(() => categories);
 
-export const provideBlogPosts = cache((category: string): GuidePostsRSC => {
+export const provideGuidePosts = cache((category: string): GuidePostsRSC => {
   const categoryPosts = posts
+    .filter(post => post.published)
     .filter(post => post.categories.includes(category))
     .sort((a, b) => b.date.getTime() - a.date.getTime());
 
   // Total amount of possible pages given the amount of blog posts
-  const total = categoryPosts.length / BLOG_POSTS_PER_PAGE;
+  const total = categoryPosts.length / GUIDE_POSTS_PER_PAGE;
 
   return {
     posts: categoryPosts,
@@ -29,9 +30,9 @@ export const provideBlogPosts = cache((category: string): GuidePostsRSC => {
   };
 });
 
-export const providePaginatedBlogPosts = cache(
+export const providePaginatedGuidePosts = cache(
   (category: string, page: number): GuidePostsRSC => {
-    const { posts, pagination } = provideBlogPosts(category);
+    const { posts, pagination } = provideGuidePosts(category);
 
     // This autocorrects if invalid numbers are given to only allow
     // actual valid numbers to be provided
@@ -42,8 +43,8 @@ export const providePaginatedBlogPosts = cache(
     if (actualPage <= pagination.pages) {
       return {
         posts: posts.slice(
-          BLOG_POSTS_PER_PAGE * (actualPage - 1),
-          BLOG_POSTS_PER_PAGE * actualPage
+          GUIDE_POSTS_PER_PAGE * (actualPage - 1),
+          GUIDE_POSTS_PER_PAGE * actualPage
         ),
         pagination: {
           prev: actualPage > 1 ? actualPage - 1 : null,

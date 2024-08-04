@@ -6,7 +6,7 @@ import readline from 'node:readline';
 
 import graymatter from 'gray-matter';
 
-import { getMarkdownFiles } from '../../next.helpers.mjs';
+import { getMarkdownFiles } from '@/config/next.helpers';
 
 // gets the current guide path based on local module path
 const guidePath = join(process.cwd(), 'pages/guide');
@@ -26,7 +26,6 @@ const guideCategories = new Set(['all']);
 const getFrontMatter = (filename, source) => {
   const {
     title = 'Untitled',
-    author = 'The Node.js Project',
     date = new Date(),
     category = 'uncategorized',
   } = graymatter(source).data;

@@ -101,7 +101,7 @@ export const MD_EXTENSION_REGEX = /((\/)?(index))?\.mdx?$/i;
 /**
  * This defines how many blog posts each pagination page should have
  */
-export const BLOG_POSTS_PER_PAGE = 6;
+export const GUIDE_POSTS_PER_PAGE = 20;
 
 /**
  * The `localStorage` key to store the theme choice of `next-themes`
