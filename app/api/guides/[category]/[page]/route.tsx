@@ -10,46 +10,50 @@ type StaticParams = {
 };
 
 // This is the Route Handler for the `GET` method which handles the request
-// for providing Blog Posts for Blog Categories and Pagination Metadata
+// for providing Guides Posts for Guides Categories and Pagination Metadata
 // @see https://nextjs.org/docs/app/building-your-application/routing/router-handlers
-export const GET = async (_: Request, { params }: StaticParams) => {
+export async function GET(req: Request, { params }: StaticParams) {
   const requestedPage = Number(params.page);
+  const keywords = req.nextUrl.searchParams.get('keywords');
 
   const data =
     requestedPage >= 1
-      ? // This allows us to blindly get all blog posts from a given category
+      ? // This allows us to blindly get all guides posts from a given category
         // if the page number is 0 or something smaller than 1
         providePaginatedGuidePosts(params.category, requestedPage)
       : provideGuidePosts(params.category);
 
   return Response.json(data, { status: data.posts.length ? 200 : 404 });
-};
+}
 
 // This function generates the static paths that come from the dynamic segments
-// `[locale]/next-data/blog-data/[category]` and returns an array of all available static paths
+// `next-data/blog-data/[category]` and returns an array of all available static paths
 // This is used for ISR static validation and generation
-export const generateStaticParams = async () => {
-  // This metadata is the original list of all available categories and all available years
-  // within the Node.js Website Blog Posts (2011, 2012...)
-  const categories = provideGuideCategories();
+// export const generateStaticParams = async () => {
+//   // This metadata is the original list of all available categories and all available years
+//   // within the Node.js Website Blog Posts (2011, 2012...)
+//   console.log('nesto');
+//   const categories = provideGuideCategories();
 
-  const mappedCategories = categories.map(category => {
-    // gets the current pagination meta for a given category
-    const { pagination } = provideGuidePosts(category);
+//   const mappedCategories = categories.map((category: any) => {
+//     // gets the current pagination meta for a given category
+//     const { pagination } = provideGuidePosts(category);
 
-    // creates a sequential array containing each page number
-    const pages = [...Array(pagination.pages).keys()].map((_, key) => key + 1);
+//     // creates a sequential array containing each page number
+//     const pages = [...Array(pagination.pages).keys()].map((_, key) => key + 1);
 
-    // maps the data into valid Next.js Route Engine routes with all required params
-    // notice that we add an extra 0 in the beginning in case we want a non-paginated route
-    return [0, ...pages].map(page => ({
-      page: String(page),
-      category,
-    }));
-  });
+//     // maps the data into valid Next.js Route Engine routes with all required params
+//     // notice that we add an extra 0 in the beginning in case we want a non-paginated route
+//     return [0, ...pages].map(page => ({
+//       page: String(page),
+//       category,
+//     }));
+//   });
 
-  return mappedCategories.flat();
-};
+//   console.log('mappedCategories', mappedCategories);
+
+//   return mappedCategories.flat();
+// };
 
 export const runtime = 'edge';
 
@@ -61,7 +65,7 @@ export const dynamicParams = false;
 
 // Enforces that this route is cached and static as much as possible
 // @see https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamic
-export const dynamic = 'error';
+//export const dynamic = 'error';
 
 // Ensures that this endpoint is invalidated and re-executed every X minutes
 // so that when new deployments happen, the data is refreshed

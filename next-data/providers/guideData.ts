@@ -6,9 +6,9 @@ import type { GuidePostsRSC } from '@/types';
 
 const { categories, posts } = await generateGuideData();
 
-export const provideGuideCategories = cache(() => categories);
+export const provideGuideCategories = () => categories;
 
-export const provideGuidePosts = cache((category: string): GuidePostsRSC => {
+export const provideGuidePosts = (category: string): GuidePostsRSC => {
   const categoryPosts = posts
     .filter(post => post.published)
     .filter(post => post.categories.includes(category))
@@ -28,41 +28,43 @@ export const provideGuidePosts = cache((category: string): GuidePostsRSC => {
       total: categoryPosts.length,
     },
   };
-});
+};
 
-export const providePaginatedGuidePosts = cache(
-  (category: string, page: number): GuidePostsRSC => {
-    const { posts, pagination } = provideGuidePosts(category);
+export const providePaginatedGuidePosts = (
+  category: string,
+  page: number
+): GuidePostsRSC => {
+  console.log('nesto');
+  const { posts, pagination } = provideGuidePosts(category);
 
-    // This autocorrects if invalid numbers are given to only allow
-    // actual valid numbers to be provided
-    const actualPage = page < 1 ? 1 : page;
+  // This autocorrects if invalid numbers are given to only allow
+  // actual valid numbers to be provided
+  const actualPage = page < 1 ? 1 : page;
 
-    // If the page is within the allowed range then we calculate
-    // the pagination of Blog Posts for a given current page "page"
-    if (actualPage <= pagination.pages) {
-      return {
-        posts: posts.slice(
-          GUIDE_POSTS_PER_PAGE * (actualPage - 1),
-          GUIDE_POSTS_PER_PAGE * actualPage
-        ),
-        pagination: {
-          prev: actualPage > 1 ? actualPage - 1 : null,
-          next: actualPage < pagination.pages ? actualPage + 1 : null,
-          pages: pagination.pages,
-          total: posts.length,
-        },
-      };
-    }
-
+  // If the page is within the allowed range then we calculate
+  // the pagination of Blog Posts for a given current page "page"
+  if (actualPage <= pagination.pages) {
     return {
-      posts: [],
+      posts: posts.slice(
+        GUIDE_POSTS_PER_PAGE * (actualPage - 1),
+        GUIDE_POSTS_PER_PAGE * actualPage
+      ),
       pagination: {
-        prev: pagination.total,
-        next: null,
+        prev: actualPage > 1 ? actualPage - 1 : null,
+        next: actualPage < pagination.pages ? actualPage + 1 : null,
         pages: pagination.pages,
         total: posts.length,
       },
     };
   }
-);
+
+  return {
+    posts: [],
+    pagination: {
+      prev: pagination.total,
+      next: null,
+      pages: pagination.pages,
+      total: posts.length,
+    },
+  };
+};
