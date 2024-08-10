@@ -1,11 +1,11 @@
 import type { FC, PropsWithChildren } from 'react';
 
+import { getClientContext } from '@/client-context';
 import { DocsPageHeader } from '@/components/Common/DocsPageHeader';
 import { useClientContext } from '@/hooks/react-server';
+import { getGuideData } from '@/next-data/guideData';
 
 import DefaultLayout from './Default';
-import { getGuideData } from '@/next-data/guideData';
-import { getClientContext } from '@/client-context';
 
 const getGuidesCategory = async (pathname: string) => {
   // pathname format can either be: /en/blog/{category}
