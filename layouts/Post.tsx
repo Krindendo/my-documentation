@@ -1,35 +1,41 @@
 import type { FC, PropsWithChildren } from 'react';
 
-import Preview from '@/components/Common/Preview';
-import WithBlogCrossLinks from '@/components/withBlogCrossLinks';
-import WithFooter from '@/components/withFooter';
-import WithMetaBar from '@/components/withMetaBar';
-import WithNavBar from '@/components/withNavBar';
 import { useClientContext } from '@/hooks/react-server';
-import ContentLayout from '@/layouts/Content';
+import DefaultLayout from './Default';
+import { DocsPageHeader } from '@/components/Common/DocsPageHeader';
+import Link from 'next/link';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/util/cn';
+import { Icons } from '@/components/Icons';
 
 const PostLayout: FC<PropsWithChildren> = ({ children }) => {
   const { frontmatter } = useClientContext();
 
   return (
     <>
-      <WithNavBar />
-
-      <ContentLayout>
-        <main className="container">
-          <h1>{frontmatter.title}</h1>
-
-          <Preview title={frontmatter.title!} />
-
-          {children}
-
-          <WithBlogCrossLinks />
-        </main>
-
-        <WithMetaBar />
-      </ContentLayout>
-
-      <WithFooter />
+      <DefaultLayout>
+        <div className="container flex-1">
+          <div className="relative lg:gap-10 xl:grid xl:grid-cols-[1fr_300px]">
+            <div className="mx-auto w-full min-w-0">
+              <DocsPageHeader
+                heading={frontmatter.title ?? ''}
+                text={frontmatter.description}
+              />
+              <div className="pb-12 pt-8">{children}</div>
+              <hr className="my-4" />
+              <div className="flex justify-center py-6 lg:py-10">
+                <Link
+                  href="/guides"
+                  className={cn(buttonVariants({ variant: 'ghost' }))}
+                >
+                  <Icons.chevronLeft className="mr-2 h-4 w-4" />
+                  See all guides
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </DefaultLayout>
     </>
   );
 };
