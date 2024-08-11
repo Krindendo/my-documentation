@@ -6,10 +6,10 @@ import readline from 'node:readline';
 
 import graymatter from 'gray-matter';
 
-import { getMarkdownFiles } from '../../next.helpers.mjs';
+import { getMarkdownFiles } from '@/config/next.helpers';
 
 // gets the current guide path based on local module path
-const guidePath = join(process.cwd(), 'pages/guide');
+const guidePath = join(process.cwd(), 'pages/guides');
 
 /**
  * This contains the metadata of all available guide categories
@@ -26,9 +26,10 @@ const guideCategories = new Set(['all']);
 const getFrontMatter = (filename, source) => {
   const {
     title = 'Untitled',
-    author = 'The Node.js Project',
+    description = '',
     date = new Date(),
     category = 'uncategorized',
+    published = true,
   } = graymatter(source).data;
 
   // We also use publishing years as categories for the guide
@@ -45,9 +46,16 @@ const getFrontMatter = (filename, source) => {
   guideCategories.add(category);
 
   // this is the url used for the guide post it based on the category and filename
-  const slug = `/guide/${category}/${basename(filename, extname(filename))}`;
+  const slug = `/guides/${category}/${basename(filename, extname(filename))}`;
 
-  return { title, author, date: new Date(date), categories, slug };
+  return {
+    title,
+    description,
+    published,
+    date: new Date(date),
+    categories,
+    slug,
+  };
 };
 
 /**
@@ -58,7 +66,7 @@ const getFrontMatter = (filename, source) => {
  */
 const generateGuideData = async () => {
   // We retrieve the full pathnames of all guide Posts to read each file individually
-  const filenames = await getMarkdownFiles(process.cwd(), 'pages/guide', [
+  const filenames = await getMarkdownFiles(process.cwd(), 'pages/guides', [
     '**/index.md',
   ]);
 

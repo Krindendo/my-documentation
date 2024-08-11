@@ -1,7 +1,5 @@
 'use strict';
 
-import { redirects, rewrites } from './next.rewrites.mjs';
-
 const ENABLE_STATIC_EXPORT = process.env.NEXT_PUBLIC_STATIC_EXPORT === 'true';
 
 /** @type {import('next').NextConfig} */
@@ -49,11 +47,6 @@ const nextConfig = {
   distDir: ENABLE_STATIC_EXPORT ? 'build' : '.next',
   // On static export builds we want to enable the export feature
   output: ENABLE_STATIC_EXPORT ? 'export' : undefined,
-  // This configures all the Next.js rewrites, which are used for rewriting internal URLs into other internal Endpoints
-  // This feature is not supported within static export builds, hence we pass an empty array if static exports are enabled
-  rewrites: !ENABLE_STATIC_EXPORT ? rewrites : undefined,
-  // This configures all Next.js redirects
-  redirects: !ENABLE_STATIC_EXPORT ? redirects : undefined,
   // We don't want to run Type Checking on Production Builds
   // as we already check it on the CI within each Pull Request
   typescript: { ignoreBuildErrors: true },
@@ -85,6 +78,18 @@ const nextConfig = {
       '@radix-ui/react-avatar',
       '@radix-ui/react-select',
       '@radix-ui/react-toast',
+      '@radix-ui/react-accessible-icon',
+      '@radix-ui/react-avatar',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-label',
+      '@radix-ui/react-radio-group',
+      '@radix-ui/react-scroll-area',
+      '@radix-ui/react-select',
+      '@radix-ui/react-separator',
+      '@radix-ui/react-slot',
+      '@radix-ui/react-switch',
+      '@radix-ui/react-tabs',
       'tailwindcss',
     ],
     // Removes the warning regarding the WebPack Build Worker

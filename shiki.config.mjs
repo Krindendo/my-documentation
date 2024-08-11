@@ -10,6 +10,7 @@ import shellScriptLanguage from 'shiki/langs/shellscript.mjs';
 import shellSessionLanguage from 'shiki/langs/shellsession.mjs';
 import TSXLanguage from 'shiki/langs/tsx.mjs';
 import vueLanguage from 'shiki/langs/vue.mjs';
+import cssLanguage from 'shiki/langs/css.mjs';
 import typeScriptLanguage from 'shiki/langs/typescript.mjs';
 import shikiDarkPlusTheme from 'shiki/themes/dark-plus.mjs';
 
@@ -76,6 +77,11 @@ export const LANGUAGES = [
     scopeName: 'source.vue',
     aliases: ['vue'],
     displayName: 'Vue',
+  },
+  {
+    ...cssLanguage[0],
+    scopeName: 'source.css',
+    displayName: 'CSS',
   },
 ];
 

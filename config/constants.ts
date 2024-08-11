@@ -86,8 +86,8 @@ export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || '';
 export const NEXT_DATA_URL = process.env.NEXT_PUBLIC_DATA_URL
   ? process.env.NEXT_PUBLIC_DATA_URL
   : VERCEL_ENV
-    ? `${BASE_URL}${BASE_PATH}/en/next-data/`
-    : `http://localhost:3000/en/next-data/`;
+    ? `${BASE_URL}${BASE_PATH}/next-data/`
+    : `http://localhost:3000/next-data/`;
 
 /**
  * This ReGeX is used to remove the `index.md(x)` suffix of a name and to remove
@@ -101,7 +101,7 @@ export const MD_EXTENSION_REGEX = /((\/)?(index))?\.mdx?$/i;
 /**
  * This defines how many blog posts each pagination page should have
  */
-export const BLOG_POSTS_PER_PAGE = 6;
+export const GUIDE_POSTS_PER_PAGE = 20;
 
 /**
  * The `localStorage` key to store the theme choice of `next-themes`
@@ -132,4 +132,13 @@ export const DEFAULT_ORAMA_QUERY_PARAMS = {
   facets: {
     siteSection: {},
   },
+};
+
+/**
+ * Default Date format for Calendars and Time Components
+ */
+export const DEFAULT_DATE_FORMAT: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: 'short',
+  day: '2-digit',
 };

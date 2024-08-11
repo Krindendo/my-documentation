@@ -2,15 +2,16 @@ export type GuidePreviewType = 'announcements' | 'release' | 'vulnerability';
 
 export interface GuidePost {
   title: string;
-  author: string;
-  username: string;
+  description: string;
   date: Date;
-  categories: Array<string>;
+  categories: string[];
+  tags: string[];
+  published: boolean;
   slug: string;
 }
 
 export interface GuideData {
-  posts: Array<GuidePost>;
+  posts: GuidePost[];
   categories: Array<string>;
 }
 
@@ -22,6 +23,6 @@ export interface GuidePagination {
 }
 
 export interface GuidePostsRSC {
-  posts: Array<GuidePost>;
+  posts: GuidePost[];
   pagination: GuidePagination;
 }
