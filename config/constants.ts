@@ -133,3 +133,12 @@ export const DEFAULT_ORAMA_QUERY_PARAMS = {
     siteSection: {},
   },
 };
+
+/**
+ * Default Date format for Calendars and Time Components
+ */
+export const DEFAULT_DATE_FORMAT: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: 'short',
+  day: '2-digit',
+};

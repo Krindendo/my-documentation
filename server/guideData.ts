@@ -8,6 +8,7 @@ export const provideGuideCategories = () => categories;
 
 const provideGuidePosts = (category: string): GuidePostsRSC => {
   const categoryPosts = posts
+    .filter(post => post.slug !== '/guides/uncategorized/index')
     .filter(post => post.published)
     .filter(post => post.categories.includes(category))
     .sort((a, b) => b.date.getTime() - a.date.getTime());
@@ -33,7 +34,6 @@ const providePaginatedGuidePosts = (
   page: number
 ): GuidePostsRSC => {
   const { posts, pagination } = provideGuidePosts(category);
-  console.log('nesto');
 
   // This autocorrects if invalid numbers are given to only allow
   // actual valid numbers to be provided

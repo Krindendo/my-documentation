@@ -26,6 +26,7 @@ const guideCategories = new Set(['all']);
 const getFrontMatter = (filename, source) => {
   const {
     title = 'Untitled',
+    description = '',
     date = new Date(),
     category = 'uncategorized',
     published = true,
@@ -47,7 +48,14 @@ const getFrontMatter = (filename, source) => {
   // this is the url used for the guide post it based on the category and filename
   const slug = `/guides/${category}/${basename(filename, extname(filename))}`;
 
-  return { title, published, date: new Date(date), categories, slug };
+  return {
+    title,
+    description,
+    published,
+    date: new Date(date),
+    categories,
+    slug,
+  };
 };
 
 /**

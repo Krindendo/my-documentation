@@ -1,6 +1,6 @@
-import type { ComponentProps, FC } from 'react';
+import type { FC } from 'react';
 
-import { BlogPostCard } from '@/components/Common/GuidePostCard';
+import { GuidePostCard } from '@/components/Common/GuidePostCard';
 
 import type { GuidePostsRSC } from '@/types';
 
@@ -10,17 +10,18 @@ type WithBlogCategoriesProps = {
 
 const mapPaginationPages = (category: string, pages: number) =>
   [...Array(pages).keys()].map(page => ({
-    url: `/blog/${category}/page/${page + 1}`,
+    url: `/guides/${category}/page/${page + 1}`,
   }));
 
-const WithBlogCategories: FC<WithBlogCategoriesProps> = ({ guideData }) => {
+const WithGuideCategories: FC<WithBlogCategoriesProps> = ({ guideData }) => {
   return (
     <>
-      <div className="max-xs:grid-cols-[1fr] grid grid-cols-[repeat(auto-fill,minmax(theme(spacing.80),1fr))] [grid-gap:theme(spacing.12)_theme(spacing.8)]">
+      <div className="max-xs:grid-cols-[1fr] grid grid-cols-[repeat(auto-fill,minmax(theme(spacing.80),1fr))] gap-6 ">
         {guideData.posts.map(post => (
-          <BlogPostCard
+          <GuidePostCard
             key={post.slug}
             title={post.title}
+            description={post.description}
             category={post.categories[0]}
             date={post.date}
             slug={post.slug}
@@ -41,4 +42,4 @@ const WithBlogCategories: FC<WithBlogCategoriesProps> = ({ guideData }) => {
   );
 };
 
-export default WithBlogCategories;
+export default WithGuideCategories;

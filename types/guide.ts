@@ -2,8 +2,10 @@ export type GuidePreviewType = 'announcements' | 'release' | 'vulnerability';
 
 export interface GuidePost {
   title: string;
+  description: string;
   date: Date;
   categories: string[];
+  tags: string[];
   published: boolean;
   slug: string;
 }
