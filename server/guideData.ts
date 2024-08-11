@@ -1,14 +1,12 @@
-import { cache } from 'react';
-
-import generateGuideData from '@/next-data/generators/guidesData.mjs';
+import generateGuideData from '@/server/generators/guidesData.mjs';
 import { GUIDE_POSTS_PER_PAGE } from '@/config/constants';
-import type { GuidePostsRSC } from '@/types';
+import type { GuideData, GuidePostsRSC } from '@/types';
 
-const { categories, posts } = await generateGuideData();
+const { categories, posts } = (await generateGuideData()) as GuideData;
 
 export const provideGuideCategories = () => categories;
 
-export const provideGuidePosts = (category: string): GuidePostsRSC => {
+const provideGuidePosts = (category: string): GuidePostsRSC => {
   const categoryPosts = posts
     .filter(post => post.published)
     .filter(post => post.categories.includes(category))
@@ -30,12 +28,12 @@ export const provideGuidePosts = (category: string): GuidePostsRSC => {
   };
 };
 
-export const providePaginatedGuidePosts = (
+const providePaginatedGuidePosts = (
   category: string,
   page: number
 ): GuidePostsRSC => {
-  console.log('nesto');
   const { posts, pagination } = provideGuidePosts(category);
+  console.log('nesto');
 
   // This autocorrects if invalid numbers are given to only allow
   // actual valid numbers to be provided
@@ -68,3 +66,20 @@ export const providePaginatedGuidePosts = (
     },
   };
 };
+
+const getGuideData = async (
+  category: string,
+  page: number = 1,
+  keywords?: string
+): Promise<GuidePostsRSC> => {
+  const data =
+    page >= 1
+      ? // This allows us to blindly get all guides posts from a given category
+        // if the page number is 0 or something smaller than 1
+        providePaginatedGuidePosts(category, page)
+      : provideGuidePosts(category);
+
+  return data;
+};
+
+export { getGuideData, providePaginatedGuidePosts, provideGuidePosts };

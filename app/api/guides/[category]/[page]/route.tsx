@@ -3,7 +3,7 @@ import {
   provideGuideCategories,
   provideGuidePosts,
   providePaginatedGuidePosts,
-} from '@/next-data/providers/guideData';
+} from '@/server/providers/guideData';
 
 type StaticParams = {
   params: { category: string; page: string };

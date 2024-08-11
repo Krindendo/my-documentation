@@ -28,6 +28,7 @@ const getFrontMatter = (filename, source) => {
     title = 'Untitled',
     date = new Date(),
     category = 'uncategorized',
+    published = true,
   } = graymatter(source).data;
 
   // We also use publishing years as categories for the guide
@@ -46,7 +47,7 @@ const getFrontMatter = (filename, source) => {
   // this is the url used for the guide post it based on the category and filename
   const slug = `/guides/${category}/${basename(filename, extname(filename))}`;
 
-  return { title, author, date: new Date(date), categories, slug };
+  return { title, published, date: new Date(date), categories, slug };
 };
 
 /**

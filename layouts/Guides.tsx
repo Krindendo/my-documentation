@@ -3,7 +3,7 @@ import type { FC, PropsWithChildren } from 'react';
 import { getClientContext } from '@/client-context';
 import { DocsPageHeader } from '@/components/Common/DocsPageHeader';
 import { useClientContext } from '@/hooks/react-server';
-import { getGuideData } from '@/next-data/guideData';
+import { getGuideData } from '@/server/guideData';
 
 import DefaultLayout from './Default';
 
