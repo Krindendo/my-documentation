@@ -1,3 +1,4 @@
+import { GUIDE_POSTS_PER_PAGE } from '@/config/constants';
 import { FC } from 'react';
 
 type Page = { url: string };
@@ -5,22 +6,24 @@ type Page = { url: string };
 export type PaginationProps = {
   // One-based number of the current page
   currentPage: number;
-  pages: Page[];
-  // The number of page buttons on each side of the current page button
-  // @default 1
-  currentPageSiblingsCount?: number;
+  totalPages: number;
 };
 
-const PaginationStatus: FC<PaginationProps> = ({
-  currentPage,
-  pages,
-  currentPageSiblingsCount = 1,
-}) => {
+const PaginationStatus: FC<PaginationProps> = ({ currentPage, totalPages }) => {
+  console.log('currentPage', currentPage);
+  console.log('GUIDE_POSTS_PER_PAGE', GUIDE_POSTS_PER_PAGE);
+  console.log('totalPages', totalPages);
+  const minimumArtiklesOnPage = (currentPage - 1) * GUIDE_POSTS_PER_PAGE + 1;
+  const probablyMaximumLength =
+    (currentPage - 1) * GUIDE_POSTS_PER_PAGE + GUIDE_POSTS_PER_PAGE;
+  const maximumArtiklesOnPage =
+    probablyMaximumLength > totalPages ? totalPages : probablyMaximumLength;
+
   return (
     <p className="text-sm">
       Showing <span className="font-medium">{minimumArtiklesOnPage}</span> to{' '}
       <span className="font-medium">{maximumArtiklesOnPage}</span> of{' '}
-      <span className="font-medium">{maximumLength}</span> results
+      <span className="font-medium">{totalPages}</span> results
     </p>
   );
 };

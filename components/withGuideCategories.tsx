@@ -3,7 +3,8 @@ import type { FC } from 'react';
 import { GuidePostCard } from '@/components/Common/GuidePostCard';
 import type { GuidePostsRSC } from '@/types';
 
-import { Pagination } from './Common/Pagination';
+// import { PaginationGroup } from './Common/Pagination';
+import { PaginationStatus } from './Common/PaginationStatus';
 
 type WithBlogCategoriesProps = {
   guideData: GuidePostsRSC & { category: string; page: number };
@@ -30,8 +31,14 @@ const WithGuideCategories: FC<WithBlogCategoriesProps> = ({ guideData }) => {
         ))}
       </div>
 
-      <div className="mt-4 border-t border-t-neutral-200 pt-5 dark:border-t-neutral-900 md:mt-8">
-        {/* <Pagination
+      <div className="flex items-center justify-between rounded bg-white px-4 py-3 dark:bg-transparent sm:px-6">
+        <div className="hidden gap-4 sm:flex sm:w-full sm:items-center sm:justify-between">
+          <PaginationStatus
+            currentPage={guideData.page}
+            totalPages={guideData.posts.length}
+          />
+        </div>
+        {/* <PaginationGroup
           currentPage={guideData.page}
           pages={mapPaginationPages(
             guideData.category,

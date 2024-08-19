@@ -1,13 +1,12 @@
 import type { ComponentProps } from 'react';
 
-import type { Pagination } from '@/components/Common/Pagination';
-
+import type { PaginationGroup } from '@/components/Common/PaginationGroup';
+import type { PaginationListItemProps } from '@/components/Common/PaginationGroup/PaginationListItem';
+import { PaginationListItem } from '@/components/Common/PaginationGroup/PaginationListItem';
 import { PaginationEllipsis } from '@/components/ui/pagination';
-import type { PaginationListItemProps } from '@/components/Common/Pagination/PaginationListItem/index';
-import PaginationListItem from '@/components/Common/Pagination/PaginationListItem/index';
 
 const parsePages = (
-  pages: ComponentProps<typeof Pagination>['pages'],
+  pages: ComponentProps<typeof PaginationGroup>['pages'],
   currentPage: number,
   totalPages: number
 ): PaginationListItemProps[] =>
@@ -31,8 +30,8 @@ const MAXIMUM_AMOUNT_OF_ELLIPSES = 2;
 // React MUI's Pagination component as reference. More info here:
 // https://github.com/mui/material-ui/blob/master/packages/mui-material/src/usePagination/usePagination.js
 export const useGetPageElements = (
-  currentPage: ComponentProps<typeof Pagination>['currentPage'],
-  pages: ComponentProps<typeof Pagination>['pages'],
+  currentPage: ComponentProps<typeof PaginationGroup>['currentPage'],
+  pages: ComponentProps<typeof PaginationGroup>['pages'],
   currentPageSiblingsCount: number
 ) => {
   const totalPages = pages.length;

@@ -29,4 +29,4 @@ const PaginationListItem: FC<PaginationListItemProps> = ({
   );
 };
 
-export default PaginationListItem;
+export { PaginationListItem };
