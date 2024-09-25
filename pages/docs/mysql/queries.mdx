@@ -756,3 +756,276 @@ By including the OVER() clause and specifying the partition and sort order, we c
 ### Consider performance when working with large result sets
 
 While window functions can be powerful, they can also be resource-intensive, especially when working with large result sets. Consider the performance implications of using window functions before including them in your queries.
+
+## Sorting and limiting
+
+Sorting your rows is not free. It can take a significant amount of resources and time to sort large data sets, and thus, it's important to do it with caution. If you don't need your rows in a certain order, don't order them.
+
+### Limiting results
+
+To limit your results to 10 rows, for example, you can use the following query:
+
+```sql
+SELECT * FROM people LIMIT 10;
+```
+
+### Sorting results
+
+To order your results in MySQL, you can use the ORDER BY clause. By default, MySQL sorts in ascending order. Here's an example:
+
+```sql
+SELECT id, birthday FROM people ORDER BY birthday;
+
+
+SELECT id, birthday FROM people ORDER BY birthday DESC;
+```
+
+It's important to note that if you're sorting by a column that is not specific enough to be deterministic, MySQL gets to decide what order to return the rows in. For example, if you sort by birthday and two people have the same birthday, MySQL gets to decide the order in which they appear.
+
+To make the sorting deterministic, you should add more columns to the ORDER BY clause. For example, you can add the id column, which is guaranteed to be unique:
+
+```sql
+SELECT id, birthday FROM people ORDER BY birthday, id;
+```
+
+This query will sort the rows by birthday first and then by ID, making the sorting deterministic.
+
+### Offset your results
+
+To offset your results in MySQL, you can use the OFFSET clause. Let's say you want to skip the first 20 rows and return the next 100 rows. You can use the following query:
+
+```sql
+SELECT id, birthday FROM people ORDER BY birthday, id LIMIT 100 OFFSET 20;
+```
+
+It's important to note that when you use the OFFSET clause, the sorted result must be produced first. Whether it's done manually or using an index, the sorted result must be produced before the offset is applied. In the worst case scenario, the entire list must be produced, sorted, and then the offset is applied, which can be inefficient.
+
+## Sorting with indexes
+
+By adding indexes to our tables, we can reduce the need for secondary sorting operations and improve query performance.
+
+We will focus on the people table, which contains 500,000 records, and has no indexes except for the primary key. This is sufficient for this demo, but not ideal for real-world situations.
+
+### Basic order by operation
+
+We will begin by ordering the results of the people table by birthday and using a limit of 10.
+
+```sql
+SELECT
+  *
+FROM
+  people
+ORDER BY
+  birthday ASC
+LIMIT
+  10;
+```
+
+When we run this query and examine it using the EXPLAIN statement, we see that it employs the "using file sort" method. This means that MySQL produced a sorted result by sorting all the results, not by reading an index in order.
+
+| id  | select_type | table  | type | possible_keys | key | key_len | ref | rows   | filtered | Extra          |
+| --- | ----------- | ------ | ---- | ------------- | --- | ------- | --- | ------ | -------- | -------------- |
+| 1   | SIMPLE      | people | ALL  |               |     |         |     | 491583 | 100.00   | Using filesort |
+
+### Indexes and ordering
+
+To avoid the costly sorting operation, we need to add an index to the birthday column of the people table.
+
+```sql
+ALTER TABLE people
+ADD INDEX birthday (birthday);
+```
+
+| id  | select_type | table  | type  | possible_keys | key      | key_len | ref | rows | filtered | Extra |
+| --- | ----------- | ------ | ----- | ------------- | -------- | ------- | --- | ---- | -------- | ----- |
+| 1   | SIMPLE      | people | index |               | birthday | 3       |     | 10   | 100.00   |       |
+
+This time, it is able to use the birthday index to sort the results, and the "using file sort" method is gone.
+
+
+### Deterministic sorting
+
+In order to ensure that our rows are returned in the same order every time, our sorting must be "deterministic." In many cases, this involves sorting by a unique identifier or primary key.
+
+For example, if we add the ID column to our original query and sort by ID after sorting by birthday, we can ensure deterministic sorting.
+
+```sql
+SELECT
+  *
+FROM
+  people
+ORDER BY
+  birthday ASC, ID ASC
+LIMIT
+  10;
+```
+
+In this case, MySQL can still use the birthday index, even though there is another column involved in the sorting process.
+
+### Backward index scans
+
+In MySQL 8.0 or later, we can perform backward index scans when sorting in descending order.
+
+For example, if we set the birthday index to order in descending order and rerun the query, we can see that MySQL performs a backward index scan. This is a new optimization that MySQL uses when it is able to read an index in reverse order.
+
+```sql
+alter table people add index (birthday desc);
+```
+
+## Sorting with composite indexes
+
+Sorting with multi-column indexes can be a powerful tool for improving database performance. It's important to follow the established rules on index creation and access patterns. By unlocking key parts and forming left prefixes, we can avoid file sorting and make use of all key parts in our index. Additionally, we must ensure that the sorting direction in our query matches the ordering of our key parts. With these techniques, we can take full advantage of multi-column indexes in MySQL.
+
+### Creating a composite index
+
+Creating a composite index over three columns: first name, last name, and birthday.
+
+```sql
+ALTER TABLE people ADD INDEX composite_idx(first_name, last_name, birthday);
+```
+
+Note that the order of columns in the index matters. We cannot skip columns or read them out of order when creating or using the index.
+
+### Sorting with multi-column indexes
+
+Now that we have our multi-column index set up, let's explore sorting with it. We'll use the SELECT statement and order by first name, then limit the output to the first ten entries:
+
+```sql
+SELECT
+ *
+FROM
+  people
+ORDER BY
+  first_name
+LIMIT 10;
+```
+
+We should see that the query executes without any file sorting. This is because the multi-column index allows the database to efficiently sort and retrieve the requested data.
+
+### Unlocking key parts for sorting
+
+Let's say we want to sort by last_name but skip over first_name. According to our rules, this is not allowed. However, we can unlock the last_name key part for sorting by adding an equality condition on the first_name column. Here's the query:
+
+```sql
+SELECT
+  *
+FROM
+  people
+WHERE
+  first_name = 'John'
+ORDER BY
+  last_name;
+```
+
+The database can now use the unlocked last_name key part to sort the data. However, note that the birthday column is still locked behind the last_name key part and is not available for sorting or filtering.
+
+### Using all key parts for sorting
+
+To use all three key parts of our index, we need to form a left prefix using the ordering in our query. We can do this by adding first_name back into our SELECT and WHERE clauses. Here's our new query:
+
+```sql
+SELECT
+  *
+FROM
+  people
+WHERE
+  first_name = 'John'
+ORDER BY
+  last_name, birthday;
+```
+
+Now we can sort by all three columns without file sorting. Once again, note that the order of columns in the index and query must match. Also, the id column is always appended to the end of the index but is subject to the same access rules.
+
+### Sorting direction and key parts
+
+Finally, let's discuss sorting direction and how it relates to our multi-column indexes. We can sort each key part in ascending or descending order, but we must make sure that the ordering matches our query. If we sort one key part differently from our query, we may end up with file sorting.
+
+Here are some examples:
+
+- If both key parts are sorted as ascending or descending, we get no file sort.
+- If one key part is sorted as ascending and the other as descending, we get a file sort.
+- If we swap the order of key parts in our index, we may get a backward index scan.
+
+Remember that it's not the order of columns in the index that matters, but the relationship between them and the sorting direction in the query.
+
+```sql
+alter table people add index (first_name asc, last_name desc, birthday );
+```
+
+## Counting results
+
+MySQL allows you to count multiple things using expressions by taking advantage of the way the COUNT() function works. You can use the IF() or SUM() function to create conditions based on your requirements and calculate the sum of values that meet those conditions. This feature helps you quickly and efficiently count various values from a database all at once.
+
+Before diving into counting multiple things using expressions, let's have a quick refresher on two basic counting techniques.
+
+- Counting Rows: To count the number of rows in a table, use the COUNT(*) function. This function counts all rows, regardless of whether they contain null values.
+- Counting Non-Null Values in Columns: To count the number of non-null values in a column, use the COUNT(column_name) function. This function counts only non-null values in the specified column.
+
+### Using expressions to count multiple things
+
+Let's say we have a table called rental that contains rental information such as rental date, customer ID, and return date. We are interested in knowing how many rentals were done on weekends and how many were done on weekdays.
+
+### The DAYOFWEEK function
+
+Next, we can use the DAYOFWEEK(date) function to get the numeric value of the day of the week. This function returns a value between 1 (Sunday) and 7 (Saturday).
+
+```sql
+SELECT
+  rental_date, DAYOFWEEK(rental_date)
+FROM
+  rental;
+```
+
+Running this query shows us the rental date and the corresponding day of the week number. This helps us identify the rental dates that fall on weekends.
+
+### Using the count and if functions
+
+Now that we have identified the rental dates that fall on weekends, we can use the **COUNT()** function to count them. However, instead of using the basic **COUNT(*)** or **COUNT(column_name)** functions, we will use the **COUNT(if_statement)** function. This function allows us to count values based on a specified condition.
+
+In our case, we want to count the number of rentals that occurred on weekends. We can use the **IF(condition, value_if_true, value_if_false)** function to create a column that assigns a value of 1 for rental dates that fall on weekends and a value of null for those that do not.
+
+```sql
+SELECT
+  COUNT(IF(DAYOFWEEK(rental_date) IN (1, 7), 1, NULL)) AS weekend_rentals,
+  COUNT(IF(DAYOFWEEK(rental_date) NOT IN (1, 7), 1, NULL)) AS weekday_rentals,
+  COUNT(return_date) AS completed_rentals,
+  COUNT(*) AS total_rentals
+FROM
+  rental;
+```
+
+Running this query shows us the number of rentals that occurred on weekends and weekdays, as well as the total number of completed rentals and the total number of rentals.
+
+### Another approach — using the sum and if functions
+
+While the previous approach is effective, it requires the use of the **COUNT()** and **IF()** functions inside each other. An alternative approach is to use the **SUM()** function instead. This function calculates the sum of a column based on a specified condition.
+
+In our case, we can create a new column for rentals that occurred on weekends and calculate the sum of this column using the **SUM()** function.
+
+```sql
+SELECT
+  SUM(DAYOFWEEK(rental_date) IN (1, 7)) AS weekend_rentals,
+  SUM(DAYOFWEEK(rental_date) NOT IN (1, 7)) AS weekday_rentals,
+  COUNT(return_date) AS completed_rentals,
+  COUNT(*) AS total_rentals
+FROM
+  rental;
+```
+
+This query produces the same results as the previous one but uses the **SUM()** function instead of **COUNT()** and calculates the value of either 1 or 0 instead of null.
+
+## Dealing with NULLs
+
+Null values are a reality of working with databases, but they can often cause headaches if not handled properly. By using the null-safe equal operator, the is null and is not null operators, and the ifnull statement or coalesce function, we can effectively deal with null values in our SQL queries. With these tools in our toolkit, we can ensure that our queries are working as expected and that we’re getting accurate and complete results.
+
+### Comparing null Values
+
+When dealing with null values in SQL, one of the first things to consider is how to compare null values. In MySQL, null is not equal to anything, including itself. For example, if we run the query **select null = null** we’ll get **null** back as the result.
+
+Similarly, if we use the equals operator to compare a column with a null value, we’ll also get null back as the result. For example, if we run the query **select null = one** we’ll get **null** back as the result.
+
+This behavior can be frustrating, especially when trying to filter or compare data. Let’s take a look at an example. Consider the following table, which contains information about films:
+
+To account for null values, we can use the null-safe equal operator `<=>`, also known as the “spaceship operator.” This operator considers null and another null value as equal.
+
+To compare a column with a null value, we can use the **is null** or **is not null** operators. These operators will return true or false, depending on whether the value is null or not null.
