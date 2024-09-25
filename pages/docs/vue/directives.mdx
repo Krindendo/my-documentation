@@ -168,7 +168,7 @@ For `v-model` bindings with both argument and modifiers, the generated prop name
 <MyComponent v-model:title.capitalize="myText">
 ```
 
-```js
+```javascript
 const props = defineProps(['title', 'titleModifiers'])
 defineEmits(['update:title'])
 

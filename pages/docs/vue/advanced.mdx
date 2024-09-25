@@ -15,7 +15,7 @@ layout: docs
 
 Force trigger effects that depends on a shallow ref. This is typically used after making deep mutations to the inner value of a shallow ref.
 
-```js
+```javascript
 const shallow = shallowRef({
   greet: 'Hello, world'
 })
@@ -42,7 +42,7 @@ In general, track() should be called inside get(), and trigger() should be calle
 
 ### Example: debounced ref
 
-```js
+```javascript
 import { customRef } from 'vue'
 
 export function useDebouncedRef(value, delay = 200) {
@@ -80,7 +80,7 @@ const text = useDebouncedRef('hello')
 
 Marks an object so that it will never be converted to a proxy. Returns the object itself.
 
-```js
+```javascript
 const foo = markRaw({})
 console.log(isReactive(reactive(foo))) // false
 
@@ -93,7 +93,7 @@ console.log(isReactive(bar.foo)) // false
 
 Creates an effect scope object which can capture the reactive effects created within it so that these effects can be disposed together.
 
-```js
+```javascript
 const scope = effectScope()
 
 scope.run(() => {

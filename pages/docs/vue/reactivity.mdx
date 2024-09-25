@@ -72,7 +72,7 @@ onTrack will be called when a reactive property or ref is tracked as a dependenc
 onTrigger will be called when the watcher callback is triggered by the mutation of a dependency.
 Both callbacks will receive debugger events in the same format as component debug hooks:
 
-```js
+```javascript
 const plusOne = computed(() => count.value + 1, {
   onTrack(e) {
     // triggered when count.value is tracked as a dependency
@@ -91,7 +91,7 @@ console.log(plusOne.value)
 count.value++
 ```
 
-```js
+```javascript
 watch(source, callback, {
   onTrack(e) {
     debugger;
@@ -123,7 +123,7 @@ If you are implementing an undo / redo feature, you likely want to take a snapsh
 
 Immutable data structures solve this by never mutating the state objects - instead, it creates new objects that share the same, unchanged parts with old ones. There are different ways of using immutable data in JavaScript, but we recommend using Immer with Vue because it allows you to use immutable data while keeping the more ergonomic, mutable syntax.
 
-```js
+```javascript
 import produce from 'immer'
 import { shallowRef } from 'vue'
 
@@ -141,7 +141,7 @@ export function useImmer(baseState) {
 
 State Machine is a model for describing all the possible states an application can be in, and all the possible ways it can transition from one state to another. While it may be overkill for simple components, it can help make complex state flows more robust and manageable.
 
-```js
+```javascript
 import { createMachine, interpret } from 'xstate'
 import { shallowRef } from 'vue'
 
@@ -167,7 +167,7 @@ Although not a necessary trait for something to qualify as signals, today the co
 
 In Solid you can passed down value without the setter. This ensures that the state can never be mutated unless the setter is also explicitly exposed. Whether this safety guarantee justifies the more verbose syntax could be subject to the requirement of the project and personal taste.
 
-```js
+```javascript
 import { shallowRef, triggerRef } from 'vue'
 
 export function createSignal(value, options) {
@@ -188,7 +188,7 @@ setCount(1) // update the value
 
 Angular signals
 
-```js
+```javascript
 import { shallowRef, triggerRef } from 'vue'
 
 export function signal(initialValue) {

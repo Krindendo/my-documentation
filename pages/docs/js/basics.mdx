@@ -25,14 +25,14 @@ Despite the difference, null == undefined evaluates to true due to JavaScript's 
 **every**
 
 - tests whether all elements in the array pass the test implemented by the provided function
-```js
+```javascript
 array1.every((currentValue) => currentValue < 40)
 ```
 
 **some**
 
 - tests whether at least one element in the array passes the test implemented by the provided function
-```js
+```javascript
 array1.some((element) => element % 2 === 0)
 ```
 
@@ -57,7 +57,7 @@ Example:
 
 ---
 
-```js title="Summing an array of numbers"
+```javascript title="Summing an array of numbers"
 const numbers = [1, 2, 3, 4, 5];
 
 const sum = numbers.reduce(function(accumulator, currentValue) {
@@ -67,7 +67,7 @@ const sum = numbers.reduce(function(accumulator, currentValue) {
 console.log(sum); // Outputs: 15
 ```
 
-```js title="Summing an array of numbers"
+```javascript title="Summing an array of numbers"
 const pets = ['Dog', 'Cat', 'Fish'];
 
 const petObject = pets.reduce(function(obj, pet) {
@@ -79,7 +79,7 @@ console.log(petObject);
 // Outputs: { 'Dog': 'Dog', 'Cat': 'Cat', 'Fish': 'Fish' }
 ```
 
-```js title="Filtering and transforming elements in an array"
+```javascript title="Filtering and transforming elements in an array"
 let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 // Filter out odd numbers and square the even numbers
@@ -98,7 +98,7 @@ console.log(result);
 
 - removes the first element from an array and returns that removed element.
 
-```js
+```javascript
 const array1 = [1, 2, 3];
 const firstElement = array1.shift();
 console.log(array1); 
@@ -109,7 +109,7 @@ console.log(array1);
 
 - adds the specified elements to the beginning of an array and returns the new length of the array.
 
-```js
+```javascript
 const array1 = [1, 2, 3];
 
 console.log(array1.unshift(4, 5));
@@ -123,7 +123,7 @@ console.log(array1);
 
 - removes the last element from an array and returns that element.
 
-```js
+```javascript
 const plants = ['cabbage', 'kale', 'tomato'];
 
 console.log(plants.pop());
@@ -137,7 +137,7 @@ console.log(plants);
 
 - adds the specified elements to the end of an array and returns the new length of the array.
 
-```js
+```javascript
 const animals = ['pigs', 'goats', 'sheep'];
 
 const count = animals.push('cows');
@@ -151,7 +151,7 @@ console.log(animals);
 
 - returns a shallow copy of a portion of an array into a new array object selected from start to end (end not included) where start and end represent the index of items in that array.
 
-```js
+```javascript
 const animals = ['ant', 'bison', 'camel', 'duck', 'elephant'];
 
 console.log(animals.slice(2));
@@ -165,7 +165,7 @@ console.log(animals.slice(2, 4));
 
 - changes the contents of an array by removing or replacing existing elements and/or adding new elements.
 
-```js
+```javascript
 const months = ['Jan', 'March', 'April', 'June'];
 months.splice(1, 0, 'Feb');
 // Inserts at index 1
@@ -183,7 +183,7 @@ console.log(months);
 
 - creates a new array with all sub-array elements concatenated into it recursively up to the specified depth.
 
-```js
+```javascript
 const arr1 = [0, 1, 2, [3, 4]];
 
 console.log(arr1.flat());
@@ -194,7 +194,7 @@ console.log(arr1.flat());
 
 - returns a new array formed by applying a given callback function to each element of the array, and then flattening the result by one level. It is identical to a map() followed by a flat() of depth 1 (arr.map(...args).flat()), but slightly more efficient than calling those two methods separately.
 
-```js
+```javascript
 const arr1 = [1, 2, 1];
 
 const result = arr1.flatMap((num) => (num === 2 ? [2, 2] : 1));
@@ -207,7 +207,7 @@ console.log(result);
 
 - creates a new array populated with the results of calling a provided function on every element in the calling array.
 
-```js
+```javascript
 const array1 = [1, 4, 9, 16];
 console.log(array1.map((x) => x * 2));
 // Expected output: Array [2, 8, 18, 32]
@@ -299,7 +299,7 @@ Examples:
 
 1. for...in loop:
 
-```js
+```javascript
 for (const key in person) {
   console.log(key, person[key]);
 }
@@ -316,7 +316,7 @@ for (const key in person) {
 
 1. Function Declaration
 
-```js
+```javascript
 function functionName(parameter1, parameter2) {
     // Function body containing statements to be executed
     return value; // Optional return statement
@@ -325,7 +325,7 @@ function functionName(parameter1, parameter2) {
 
 2. Function Expression
 
-```js
+```javascript
 const functionName = function(parameter1, parameter2) {
     // Function body
     return value;
@@ -334,7 +334,7 @@ const functionName = function(parameter1, parameter2) {
 
 JavaScript provides the rest parameter syntax to capture an indefinite number of arguments passed to a function
 
-```js
+```javascript
 function functionName(...parameter){
   return parameter;
 }
@@ -354,7 +354,7 @@ A **Promise** is an object returned by an a synchronous function, which represen
 
 Deeper explanation:
 
-```js
+```javascript
 new Promise((resolve, rejected) => {}).then((result) => {console.log("result", result)})
 ```
 
@@ -382,7 +382,7 @@ There's a special syntax to work with promises in a more comfortable fashion.
 
 Callback Hell is essentially nested callbacks stacked below one another forming a pyramid structure. Every callback depends/waits for the previous callback, thereby making a pyramid structure that affects the readability and maintainability of the code. 
 
-```js
+```javascript
     setTimeout(() => {
         animate(words[0]);
         setTimeout(() => {
@@ -445,7 +445,7 @@ To create a deep copy, we can use:
 
 Getter methods are used to access the properties of an object.
 
-```js
+```javascript
 const student = {
 
     // data property
@@ -463,7 +463,7 @@ console.log(student.getName); // Monica
 
 Setter methods are used to change the values of an object
 
-```js
+```javascript
 const student = {
     firstName: 'Monica',
     
@@ -487,7 +487,7 @@ The RegExp `regular expressions` object is used for matching text with a pattern
 
 These patterns are used with the `exec()` and `test()` methods of RegExp, and with the `match()`, `matchAll()`, `replace()`, `replaceAll()`, `search()`, and `split()` methods of String. This chapter describes JavaScript regular expressions.
 
-```js
+```javascript
 const re = /ab+c/i;
 // OR
 const re = new RegExp("ab+c", "i"); 

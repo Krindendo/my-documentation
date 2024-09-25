@@ -49,7 +49,7 @@ interface WatchOptions extends WatchEffectOptions {
 
 ### Example: Stopping the watcher
 
-```js
+```javascript
 const stop = watch(source, callback)
 
 // when the watcher is no longer needed:
@@ -76,7 +76,7 @@ Object that can be used to adjust the effect's flush timing or to debug the effe
 
 ### Example: simple
 
-```js
+```javascript
 const count = ref(0)
 
 watchEffect(() => console.log(count.value))
@@ -88,7 +88,7 @@ count.value++
 
 ### Example
 
-```js
+```javascript
 watchEffect(async (onCleanup) => {
   const { response, cancel } = doAsyncWork(id.value)
   // `cancel` will be called if `id` changes

@@ -37,7 +37,7 @@ This also means if the object contains nested refs, they will be deeply unwrappe
 
 </Callout>
 
-```js
+```javascript
 const count = ref(0)
 count.value++
 console.log(count.value) // 1
@@ -53,13 +53,13 @@ The reactive conversion affects all nested properties. A reactive object also de
 
 If your original variable is already an object (or array), a ref wrapping is not needed because it is already a reference type. It only needs Vue's reactive functionality.
 
-```js
+```javascript
 const obj = reactive({ count: 0 })
 obj.count++
 console.log(obj.value.count) // 1
 ```
 
-```js
+```javascript
 const count = ref(1)
 const obj = reactive({ count })
 
@@ -78,7 +78,7 @@ console.log(count.value) // 3
 ```
 Note that refs are not unwrapped when accessed as array or collection elements:
 
-```js
+```javascript
 const books = reactive([ref('Vue 3 Guide')])
 // need .value here
 console.log(books[0].value)
@@ -90,7 +90,7 @@ console.log(map.get('count').value)
 
 When assigning a ref to a reactive property, that ref will also be automatically unwrapped:
 
-```js
+```javascript
 const count = ref(1)
 const obj = reactive({})
 
@@ -106,7 +106,7 @@ console.log(obj.count === count.value) // true
 
 2. if you extract a nest proxy out to a variable, it is detached from its original parent. This can be made clearer with an example. The second assignment below `(state.foo = {bar: 3})` does not destroy the reactivity of foo, but state.foo will be a new proxy object while the foo variable still points the to original proxy object.
 
-```js
+```javascript
 const state = reactive({foo: {bar: 1}});
 const foo = state.foo;
 
@@ -125,7 +125,7 @@ Takes an object (reactive or plain) or a ref and returns a readonly proxy to the
 
 Any nested property accessed will be readonly as well. It also has the same ref-unwrapping behavior as reactive(), except the unwrapped values will also be made readonly.
 
-```js
+```javascript
 const original = reactive({ count: 0 })
 
 const copy = readonly(original)
@@ -146,7 +146,7 @@ copy.count++ // warning!
 
 Shallow version of ref().
 
-```js
+```javascript
 const state = shallowRef({ count: 1 })
 
 // does NOT trigger change
@@ -166,7 +166,7 @@ Shallow version of reactive().
 
 Unlike reactive(), there is no deep conversion: only root-level properties are reactive for a shallow reactive object. Property values are stored and exposed as-is - this also means properties with ref values will not be automatically unwrapped.
 
-```js
+```javascript
 const state = shallowReactive({
   foo: 1,
   nested: {
