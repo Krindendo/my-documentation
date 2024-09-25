@@ -1,0 +1,72 @@
+---
+title: Examples
+description: Examples of common MySQL queries
+tags: [MySQL]
+layout: docs
+---
+
+## MD5 column
+
+When working with large columns, performing indexed searches can be a challenge. One solution is to use an MD5 column to index the search. In this video, we will explore how an MD5 column can be used for an indexed search and provide step-by-step instructions on how to add an MD5 column to a MySQL table.
+
+### The basics
+
+To understand how an MD5 column works, let's start with a basic example. Let's consider a simple table called **urls** that contains only two columns: **id** and **url**. The url column is a **TEXT** column because it can be a very large value consisting of many thousands of characters.
+
+If we want to perform a strict equality lookup on this table where the URL equals a specific value, we could run the following SQL query:
+
+```sql
+SELECT * FROM URLs WHERE url = 'specific_value';
+```
+
+Since the **url** column is not indexed, this query would result in a full table scan, searching through all the huge text columns. Unfortunately we can't just add a regular index to a **TEXT** column.
+
+### MD5 hashes
+
+One way to create an equality index for a **TEXT** column is to add an MD5 hash virtual generated column. An MD5 hash is a 128-bit value that can be calculated for any file, text string, or other data input.
+
+To add an MD5 hash virtual generated column to the URLs table, we can run the following SQL query:
+
+```sql
+ALTER TABLE urls ADD COLUMN url_md5 CHAR(32) GENERATED ALWAYS AS (MD5(url));
+```
+
+This creates a new column called **url_md5** that contains the MD5 hash of the URL column. This column can be indexed using a B-tree index.
+
+To add an index to the new **url_md5** column, we can use the following SQL query:
+
+```sql
+ALTER TABLE URLs ADD INDEX (`url_md5`);
+```
+
+Once indexed, we can perform an indexed search by running the following SQL query:
+
+```sql
+SELECT * FROM urls WHERE url_md5 = MD5('specific_value');
+```
+
+This query takes advantage of the index that was created on the **url_md5** column, resulting in a much faster and more efficient search.
+
+### Binary strings
+
+When creating an MD5 hash virtual generated column, it is important to specify the data type. Since we're only ever going to be comparing sets of bytes rather than characters, we can use **BINARY(16)** for a more efficient search.
+
+```sql
+ALTER TABLE urls ADD COLUMN url_md5 binary(16) GENERATED ALWAYS AS (UNHEX(MD5(url)));
+```
+
+Then we can add an index to the new binary url_md5 column using the following SQL query:
+
+```sql
+ALTER TABLE urls ADD INDEX (url_md5);
+```
+
+And perform an indexed search using the following SQL query:
+
+```sql
+SELECT * FROM urls WHERE url_md5 = UNHEX(MD5('specific_value'));
+```
+
+This binary search is more efficient and faster than the previous example using CHAR.
+
+## MD5 over multiple columns

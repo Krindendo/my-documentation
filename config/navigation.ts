@@ -121,6 +121,7 @@ const sideNavigationDocs: NavigationEntry[] = [
       { label: 'Schema', link: '/docs/mysql/schema' },
       { label: 'Indexes', link: '/docs/mysql/indexes' },
       { label: 'Queries', link: '/docs/mysql/queries' },
+      { label: 'Examples', link: '/docs/mysql/examples' },
     ],
   },
 ];
