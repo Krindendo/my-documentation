@@ -6,6 +6,7 @@
   "engines": {
     "node": "v20"
   },
+  "packageManager": "pnpm@9.11.0",
   "scripts": {
     "dev": "cross-env NODE_NO_WARNINGS=1 next dev --turbo",
     "build": "cross-env NODE_NO_WARNINGS=1 next build",

@@ -11,6 +11,7 @@ import shellSessionLanguage from 'shiki/langs/shellsession.mjs';
 import TSXLanguage from 'shiki/langs/tsx.mjs';
 import vueLanguage from 'shiki/langs/vue.mjs';
 import cssLanguage from 'shiki/langs/css.mjs';
+import sqlLanguage from 'shiki/langs/sql.mjs';
 import typeScriptLanguage from 'shiki/langs/typescript.mjs';
 import shikiDarkPlusTheme from 'shiki/themes/dark-plus.mjs';
 
@@ -82,6 +83,11 @@ export const LANGUAGES = [
     ...cssLanguage[0],
     scopeName: 'source.css',
     displayName: 'CSS',
+  },
+  {
+    ...sqlLanguage[0],
+    scopeName: 'source.sql',
+    displayName: 'SQL',
   },
 ];
 
