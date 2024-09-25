@@ -19,76 +19,20 @@ import shikiDarkPlusTheme from 'shiki/themes/dark-plus.mjs';
 export const LANGUAGES = [
   {
     ...javaScriptLanguage[0],
-    scopeName: 'source.js',
-    aliases: ['mjs', 'cjs', 'js'],
-    displayName: 'JavaScript',
+    aliases: javaScriptLanguage[0].aliases.concat('cjs', 'mjs'),
   },
-  {
-    ...jsonLanguage[0],
-    scopeName: 'source.json',
-    displayName: 'JSON',
-  },
-  {
-    ...typeScriptLanguage[0],
-    scopeName: 'source.ts',
-    aliases: ['ts'],
-    displayName: 'TypeScript',
-  },
-  {
-    ...shellScriptLanguage[0],
-    scopeName: 'source.shell',
-    aliases: ['bash', 'sh', 'shell', 'zsh'],
-    displayName: 'Bash',
-  },
-  {
-    ...powershellLanguage[0],
-    scopeName: 'source.powershell',
-    aliases: ['ps', 'ps1'],
-    displayName: 'PowerShell',
-  },
-  {
-    ...shellSessionLanguage[0],
-    scopeName: 'text.shell-session',
-    aliases: ['console'],
-    displayName: 'Bash',
-  },
-  {
-    ...dockerLanguage[0],
-    scopeName: 'source.dockerfile',
-    aliases: ['dockerfile'],
-    displayName: 'Dockerfile',
-  },
-  {
-    ...diffLanguage[0],
-    scopeName: 'source.diff',
-    displayName: 'Diff',
-  },
-  {
-    ...JSXLanguage[0],
-    scopeName: 'source.jsx',
-    displayName: 'JSX',
-  },
-  {
-    ...TSXLanguage[0],
-    scopeName: 'source.tsx',
-    displayName: 'TSX',
-  },
-  {
-    ...vueLanguage[0],
-    scopeName: 'source.vue',
-    aliases: ['vue'],
-    displayName: 'Vue',
-  },
-  {
-    ...cssLanguage[0],
-    scopeName: 'source.css',
-    displayName: 'CSS',
-  },
-  {
-    ...sqlLanguage[0],
-    scopeName: 'source.sql',
-    displayName: 'SQL',
-  },
+  ...jsonLanguage,
+  ...typeScriptLanguage,
+  ...shellScriptLanguage,
+  ...powershellLanguage,
+  ...shellSessionLanguage,
+  ...dockerLanguage,
+  ...diffLanguage,
+  ...JSXLanguage,
+  ...TSXLanguage,
+  ...vueLanguage,
+  ...cssLanguage,
+  ...sqlLanguage,
 ];
 
 // This is the default theme we use for our Shiki Syntax Highlighter

@@ -1,6 +1,6 @@
 {
   "name": "my-documentation",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "private": true,
   "type": "module",
   "engines": {
@@ -81,6 +81,8 @@
     "zustand": "5.0.0-rc.2"
   },
   "devDependencies": {
+    "@shikijs/core": "^1.18.0",
+    "@shikijs/engine-javascript": "^1.18.0",
     "@storybook/addon-controls": "~8.3.3",
     "@storybook/addon-interactions": "~8.3.3",
     "@storybook/addon-themes": "~8.3.3",
