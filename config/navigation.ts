@@ -29,7 +29,7 @@ const socialLinks: SiteNavigation['socialLinks'] = [
   },
   {
     icon: 'linkedin',
-    link: 'https://rs.linkedin.com/in/marko-milo%C5%A1evi%C4%87-934766224',
+    link: 'https://rs.linkedin.com/in/marko-samek',
     alt: 'LinkedIn',
   },
 ];
@@ -75,6 +75,7 @@ const sideNavigationDocs: NavigationEntry[] = [
       { label: 'Other Hooks', link: '/docs/react/other-hooks' },
       { label: 'APIs', link: '/docs/react/apis' },
       { label: 'Advanced guides', link: '/docs/react/advanced-guides' },
+      { label: 'State management', link: '/docs/react/state-management' },
     ],
   },
   {
@@ -105,6 +106,7 @@ const sideNavigationDocs: NavigationEntry[] = [
       },
       { label: 'Advanced', link: '/docs/vue/advanced' },
       { label: 'Directives', link: '/docs/vue/directives' },
+      { label: 'State management', link: '/docs/vue/state-management' },
     ],
   },
   {
@@ -122,6 +124,72 @@ const sideNavigationDocs: NavigationEntry[] = [
       { label: 'Indexes', link: '/docs/mysql/indexes' },
       { label: 'Queries', link: '/docs/mysql/queries' },
       { label: 'Examples', link: '/docs/mysql/examples' },
+    ],
+  },
+];
+
+const sideNavigationGuides: NavigationEntry[] = [
+  {
+    label: 'Getting Started',
+    items: [
+      {
+        label: 'Introduction',
+        link: '/guides',
+      },
+    ],
+  },
+  {
+    label: 'Uncategorized',
+    items: [
+      {
+        label: 'Abort fetch',
+        link: '/guides/uncategorized/abort-fetch',
+      },
+      {
+        label: 'Axios config',
+        link: '/guides/uncategorized/axios-config',
+      },
+      {
+        label: 'Branching models',
+        link: '/guides/uncategorized/branching-models',
+      },
+      {
+        label: 'Configure tsconfig',
+        link: '/guides/uncategorized/configure-tsconfig',
+      },
+      {
+        label: 'Control history API',
+        link: '/guides/uncategorized/how-to-control-history-api',
+      },
+      {
+        label: 'HTML tags',
+        link: '/guides/uncategorized/html-tags',
+      },
+      {
+        label: 'Intersection observer API',
+        link: '/guides/uncategorized/intersection-observer-API',
+      },
+
+      {
+        label: 'Rendering patterns',
+        link: '/guides/uncategorized/rendering-patterns',
+      },
+      {
+        label: 'Serverless',
+        link: '/guides/uncategorized/serverless',
+      },
+      {
+        label: 'Styling with CSS',
+        link: '/guides/uncategorized/styling-with-css',
+      },
+      {
+        label: 'Tokens',
+        link: '/guides/uncategorized/tokens',
+      },
+      {
+        label: 'Websockets vs polling',
+        link: '/guides/uncategorized/websockets-vs-polling',
+      },
     ],
   },
 ];
@@ -237,6 +305,18 @@ const sideNavigationAlgorithms: NavigationEntry[] = [
   },
 ];
 
+const sideNavigationPackages: NavigationEntry[] = [
+  {
+    label: 'Getting Started',
+    items: [
+      {
+        label: 'Introduction',
+        link: '/guides',
+      },
+    ],
+  },
+];
+
 const sideNavigation: SiteNavigation['topNavigation'] = {
   docs: {
     label: 'Docs',
@@ -244,7 +324,7 @@ const sideNavigation: SiteNavigation['topNavigation'] = {
   },
   guides: {
     label: 'Guides',
-    items: [],
+    items: sideNavigationGuides,
   },
   algorithms: {
     label: 'Algorithms',

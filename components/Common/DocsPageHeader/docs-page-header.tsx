@@ -3,11 +3,15 @@ import { cn } from '@/util/cn';
 interface DocsPageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   heading: string;
   text?: string;
+  publishedAt?: string;
+  verifiedDate?: string;
 }
 
 const DocsPageHeader = ({
   heading,
   text,
+  publishedAt,
+  verifiedDate = publishedAt,
   className,
   ...props
 }: DocsPageHeaderProps) => {
@@ -20,7 +24,19 @@ const DocsPageHeader = ({
         >
           {heading}
         </h1>
-        {text && <p className="text-xl text-muted-foreground">{text}</p>}
+        <div className="flex flex-col space-y-2">
+          {text && <p className="mb-2 text-xl text-muted-foreground">{text}</p>}
+          {publishedAt && (
+            <p className="text-base text-muted-foreground">
+              Published: {publishedAt}
+            </p>
+          )}
+          {verifiedDate && (
+            <p className="text-base text-muted-foreground">
+              Last time verified: {verifiedDate}
+            </p>
+          )}
+        </div>
       </div>
       <hr className="my-4" />
     </>

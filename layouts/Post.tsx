@@ -20,6 +20,8 @@ const PostLayout: FC<PropsWithChildren> = ({ children }) => {
               <DocsPageHeader
                 heading={frontmatter.title ?? ''}
                 text={frontmatter.description}
+                publishedAt={frontmatter.publishedAt}
+                verifiedDate={frontmatter.verifiedDate}
               />
               <div className="pb-12 pt-8">{children}</div>
               <hr className="my-4" />
