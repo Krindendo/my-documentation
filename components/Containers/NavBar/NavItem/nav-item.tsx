@@ -1,4 +1,3 @@
-import { ArrowUpRight } from 'lucide-react';
 import type { FC, HTMLAttributeAnchorTarget, PropsWithChildren } from 'react';
 
 import { ActiveLink } from '@/components/Common/ActiveLink';
@@ -30,10 +29,6 @@ const NavItem: FC<PropsWithChildren<NavItemProps>> = ({
     target={target}
   >
     <span className={styles.label}>{children}</span>
-
-    {((type === 'nav' && href.startsWith('http')) || target === '_blank') && (
-      <ArrowUpRight className={styles.icon} />
-    )}
   </ActiveLink>
 );
 

@@ -26,7 +26,7 @@ const Footer: FC = () => {
           const SocialIcon = footerSocialIcons[link.icon];
 
           return (
-            <NavItem key={link.icon} href={link.link} type="footer">
+            <NavItem key={link.icon} href={link.link} type="footer" target="_blank">
               <SocialIcon width={20} height={20} aria-label={link.link} />
             </NavItem>
           );
