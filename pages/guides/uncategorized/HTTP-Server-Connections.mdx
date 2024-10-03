@@ -1,0 +1,33 @@
+---
+title: HTTP Server Connections
+description: DNS | TCP | TLS/SSL
+publishedAt: 2024-10-03
+tags: [HTTP,  ,connection, handshake]
+layout: post
+---
+
+Before making an HTTP request for a resource browsers first need to create a connection to the web server that they want to load the resource from.
+
+You can see a server connection being created when looking at a request waterfall, for example from our free speed test or in Chrome DevTools.
+
+You can see **three other steps in teal, orange, and purple before the HTTP request** shown in green and the download in blue. These three steps are where the connection is created.
+
+image
+
+Typically three steps are required to establish a connection to an HTTP server:
+
+- DNS lookup: finding the server IP address based on the domain name
+- TCP connection: enabling reliable communication
+- TLS/SSL connection: enabling secure encrypted communication
+
+After that HTTP requests can be made to request resources from the server.
+
+## DNS lookup
+
+IP addresses like `12.34.456.789` are used to route messages between different computers on a network. However, they are difficult to remember and not nice to work with for humans. A website may also move from one server to the other, and we don’t want to update all references to the website when that happens.
+
+Instead we use domain names to address websites. The Domain Name System (DNS) allows us to map a domain like `example.com` to an IP address.
+
+Before sending an HTTP request to a server we first need to perform a DNS lookup to find its IP address.
+
+You can use `dig` on the command line to find the IP address of a server:
