@@ -21,7 +21,7 @@ const PostLayout: FC<PropsWithChildren> = ({ children }) => {
                 heading={frontmatter.title ?? ''}
                 text={frontmatter.description}
                 publishedAt={frontmatter.publishedAt}
-                verifiedDate={frontmatter.verifiedDate}
+                updatedAt={frontmatter.updatedAt}
               />
               <div className="pb-12 pt-8">{children}</div>
               <hr className="my-4" />

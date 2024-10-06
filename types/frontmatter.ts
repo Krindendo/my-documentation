@@ -12,5 +12,5 @@ export interface DocsFrontMatter extends FrontMatter {}
 
 export interface GuidesFrontMatter extends FrontMatter {
   published: boolean;
-  verifiedDate?: string;
+  updatedAt?: string;
 }

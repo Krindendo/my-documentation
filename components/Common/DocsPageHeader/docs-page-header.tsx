@@ -4,14 +4,14 @@ interface DocsPageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   heading: string;
   text?: string;
   publishedAt?: string;
-  verifiedDate?: string;
+  updatedAt?: string;
 }
 
 const DocsPageHeader = ({
   heading,
   text,
   publishedAt,
-  verifiedDate = publishedAt,
+  updatedAt,
   className,
   ...props
 }: DocsPageHeaderProps) => {
@@ -31,9 +31,9 @@ const DocsPageHeader = ({
               Published: {publishedAt}
             </p>
           )}
-          {verifiedDate && (
+          {updatedAt && (
             <p className="text-base text-muted-foreground">
-              Last time verified: {verifiedDate}
+              Updated at: {updatedAt}
             </p>
           )}
         </div>
