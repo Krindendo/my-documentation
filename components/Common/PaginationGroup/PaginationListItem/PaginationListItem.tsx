@@ -22,6 +22,7 @@ const PaginationListItem: FC<PaginationListItemProps> = ({
         href={url}
         aria-label={`page ${pageNumber}`}
         {...(pageNumber === currentPage && { 'aria-current': 'page' })}
+        prefetch={true}
       >
         <span>{pageNumber}</span>
       </Link>

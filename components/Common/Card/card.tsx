@@ -26,7 +26,7 @@ const Card: FC<CardProps> = ({ children, href, pattern }) => {
   }
 
   return (
-    <Link href={href} className="overflow-hidden">
+    <Link href={href} className="overflow-hidden" prefetch={true}>
       <div
         onMouseMove={onMouseMove}
         className="group relative flex h-full rounded-2xl bg-zinc-50 pt-5 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/5 dark:hover:shadow-black/5"

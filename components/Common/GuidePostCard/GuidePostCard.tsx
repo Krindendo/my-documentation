@@ -43,7 +43,7 @@ export const GuidePostCard: FC<GuidePostCardProps> = ({
           )}
         </div>
       </div>
-      <Link href={slug} className="absolute inset-0">
+      <Link href={slug} className="absolute inset-0" prefetch={true}>
         <span className="sr-only">View</span>
       </Link>
     </article>

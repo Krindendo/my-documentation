@@ -30,7 +30,7 @@ const MdxCard: FC<MdxCardProps> = ({
         </div>
       </div>
       {href && (
-        <Link href={disabled ? '#' : href} className="absolute inset-0">
+        <Link href={disabled ? '#' : href} className="absolute inset-0" prefetch={true}>
           <span className="sr-only">View</span>
         </Link>
       )}

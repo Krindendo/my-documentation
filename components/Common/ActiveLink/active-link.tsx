@@ -31,7 +31,7 @@ const ActiveLink: FC<ActiveLocalizedLinkProps> = ({
   });
 
   return (
-    <Link className={finalClassName} href={href} {...props}>
+    <Link className={finalClassName} href={href} prefetch={true} {...props} >
       {children}
     </Link>
   );

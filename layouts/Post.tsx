@@ -28,6 +28,7 @@ const PostLayout: FC<PropsWithChildren> = ({ children }) => {
               <div className="flex justify-center py-6 lg:py-10">
                 <Link
                   href="/guides"
+                  prefetch={true}
                   className={cn(buttonVariants({ variant: 'ghost' }))}
                 >
                   <Icons.chevronLeft className="mr-2 h-4 w-4" />

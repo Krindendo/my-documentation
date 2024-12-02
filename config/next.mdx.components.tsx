@@ -48,6 +48,7 @@ export const htmlComponents = {
   // Renders a Link Component for `a` tags
   a: ({ ...props }) => (
     <Link
+      prefetch={true}
       className={cn('font-medium underline underline-offset-4')}
       {...props}
     />

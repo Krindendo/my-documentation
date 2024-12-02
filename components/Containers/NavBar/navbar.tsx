@@ -66,6 +66,7 @@ const NavBar = forwardRef<HTMLDivElement, NavbarProps>(
                   <Link
                     key={index}
                     href={item.disabled ? '#' : item.link}
+                    prefetch={true}
                     className={cn(
                       'text-sm leading-5 transition hover:text-foreground/80',
                       item.link.startsWith(`/${segment}`)

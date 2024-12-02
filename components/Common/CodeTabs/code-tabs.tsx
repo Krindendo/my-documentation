@@ -24,7 +24,7 @@ const CodeTabs: FC<PropsWithChildren<CodeTabsProps>> = ({
     addons={
       linkUrl &&
       linkText && (
-        <Link className={styles.link} href={linkUrl}>
+        <Link className={styles.link} href={linkUrl} prefetch={true}>
           {linkText}
           <ArrowUpRight className={styles.icon} />
         </Link>
