@@ -5,11 +5,35 @@ tags: [React, useState, useReducer, Redux, Zustand]
 layout: docs
 ---
 
+When to use Global state manager?
+
+- Best for complex state managemenet when the state is spread across multiple components and these components need to communicate or share state in a more organized way.
+
+- Redux allows you to manage global state in a centralized store, and components can easily connect to the store to read or update state.
+
+- It provides better control over state updates, preventing unnecessary re-renders and improving performance.
+
+
 ## Redux
 
-<img src="/static/images/guides/redux-concepts-and-data-flow.png" alt="redux concepts and data flow" className="my-6" />
+<img
+  src="/static/images/guides/redux-concepts-and-data-flow.png"
+  alt="redux concepts and data flow"
+  className="my-6"
+/>
 
-Redux terms: 
+<Callout>
+Redux toolkit will allow you to easily set redux up and connect it to your react application. 
+
+Because we are using createSlice from Redux toolkit this will do things behind the scenes without us having to set up anthing.
+</Callout>
+
+3 main concepts of Redux: **Store**, **Actions** and **Reducers**
+
+Redux is a state management library that allows accessing global state.
+This means that state can be accessed by any component, regardless of where it is in the tree.
+
+Redux terms:
 
 - Actions: An action is a plain JavaScript object that has a type field. **You can think of an action as an event that describes something that happened in the application.**
 
@@ -21,8 +45,36 @@ Redux terms:
 
 - Selectors: Selectors are functions that know how to extract specific pieces of information from a store state value. As an application grows bigger, this can help avoid repeating logic as different parts of the app need to read the same data
 
+#### Store:
+
+A store is just a state that may be defined in any way and contain any content.
+
+Stores are typically made up of many slices, each with different responsibilities for a specific domain in the application.
+
+#### Action:
+
+Actions represent what you want Redux to perform with the state.
+
+The payload is optional and can be whatever data that you wish to deliver to Redux in your action so that it can do its function.
+
+#### Reducer:
+
+Reducers are responsible for taking an action and then depending on the type of the action will actually and make the update in the Redux store.
+Use the type of the action to know what updates to do and optionally they will use the payload to do those specific updates to the Redux store.
+
+Reducer will never directly make an update to the Redux store. It will immutable data. It means that it will never allowe to directly mutate the state
+Reducer will take the state and it will make a copy of the state, then it will make changes to that copy of the state and after that will completely replace the state as a whole
+with the copy that has the changes applied.
+
+<Callout>
+Redux will not work if you mutate the state.
+</Callout>
+
 Example:
 
+https://youtu.be/5yEG6GhoJBs?si=GKSk00qNxGhfUB7_&t=1155
+
+---
 
 ## Zustand
 
@@ -51,7 +103,7 @@ With zustand store, we can have multiple values in the store, but another compon
 
 No, if you have complex react logic, witch shoud be in useMemo or useEffect. If value doesnt change that often or is not that complext then it not problem for react to handle.
 
-Renders dont change the DOM - all computation are on shadow DOM and only if there are diference between shadow DOM and actually DOM, there will be commands to change the DOM. 
+Renders dont change the DOM - all computation are on shadow DOM and only if there are diference between shadow DOM and actually DOM, there will be commands to change the DOM.
 With is very expensive part
 
 https://youtu.be/fZPgBnL2x-Q?si=3lgPRdaJEHemPnCH&t=802
