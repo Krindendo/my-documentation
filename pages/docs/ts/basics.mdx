@@ -201,3 +201,89 @@ TypeScript uses built-in JavaScript operators like typeof, instanceof, and in to
       pet.bark();
   }
   ```
+
+### Dependency injection
+
+is software design pattern used to reduce tight coupling between code components, making applications easier to test, maintain, and extend.
+
+The key idea of DI is that a class should not create its own dependencies but instead receive them (inject them) externally, typically via a constructor, method, or property.
+
+Key Concepts:
+
+1. Dependency: Any class, object, or resource that another class requires to perform its function.
+
+2. Injector: A component or mechanism responsible for creating and delivering dependencies to a class.
+
+Benefits of DI:
+
+- Loose Coupling: Components are not directly tied to their dependencies.
+
+- Easier Testing: Dependencies can easily be replaced with mocks or stubs for testing.
+
+- Reusability: Components are more flexible and can be reused in other parts of the code.
+
+- Maintainability: Makes it easier to change dependencies without modifying the class itself.
+
+Example: 
+
+Without Dependency Injection:
+
+```js
+class EmailService {
+  send(message, recipient) {
+    console.log(`Sending email to ${recipient}: ${message}`);
+  }
+}
+
+class NotificationService {
+  constructor() {
+    this.emailService = new EmailService(); // Hardcoded dependency
+  }
+
+  notify(message, recipient) {
+    this.emailService.send(message, recipient);
+  }
+}
+
+// Usage
+const notificationService = new NotificationService();
+notificationService.notify('Hello!', 'user@example.com');
+```
+
+With Dependency Injection:
+
+```js
+class EmailService {
+  send(message, recipient) {
+    console.log(`Sending email to ${recipient}: ${message}`);
+  }
+}
+
+class SmsService {
+  send(message, recipient) {
+    console.log(`Sending SMS to ${recipient}: ${message}`);
+  }
+}
+
+class NotificationService {
+  constructor(notificationProvider) {
+    this.notificationProvider = notificationProvider; // Dependency is injected
+  }
+
+  notify(message, recipient) {
+    this.notificationProvider.send(message, recipient);
+  }
+}
+
+// Usage
+const emailService = new EmailService();
+const smsService = new SmsService();
+
+// Injecting EmailService
+const emailNotificationService = new NotificationService(emailService);
+emailNotificationService.notify('Hello via Email!', 'user@example.com');
+
+// Injecting SmsService
+const smsNotificationService = new NotificationService(smsService);
+smsNotificationService.notify('Hello via SMS!', '+123456789');
+```
