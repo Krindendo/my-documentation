@@ -11,7 +11,9 @@ This relationship exists when every row in table A can only be linked with anoth
 
 For example, a country has only one capital city, and a capital city only belongs to one country.
 
-Mother and Child relationship. Perhaps it exists when a mother has only one child, but the relationship is one-to-many relationship, as mothers could have more than one child.
+Customer and Customer Loyalty Card
+
+Author and AuthorBiography
 
 ## One to Many Relationship
 
@@ -19,10 +21,20 @@ This relationship exists when every row in table A may be linked with many rows 
 
 Author and Book relationship. Perhaps it exists when an author has many books, and each book is only written by one author, but the relationship here is many-to-many relationship, as books could be co-authored.
 
+Customer and Orders - One customer can place many orders, but each order belongs to exactly one customer.
+
+Category and Products - One product category can have many products, but each product belongs to exactly one category.
+
+Mother and Child relationship. Perhaps it exists when a mother has only one child, but the relationship is one-to-many relationship, as mothers could have more than one child.
+
 ## Many to Many Relationship
 
 If you have a many-to-many relationship between two entities, the standard way to represent them is with three tables.
 
 Two of the tables are entity tables, with a primary key. A junction table lies between them (logically) and contains two foreign keys, one that references each entity table. Often, these two foreign keys will be the only two columns in the junction table.
 
-Let’s take an example. MoviesCategories serve as the junction table / relation table. The primary key of Movie and Category serves as foreign keys of MoviesCategories
+Movies and Actors - multiple actors can appear in multiple movies, and each movie can have many actors.
+
+Users and Roles - a user can have multiple roles, and each role can be assigned to multiple users.
+
+Letâ€™s take an example. MoviesCategories serve as the junction table / relation table. The primary key of Movie and Category serves as foreign keys of MoviesCategories

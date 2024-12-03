@@ -505,3 +505,40 @@ While functions in JavaScript are powerful on their own, the **call**, **apply**
 **apply**: Similar to call, the apply method invokes a function with a specified this value, but it takes an array or an array-like object as its second argument, allowing you to pass a variable number of arguments to the function.
 
 **bind**: The bind method creates a new function that, when called, has its this value set to a specific value and prepends any provided arguments to the original function's arguments list. It is often used to create functions with preset contexts or partially applied arguments.
+
+```js
+var user = {
+    firstname: 'Lorem',
+    lastname: 'Ipsum',
+    getUserName: function() {
+        var fullname = this.firstname + ' ' + this.lastname;
+        return fullname;
+    }
+};
+
+var userName = function(snack, hobby) {
+    console.log(this.getUserName() + ' loves ' + snack + ' and ' + hobby);
+};
+
+userName.call(user,'sushi', 'algorithms'); // Lorem Ipsum loves sushi and algorithms
+userName.apply(user,['sushi', 'algorithms']); // Lorem Ipsum loves sushi and algorithms
+```
+
+```js
+var user = {
+    firstname: 'Lorem',
+    lastname: 'Ipsum',
+    getUserName: function() {
+        var fullname = this.firstname + ' ' + this.lastname;
+        return fullname;
+    }
+};
+
+var userName = function() {
+    console.log(this.getPokeName());
+};
+
+var logUserName = userName.bind(user); // creates new object and binds user. 'this' of user === user now
+
+logUserName(); // 'Lorem Ipsum'
+```
