@@ -1,0 +1,82 @@
+---
+title: Queue
+description: test
+tags: []
+layout: docs
+---
+
+<Callout>Most common data structure that is implemented in many languages.</Callout>
+
+A Queue is just a specific implementation of **singly linked list**. It is simply a FIFO structure, a first in first out.
+
+<h3 className="text-lg font-semibold">- How it works</h3>
+
+Let asume that we have list with node A,B,C,D. To make queue work we also need node head and node tail. 
+
+<img src="/static/images/algorithms/queue-base.png" alt="Queue example" className="my-6" />
+
+If we wish to insert node E into the queue, we will grab the last node from tail, which in our example is D, and D will now point to E, and then we will update tail to point to E.
+
+If we want to pop node A, we will get from head point, what is the first node, which in our example is node A, and then the head will point to node B, and node A will delete the next link.
+
+<h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
+
+It's **O(1)**
+
+- enqueue(unshift) - add value to the queue or push to the queue
+- deque(shift) - removing value from the queue
+- peek - have the ability to see what is my first element without popping it off.
+
+
+```ts
+type QNode<T> = {
+  value: T,
+  next?: QNode<T>
+}
+
+export default class Queue<T> {
+  public length: number;
+  private head?: QNode<T>;
+  private tail?: QNode<T>;
+
+  constructor() {
+    this.head = this.tail = undefined;
+    this.length = 0;
+  }
+
+  enqueue(item: T): void {
+    const node = {value: item} as QNode<T>;
+    this.length++;
+    if(!this.tail){
+      this.tail = this.head = node;
+      return;
+    }
+
+    this.tail.next = node;
+    this.tail = node;
+  }
+
+  deque(): T | undefined {
+    if(!this.head){
+      return;
+    }
+
+    this.length--;
+
+    const head = this.head;
+    this.head = this.head.next;
+
+    head.next = undefined; // we do not need to do that because js garbage collection will remove value head.
+
+    if(this.length === 0){
+      this.tail = undefined;
+    }
+
+    return head.value;
+  }
+
+  peek(): T | undefined {
+    return this.head?.value;
+  }
+}
+```

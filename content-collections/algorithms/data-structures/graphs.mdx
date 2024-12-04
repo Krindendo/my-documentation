@@ -1,0 +1,259 @@
+---
+title: Graphs
+description: test
+tags: []
+layout: docs
+---
+
+Graph is a series of nodes with some amount of connections. There is no rules. It's just, there's a lot of connections between nodes or some connections or no connections.
+
+
+<img src="/static/images/algorithms/graph-example.png" alt="Graph dag" className="my-6" />
+
+### Terminology
+
+#### Graph Terms
+
+cycle: When you start at Node(x), follow the links, and end back at Node(x) - A -> B -> C -> D -> A
+
+acyclic: A graph that contains no cycles
+
+connected: When every node has a path to another node. Every node can reach to every other node.
+
+not fully connectd graph is when we have node E that had a one way direction from C to E. Then Every node can reach E but E can't reach other nodes.
+
+directed: When there is a direction to the connections. - There are one-way connections or the connections are asymmetric.
+
+undirected: !directed. This means that nodes don't have any direction associated with them. You can go both ways.
+
+weighted: The edges have a weight associated with them. Think Google Maps -> In one direction from example A to B cost 10 pounds but direction B to A costs 20 pounds.
+
+dag: Directed, acyclic graph - example below - Is when you can't quite make it to any other node, everything has a terminus. So B could go all the way to C but it can't go any furher.
+
+<img src="/static/images/algorithms/graph-dag.png" alt="Graph dag" className="my-6" />
+
+#### Implementation Terms
+
+node: a point or vertex on the graph
+
+edge: the connection betxit two nodes
+
+
+<h3 className="text-lg font-semibold">- How it works</h3>
+
+<h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
+
+BigO is commonly started in terms of V and E where V stands for vertices and E stands for edges.
+So O(V * E) means that we will check every vertex and on every vertex we check every edge.
+
+For every Verte, we would visit every single edge in the graph.
+
+
+There are two ways to represent a graphs: 
+
+- adj list - adjacency list
+
+- adj matrix - adjacency matrix
+
+adj list will be a list but node zero will have list of edges.
+
+<img src="/static/images/algorithms/graph-adj-list.png" alt="Graph adj list" className="my-6" />
+
+adj matrix have problem with memory you need to have O(V)^2 memory to represent data. If you had 100 nodes, you'd have to create 100 by 100 matrix to represent it all.
+
+<img src="/static/images/algorithms/graph-adj-matrix.png" alt="Graph adj matrix" className="my-6" />
+
+
+### Search
+
+<img src="/static/images/algorithms/graph-search.png" alt="Graph search" className="my-6" />
+
+Breadth first search
+
+```ts
+type WeightedAdjacencyMatrix = number[][]
+
+export default function bfs(graph: WeightedAdjacencyMatrix, source: number, needle: number): number[] | null {
+  const seen = new Array(graph.length).fill(false);
+  const prev = new Array(graph.length).fill(-1);
+
+  seen[source] = true;
+  const q: number[] = [source];
+
+  do{
+    const curr = q.shift() as number;
+    if(curr === needle){
+      break;
+    }
+
+    const adjs = graph[curr];
+    for(let i = 0; i < adjs.length; ++i){
+      if(adjs[i] === 0){
+        continue;
+      }
+      if(seen[i]){
+        continue;
+      }
+
+      seen[i] = true;
+      prev[i] = curr;
+      q.push(i);
+    }
+
+  } while(q.length)
+
+  if(prev[needle] === -1){
+    return null
+  }
+
+  //build it backwards
+
+  let curr = needle;
+  const out: number[] = [];
+
+  while(prev[curr] !== -1){
+    out.push(curr);
+    curr = prev[curr];
+  }
+
+  return [source].concat(out.reverse());
+}
+```
+
+Depth first search
+
+Runtime for example below is **O(V+E)** 
+
+```ts
+type GraphEdge = {to: number; weight: number};
+type WeightedAdjacencyList = GraphEdge[][];
+
+function walk(graph: WeightedAdjacencyList, curr: number, needle: number, seen: boolean[], path: number[]): boolean{
+  if(seen[curr]){
+    return false;
+  }
+
+  seen[curr] = true;
+
+  // recurse
+  // pre
+  path.push(curr);
+  if(curr === needle) {
+    return true;
+  }
+
+  // recurse
+  const list = graph[curr];
+  for(let i = 0; i < list.length; ++i){
+    const edge = list[i];
+    if(walk(graph, edge.to, needle, seen, path)){
+      return true;
+    }
+  }
+
+
+  // post
+  path.pop();
+
+  return false;
+}
+
+export default function dfs(graph: WeightedAdjacencyList, source: number, needle: number): number[] | null {
+  const seen: boolean[] = new Array(graph.length).fill(false); 
+  const path: number[] = []; 
+
+  walk(graph, source, needle, seen, path);
+
+  if(path.length === 0){
+    return null
+  }
+
+  return path;
+}
+```
+
+Dijkstra's Shortest Path
+
+It is calculating the shortest path from one node to all other nodes in the graph.
+
+Dijkstra works like this 
+
+So, during the first iteration of the graph, we get the source node, which is the closest possible node because it's 0.
+
+The next iteration, we are gonna find the closest possible node to the source and that is the shortest distance. No matter how you bake it, that is always gonna be the shortest distance. If you have an entire series of node and you find the shortest distance from where you start to the next node, that will alwas be the shortest distance at that poing. You can never make it any shorter. 
+
+**If you use the distance to that node, plus the distance to all the nodes it's connected to versus the distance to all the nodes i'm connected to. Whatever is the shortest that time because the next posible shortest path that is possible in your graph.**
+
+If the distance to me plus the distance to you is shorter than any other distance we were seen so far,then we found a newer shortest path to that node. Because first we start with all distances infinity except from the one im at. Then we say hey out of all the nodes I'm connected to, have we found shorter distances?
+
+....
+
+<Callout>Must not have negative weights</Callout>
+
+<img src="/static/images/algorithms/graphs-dijkstra.png" alt="Graph search" className="my-6" />
+
+```ts
+function hasUnvisited(seen: boolean[], dists: number[]): boolean{
+  return seen.some((s,i) => !s && dists[i] < Infinity);
+}
+
+function getLowestUnvisited(seen: boolean[], dists: number[]): boolean{
+  let idx = -1;
+  let lowestDistance = Infinity;
+
+  for(let i = 0; i < seen.length; ++i){
+    if(seen[i]){
+      continue;
+    }
+
+    if(lowestDistance > dists[i]){
+      lowestDistance = dists[i];
+      idx = i;
+    }
+  }
+
+  return idx;
+}
+
+export default function dijkstra_list(source: number, sink: number, arr: WeightedAdjacencyList): number[]{
+
+  const seen = new Array(arr.length).fill(false);
+  const prev = new Array(arr.length).fill(-1);
+  const dists = new Array(arr.length).fill(Infinity);
+  dists[source] = 0;
+
+  while(hasUnvisited(seen, dists)){
+    const curr = getLowestUnvisited(seen, dists);
+    seen[curr] = true;
+
+  const adjs = arr[curr];
+    for(let i = 0; i < adjs.length; ++i){
+      const edge = adjs[i];
+      if(seen[edge.to]){
+        continue;
+      }
+
+      const dist = dists[curr] + edge.weight;
+      if(dist < dists[edge.to]){
+        dists[edge.to] = dist;
+        prev[edge.to] = curr;
+
+      }
+    }
+  }
+
+  const out: number[] = [];
+  let curr = sink;
+  while(prev[curr] !== -1){
+    out.push(curr);
+    curr = prev[curr];
+  }
+
+  out.push(source);
+  return out.reverse();
+}
+```
+
+BigO for this search is **O(V^2 + E)** But it can drastically be faster by removing value that vas seen or visited. then will be O(logV(V+E))
+
+If we had a minheap, we would literally remove the node, which means we have seen it and it can't be back inside of it. Therefore we don't need to see an array because by the very state of the heap, ithas been seen cuz we remove it and B it's always the smallest node at that point.

@@ -1,0 +1,544 @@
+---
+title: Basics
+description: Basic stuff
+tags: [JavaScript]
+layout: docs
+---
+
+### Difference between null and undefined
+
+Both null and undefined represent the absence of a value.
+
+`undefined` - indicates a variable has been declared but no value has been assigned.
+
+- Declaring a variable without initialization (e.g., let x;).
+- A function doesn't return a value explicitly (returns undefined by default).
+- Accessing a non-existent property on an object.
+
+`null` - Represents an intentional absence of value. It's a way to say "this variable should hold no value."
+
+Despite the difference, null == undefined evaluates to true due to JavaScript's type coercion rules (check for equality without strict type checking). However, null === undefined is false (strict comparison checks both type and value).
+
+ 
+### Array methods:
+
+**every**
+
+- tests whether all elements in the array pass the test implemented by the provided function
+```javascript
+array1.every((currentValue) => currentValue < 40)
+```
+
+**some**
+
+- tests whether at least one element in the array passes the test implemented by the provided function
+```javascript
+array1.some((element) => element % 2 === 0)
+```
+
+**reduce**
+
+- It allows you to iterate over each element in the array and accumulate them into a single value. It takes two arguments:
+
+1. Reducer Function: This is a custom function you define that specifies how each element should be processed and accumulated.
+
+    - Accumulator: This holds the accumulated value from previous iterations (initially the first element or a provided starting value).
+
+    - Current Element: This is the element from the array being processed in the current iteration.
+
+2. (Optional) Initial Value: This is an optional first argument that sets the starting value for the accumulator. If not provided, the first element of the array becomes the accumulator in the first iteration.
+
+Example:
+
+- Summing an array of numbers.
+- Finding the maximum or minimum value in an array.
+- Creating a new object from an array.
+- Filtering and transforming elements in an array.
+
+---
+
+```javascript title="Summing an array of numbers"
+const numbers = [1, 2, 3, 4, 5];
+
+const sum = numbers.reduce(function(accumulator, currentValue) {
+  return accumulator + currentValue;
+}, 0);
+
+console.log(sum); // Outputs: 15
+```
+
+```javascript title="Summing an array of numbers"
+const pets = ['Dog', 'Cat', 'Fish'];
+
+const petObject = pets.reduce(function(obj, pet) {
+  obj[pet] = pet;
+  return obj;
+}, {});
+
+console.log(petObject); 
+// Outputs: { 'Dog': 'Dog', 'Cat': 'Cat', 'Fish': 'Fish' }
+```
+
+```javascript title="Filtering and transforming elements in an array"
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+// Filter out odd numbers and square the even numbers
+let result = numbers.reduce(function(accumulator, currentValue) {
+  if (currentValue % 2 === 0) {
+    accumulator.push(currentValue * currentValue);
+  }
+  return accumulator;
+}, []);
+
+console.log(result); 
+// Outputs: [4, 16, 36, 64, 100]
+```
+
+**shift**
+
+- removes the first element from an array and returns that removed element.
+
+```javascript
+const array1 = [1, 2, 3];
+const firstElement = array1.shift();
+console.log(array1); 
+// Expected output: Array [2, 3]
+```
+
+**unshift**
+
+- adds the specified elements to the beginning of an array and returns the new length of the array.
+
+```javascript
+const array1 = [1, 2, 3];
+
+console.log(array1.unshift(4, 5));
+// Expected output: 5
+
+console.log(array1);
+// Expected output: Array [4, 5, 1, 2, 3]
+```
+
+**pop**
+
+- removes the last element from an array and returns that element.
+
+```javascript
+const plants = ['cabbage', 'kale', 'tomato'];
+
+console.log(plants.pop());
+// Expected output: "tomato"
+
+console.log(plants);
+// Expected output: Array ["cabbage", "kale"]
+```
+
+**push**
+
+- adds the specified elements to the end of an array and returns the new length of the array.
+
+```javascript
+const animals = ['pigs', 'goats', 'sheep'];
+
+const count = animals.push('cows');
+console.log(count);
+// Expected output: 4
+console.log(animals);
+// Expected output: Array ["pigs", "goats", "sheep", "cows"]
+```
+
+**slice**
+
+- returns a shallow copy of a portion of an array into a new array object selected from start to end (end not included) where start and end represent the index of items in that array.
+
+```javascript
+const animals = ['ant', 'bison', 'camel', 'duck', 'elephant'];
+
+console.log(animals.slice(2));
+// Expected output: Array ["camel", "duck", "elephant"]
+
+console.log(animals.slice(2, 4));
+// Expected output: Array ["camel", "duck"]
+```
+
+**splice**
+
+- changes the contents of an array by removing or replacing existing elements and/or adding new elements.
+
+```javascript
+const months = ['Jan', 'March', 'April', 'June'];
+months.splice(1, 0, 'Feb');
+// Inserts at index 1
+console.log(months);
+// Expected output: Array ["Jan", "Feb", "March", "April", "June"]
+
+months.splice(4, 1, 'May');
+// Replaces 1 element at index 4
+console.log(months);
+// Expected output: Array ["Jan", "Feb", "March", "April", "May"]
+```
+---
+
+**flat**
+
+- creates a new array with all sub-array elements concatenated into it recursively up to the specified depth.
+
+```javascript
+const arr1 = [0, 1, 2, [3, 4]];
+
+console.log(arr1.flat());
+// expected output: Array [0, 1, 2, 3, 4]
+```
+
+**flatMap**
+
+- returns a new array formed by applying a given callback function to each element of the array, and then flattening the result by one level. It is identical to a map() followed by a flat() of depth 1 (arr.map(...args).flat()), but slightly more efficient than calling those two methods separately.
+
+```javascript
+const arr1 = [1, 2, 1];
+
+const result = arr1.flatMap((num) => (num === 2 ? [2, 2] : 1));
+
+console.log(result);
+// Expected output: Array [1, 2, 2, 1]
+```
+
+**map**
+
+- creates a new array populated with the results of calling a provided function on every element in the calling array.
+
+```javascript
+const array1 = [1, 4, 9, 16];
+console.log(array1.map((x) => x * 2));
+// Expected output: Array [2, 8, 18, 32]
+```
+
+### Map (week Map)
+
+- Maps are collections of **key-value pairs**, similar to objects. However, unlike objects, Maps allow any data type to be used as a key, including strings, numbers, objects, or even other Maps. **Maps remembers the original insertion order of the keys.**
+
+`set(key, value)`: Adds a new key-value pair to the Map.
+
+`get(key)`: Retrieves the value associated with a specific key.
+
+`has(key)`: Checks if a particular key exists in the Map.
+
+`delete(key)`: Removes a key-value pair from the Map.
+
+`size`: Returns the number of key-value pairs in the Map.
+
+`clear()`: Removes all key-value pairs from the Map.
+
+#### Map vs Weak Map
+
+There are no ways to enumerate a `Weak Map` or to get all it's values. In `Weak Map`, you can store the data based on a key and when the key gets garbage collected so do the values.
+
+- Keys must be objects or functions.
+
+- Object presence as a key in a `Weak Map` does not prevent from being garbage collected.
+
+```ts
+
+var k1 = {a:1};
+var k2 = {b:2};
+
+var map = new Map();
+var weakMap = new WeakMap();
+
+map.set(k1, "k1");
+weakMap.set(k2, "k2");
+
+k1 = k2 = null;
+
+console.log(map.get(k1)) // {a: 1}
+console.log(weakMap.get(k2)) // undefined
+
+```
+
+#### Map vs objects
+
+**Map:**
+
+1. Map can have keys of any data type, including objects, functions, and primitive values.
+2. Map keys are ordered based on their insertion order.
+3. Maps have built-in methods for iteration, such as forEach, keys, values, and entries.
+
+**Objects:**
+
+1. Object keys are always strings or symbols. If other data types are used as keys, they are automatically converted to strings.
+2. Object properties do not have a guaranteed order.
+3. Objects have a prototype chain and inherit properties and methods from their prototype objects.
+
+
+### Set (weak Set)
+
+The **Set** objects are collections of values. A value in the set **may occur once**. It can store any type of values.
+
+Example:
+
+- When you need to store a collection of unique values and the order of insertion matters.
+
+- When you want to use objects, arrays as keys.
+
+- When you want to maintain strong references to the values in collection
+
+#### Set vs Weak Set
+
+The **Weak Set** can only store objects and does not prevent those objects from being garbage collected when they are no longer in use. 
+
+Examples: 
+
+- You want to store a collection of objects and don't want to prevent them from being garbage collected.
+
+- You need to associate metadata or additional information with objects.
+
+- You want to create relationships between objects without preventing them from being released when they are no longer needed.
+
+
+### How to iterate through object
+
+1. for...in loop:
+
+```javascript
+for (const key in person) {
+  console.log(key, person[key]);
+}
+```
+
+2. Object.keys(), Object.values(), and Object.entries()
+
+- `Object.keys(object)`: Returns an array of all enumerable string property names of the object.
+- `Object.values(object)`: Returns an array of all enumerable property values of the object.
+- `Object.entries(object)`: Returns an array of key-value pairs as sub-arrays.
+
+
+### How to define functions, how to have dynamic arguments?
+
+1. Function Declaration
+
+```javascript
+function functionName(parameter1, parameter2) {
+    // Function body containing statements to be executed
+    return value; // Optional return statement
+}
+```
+
+2. Function Expression
+
+```javascript
+const functionName = function(parameter1, parameter2) {
+    // Function body
+    return value;
+};
+```
+
+JavaScript provides the rest parameter syntax to capture an indefinite number of arguments passed to a function
+
+```javascript
+function functionName(...parameter){
+  return parameter;
+}
+```
+
+### Promise
+
+A **Promise** is an object returned by an a synchronous function, which represents the current state of the operation. It have two properties: `state` and `result`.
+
+**Promise** is can be one of these `states`:
+
+- **Prending** -> initial state, neither fulfilled nor rejected.
+
+- **Fullfilled** -> meaning that the operation was completed succesful.
+
+- **Rejected** -> meaning that the operation failed.
+
+Deeper explanation:
+
+```javascript
+new Promise((resolve, rejected) => {}).then((result) => {console.log("result", result)})
+```
+
+When new Promise constructor is executed a new Promise object is created in memory. That object have properties like: PromiseState, PromiseResult, PromiseFulfillReactions, PromiseRejectReactions, PromiseIsHandled.
+
+We can resolve this Promise by calling resolve(). By doing that PromiseState is set to fulfilled and PromisResult is set to the value that we pass to resolve.
+
+If we call reject(). PromiseState will be set to rejected and the PromiseResult is set to value we pass to the reject function.
+
+When we call `resolve`, `resolve` is added to the call stack, `promis state` is set to **fulfilled**, `promis result` is set to the value that we pass to resolve and `promise reactions handler` reaceives that promise result. After that handler will be added to the microtask.
+
+In Promise reaction handler will be set all function that were added in then method `.then((result) => {console.log("result", result)})`.
+
+Microtask Queue is always get priority over Task Queue. Task from Microtask Queue will be transfer to the Call Stack only when Call Stack is empty.
+
+### async / await
+
+There's a special syntax to work with promises in a more comfortable fashion.
+
+**async** -> ensures that the function returns a promise.
+
+**await** -> only works inside async functions.
+
+### Callback hell
+
+Callback Hell is essentially nested callbacks stacked below one another forming a pyramid structure. Every callback depends/waits for the previous callback, thereby making a pyramid structure that affects the readability and maintainability of the code. 
+
+```javascript
+    setTimeout(() => {
+        animate(words[0]);
+        setTimeout(() => {
+            animate(words[1]);
+            setTimeout(() => {
+                animate(words[2]);
+            }, 1000)
+        }, 1000)
+    }, 1000)
+```
+
+### Difference between function and arrow function
+
+- Both regular functions and arrow functions in JavaScript are used to define blocks of code that can be reused throughout your program.
+
+1. Hoisting:
+
+- Regular functions can be hoisted, meaning they can be used before they are defined in your code.
+- Arrow functions cannot be hoisted. They must be defined before they are used.
+
+2. `this` Binding:
+
+<a href="/docs/js/this">Press this to see more about this</a>
+
+
+### Closure
+
+Closure give you access to an outer functions scope from inner function.
+
+Scopes: **block scope**, **function scope**, **global scope**
+
+### Shallow copy and deep copy
+
+Primitive types in JavaScript include Undefined, Null, Boolean, Number, String, and Symbol. When you assign a variable with a primitive data type to another variable, JavaScript stores the value directly and any changes to one variable do not affect the other.
+
+Reference types, on the other hand, include Object, Array, and Function. When you assign a variable with a reference data type to another variable, JavaScript stores not the value itself, but a reference to that value. Any changes made through this reference will affect the original value because they both refer to the same place in memory.
+
+To create a shallow copy, we can use the following methods:
+
+- Spread syntax `[…] {…}`
+
+- Object.assign()
+
+- Array.from()
+
+- Object.create()
+
+- Array.prototype.concat()
+
+To create a deep copy, we can use:
+
+- JSON.parse(JSON.stringify())
+
+- structuredClone()
+
+- Third party libraries like Lodash
+
+
+### Functions geter and setter
+
+Getter methods are used to access the properties of an object.
+
+```javascript
+const student = {
+
+    // data property
+    firstName: 'Monica',
+    
+    // accessor property(getter)
+    get getName() {
+        return this.firstName;
+    }
+};
+
+// accessing getter methods
+console.log(student.getName); // Monica
+```
+
+Setter methods are used to change the values of an object
+
+```javascript
+const student = {
+    firstName: 'Monica',
+    
+    //accessor property(setter)
+    set changeName(newName) {
+        this.firstName = newName;
+    }
+};
+
+console.log(student.firstName); // Monica
+
+// change(set) object property using a setter
+student.changeName = 'Sarah';
+
+console.log(student.firstName); // Sarah
+```
+
+### RegExp
+
+The RegExp `regular expressions` object is used for matching text with a pattern.
+
+These patterns are used with the `exec()` and `test()` methods of RegExp, and with the `match()`, `matchAll()`, `replace()`, `replaceAll()`, `search()`, and `split()` methods of String. This chapter describes JavaScript regular expressions.
+
+```javascript
+const re = /ab+c/i;
+// OR
+const re = new RegExp("ab+c", "i"); 
+// OR
+const re = new RegExp(/ab+c/, "i"); 
+```
+
+
+### call, apply, bind
+
+While functions in JavaScript are powerful on their own, the **call**, **apply**, and **bind** methods further extend their capabilities. These methods are associated with functions and allow you to manipulate how a function is invoked and the context in which it executes.
+
+**call**: The call method invokes a function with a specified this value and individual arguments passed as separate arguments. It allows you to borrow functions from one object and invoke them in the context of another.
+
+**apply**: Similar to call, the apply method invokes a function with a specified this value, but it takes an array or an array-like object as its second argument, allowing you to pass a variable number of arguments to the function.
+
+**bind**: The bind method creates a new function that, when called, has its this value set to a specific value and prepends any provided arguments to the original function's arguments list. It is often used to create functions with preset contexts or partially applied arguments.
+
+```js
+var user = {
+    firstname: 'Lorem',
+    lastname: 'Ipsum',
+    getUserName: function() {
+        var fullname = this.firstname + ' ' + this.lastname;
+        return fullname;
+    }
+};
+
+var userName = function(snack, hobby) {
+    console.log(this.getUserName() + ' loves ' + snack + ' and ' + hobby);
+};
+
+userName.call(user,'sushi', 'algorithms'); // Lorem Ipsum loves sushi and algorithms
+userName.apply(user,['sushi', 'algorithms']); // Lorem Ipsum loves sushi and algorithms
+```
+
+```js
+var user = {
+    firstname: 'Lorem',
+    lastname: 'Ipsum',
+    getUserName: function() {
+        var fullname = this.firstname + ' ' + this.lastname;
+        return fullname;
+    }
+};
+
+var userName = function() {
+    console.log(this.getPokeName());
+};
+
+var logUserName = userName.bind(user); // creates new object and binds user. 'this' of user === user now
+
+logUserName(); // 'Lorem Ipsum'
+```

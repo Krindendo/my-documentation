@@ -1,0 +1,38 @@
+---
+title: Arrays
+description: test
+tags: []
+layout: docs
+---
+
+- [ArrayList](/algorithms/arrays/array-list)
+- [ArrayBuffer](/algorithms/arrays/array-buffer)
+
+
+<Callout>
+  Array in Javascript is Array list. But i think that Javascript makes some optimisation when you have bigger array. Maybe.
+</Callout>
+
+Difference between arrays and linked list
+
+In arrays you can access value with indexes (0,1,2) its fast!
+Its also easy to set any value. 
+Problem with arrays is that you cant literal insert value. You can't easily shift all value to put another value or unshift everything to delete value.
+Problem is usability. If you potentially have to store 1000 items, you will gonna have to **allocate all the memory upfront**.
+
+Big O of Arrays are O(1): writing, deleting, getting 
+
+In Linked List 
+when you begin with list you will have nothing to begin with. If you insert value you will only have single containing node. So memory usage is more optimized. But there is diferente runtime cost.
+
+In array memory there has been already retrived and you can easily use, but with linked list you need to creat container node and you need to set up links.
+Linked list will always use less memory.
+
+If you want to get item from linked list you can only do it with linear search, you cant hop into the middle. 
+
+If you need to scan a list or hop into a list of random access, you'd want to use an array. If you want to be able to just push or pop from either the head or the tail, you will be use something like linked list.
+
+Example: 
+If you decided to have only 5 active generated promises at one point. That means you are going to have pull the front and you are able to push onto the back as new ones come in and as old ones complete. You will have problem of a queue, but you dont want to be using an array because you will need to shift promises and this will not gonna perform very good.
+
+

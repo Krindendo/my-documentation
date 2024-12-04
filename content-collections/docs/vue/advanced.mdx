@@ -1,0 +1,118 @@
+---
+title: Advanced
+description: asd
+tags: [vue, triggerRef, customRef, markRaw, effectScope, getCurrentScope]
+layout: docs
+---
+
+- `triggerRef`
+- `customRef`
+- `markRaw`
+- `effectScope`
+- `getCurrentScope`
+
+## triggerRef()
+
+Force trigger effects that depends on a shallow ref. This is typically used after making deep mutations to the inner value of a shallow ref.
+
+```javascript
+const shallow = shallowRef({
+  greet: 'Hello, world'
+})
+
+// Logs "Hello, world" once for the first run-through
+watchEffect(() => {
+  console.log(shallow.value.greet)
+})
+
+// This won't trigger the effect because the ref is shallow
+shallow.value.greet = 'Hello, universe'
+
+// Logs "Hello, universe"
+triggerRef(shallow)
+```
+
+## customRef()
+
+Creates a customized ref with explicit control over its dependency tracking and updates triggering.
+
+`customRef()` expects a factory function, which receives track and trigger functions as arguments and should return an object with get and set methods.
+
+In general, track() should be called inside get(), and trigger() should be called inside set(). However, you have full control over when they should be called, or whether they should be called at all.
+
+### Example: debounced ref
+
+```javascript
+import { customRef } from 'vue'
+
+export function useDebouncedRef(value, delay = 200) {
+  let timeout
+  return customRef((track, trigger) => {
+    return {
+      get() {
+        track()
+        return value
+      },
+      set(newValue) {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => {
+          value = newValue
+          trigger()
+        }, delay)
+      }
+    }
+  })
+}
+```
+
+```vue
+<script setup>
+import { useDebouncedRef } from './debouncedRef'
+const text = useDebouncedRef('hello')
+</script>
+
+<template>
+  <input v-model="text" />
+</template>
+```
+
+## markRaw()
+
+Marks an object so that it will never be converted to a proxy. Returns the object itself.
+
+```javascript
+const foo = markRaw({})
+console.log(isReactive(reactive(foo))) // false
+
+// also works when nested inside other reactive objects
+const bar = reactive({ foo })
+console.log(isReactive(bar.foo)) // false
+```
+
+## effectScope()
+
+Creates an effect scope object which can capture the reactive effects created within it so that these effects can be disposed together.
+
+```javascript
+const scope = effectScope()
+
+scope.run(() => {
+  const doubled = computed(() => counter.value * 2)
+
+  watch(doubled, () => console.log(doubled.value))
+
+  watchEffect(() => console.log('Count: ', doubled.value))
+})
+
+// to dispose all effects in the scope
+scope.stop()
+```
+
+## getCurrentScope()
+
+Returns the current active  [effect scope](#effectscope) if there is one.
+
+## onScopeDispose()
+
+Registers a dispose callback on the current active [effect scope](#effectscope). The callback will be invoked when the associated effect scope is stopped.
+

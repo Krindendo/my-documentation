@@ -1,0 +1,157 @@
+---
+title: Utilities
+description: Built-in utility functions for Vue.
+tags: [vue, state]
+layout: docs
+---
+
+For converting values use one of these functions:
+
+- `unref` 
+- `toRef`
+- `toValue`
+- `toRefs`
+- `toRaw`
+
+For checking type use one of these functions:
+
+- `isRef`
+- `isProxy`
+- `isReactive`
+- `isReadonly`
+
+
+## isRef()
+
+Checks if a value is a ref object.
+
+```ts
+let foo: unknown
+if (isRef(foo)) {
+  // foo's type is narrowed to Ref<unknown>
+  foo.value
+}
+```
+
+## unref()
+
+Returns the inner value if the argument is a ref, otherwise return the argument itself. 
+This is a sugar function for val = isRef(val) ? val.value : val.
+
+```ts
+function useFoo(x: number | Ref<number>) {
+  const unwrapped = unref(x)
+  // unwrapped is guaranteed to be number now
+}
+```
+
+## toRef()
+
+Converts a reactive object property to a ref that maintains its connection with the parent object.
+
+toRef is here to handle the two edge cases mentioned for reactive.
+
+toRef can convert any property of a reactive object into a ref that is linked to its original parent. The property can be one that does not exist initially, or whose value is primitive.
+
+```javascript
+const state = reactive({
+  foo: 1,
+  bar: 2
+})
+```
+
+`toRef` is useful when you copying a property from the `reactive` object to a new variable, for example foo which contains the number 1. If you copied this to a new variable, the copy would of course be a regular, non-reactive variable having no connection to the reactive object it was copied from. If foo changed later, the copy would not, meaning the copy is not reactive.
+
+`const foo = toRef(state, 'foo')` will be very similar to `const foo = state.foo` but with two differences:
+1. `foo` is a `ref` so you need to do `foo.value`
+2. `foo` is linked to its parent, so reassigning `state.foo = {bar: 2}` will get reflected in `foo.value`
+
+## toValue()
+
+Normalizes values / refs / getters to values. This is similar to unref(), except that it also normalizes getters. If the argument is a getter, it will be invoked and its return value will be returned.
+
+This can be used in Composables to normalize an argument that can be either a value, a ref, or a getter.
+
+```javascript
+toValue(1) //       --> 1
+toValue(ref(1)) //  --> 1
+toValue(() => 1) // --> 1
+```
+
+## toRefs()
+
+Converts a reactive object to a plain object where each property of the resulting object is a ref pointing to the corresponding property of the original object. Each individual ref is created using toRef().
+
+toRefs is used for destructing a reactive object and convert all its properties to ref
+
+```javascript
+const state = reactive({
+  foo: 1,
+  bar: 2
+})
+
+const stateAsRefs = toRefs(state)
+/*
+Type of stateAsRefs: {
+  foo: Ref<number>,
+  bar: Ref<number>
+}
+*/
+
+// The ref and the original property is "linked"
+state.foo++
+console.log(stateAsRefs.foo.value) // 2
+
+stateAsRefs.foo.value++
+console.log(state.foo) // 3
+```
+
+toRefs is useful when returning a reactive object from a composable function so that the consuming component can destructure/spread the returned object without losing reactivity:
+
+```javascript
+function useFeatureX() {
+  const state = reactive({
+    foo: 1,
+    bar: 2
+  })
+
+  // ...logic operating on state
+
+  // will not work, destruction removes reactivity
+  return {...state}; 
+
+  // convert to refs when returning
+  return toRefs(state)
+}
+
+// can destructure without losing reactivity
+const { foo, bar } = useFeatureX()
+```
+
+toRefs will only generate refs for properties that are enumerable on the source object at call time. To create a ref for a property that may not exist yet, use toRef instead.
+
+## toRaw()
+
+toRaw() can return the original object from proxies created by reactive(), readonly(), shallowReactive() or shallowReadonly().
+
+This is an escape hatch that can be used to temporarily read without incurring proxy access / tracking overhead or write without triggering changes. It is not recommended to hold a persistent reference to the original object. Use with caution.
+
+```javascript
+const foo = {}
+const reactiveFoo = reactive(foo)
+
+console.log(toRaw(reactiveFoo) === foo) // true
+```
+
+## isProxy()
+
+Checks if an object is a proxy created by reactive(), readonly(), shallowReactive() or shallowReadonly().
+
+## isReactive()
+
+Checks if an object is a proxy created by reactive() or shallowReactive().
+
+## isReadonly()
+
+The proxies created by readonly() and shallowReadonly() are both considered readonly, as is a computed() ref without a set function.
+

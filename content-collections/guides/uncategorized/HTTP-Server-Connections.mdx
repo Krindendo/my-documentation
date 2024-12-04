@@ -1,0 +1,123 @@
+---
+title: HTTP Server Connections
+description: DNS | TCP | TLS/SSL
+publishedAt: 2024-10-03
+tags: [HTTP, connection, handshake]
+layout: post
+---
+
+Before making an HTTP request for a resource browsers first need to create a connection to the web server that they want to load the resource from.
+
+You can see a server connection being created when looking at a request waterfall, for example from our free speed test or in Chrome DevTools.
+
+You can see **three other steps in teal, orange, and purple before the HTTP request** shown in green and the download in blue. These three steps are where the connection is created.
+
+image
+
+Typically three steps are required to establish a connection to an HTTP server:
+
+- DNS lookup: finding the server IP address based on the domain name
+- TCP connection: enabling reliable communication
+- TLS/SSL connection: enabling secure encrypted communication
+
+After that HTTP requests can be made to request resources from the server.
+
+## DNS lookup (Domain Name System)
+
+IP addresses like `12.34.456.789` are used to route messages between different computers on a network. However, they are difficult to remember and not nice to work with for humans. A website may also move from one server to the other, and we don’t want to update all references to the website when that happens.
+
+Instead we use domain names to address websites. The Domain Name System (DNS) allows us to map a domain like `example.com` to an IP address.
+
+Before sending an HTTP request to a server we first need to perform a DNS lookup to find its IP address.
+
+In this waterfall you can see the DNS lookup in teal as the first part of the HTML document request.
+
+## TCP connection
+
+Unfortunately the Internet Protocol (IP) is not reliable: messages may get lost en route to the server without the client knowing about it.
+
+There are also limits to the maximum size of a message and to how many messages can be sent at once, but these depend on the server and the network connection to it. If you send 10 megabytes of data per second when the network only supports 1 megabyte per second then most messages would be lost.
+
+Therefore, browsers use the Transmission Control Protocol (TCP) to create a server connection and transfer data reliably.
+
+For example, TCP ensures that:
+
+- Lost messages are resent
+- Long messages are split into chunks and chunks are processed in the correct order
+- Messages are sent at a rate that is appropriate for the network connection
+
+Before requesting a resource, clients first exchange a message to coordinate how data will be sent. This message exchange is called a TCP handshake and it establishes a TCP connection.
+
+## TLS/SSL connection
+
+Once a TCP connection has been established browsers can in theory start requesting resources over it. However there’s one problem: messages are not only readable by the recipient but by every piece of network infrastructure en route.
+
+That means the router in your home that your phone or laptop are connected to can read your message. Your internet service provider can see the content of the message. An internet backbone provider who owns an undersea cable on the way to the website server can see your message. All of these network nodes can also intercept messages and pretend to be the website you were trying to load.
+
+<img src="/static/images/guides/HTTP-Server-Connections-unencrypted-TCP-connection.png" alt="HTTP Server Connections unencrypted TCP connection" className="my-6" />
+
+The TLS protocol (Transport Layer Security) is used to secure the TCP connection. The client encrypts the message it wants to send to the server, so that network nodes on the way can only see metadata like the number of packages or the destination IP address. So they’ll know what website you’re loading but not what page or what data you’re sending to the website.
+
+<img src="/static/images/guides/HTTP-Server-Connections-encrypted-TCP-connection.png" alt="HTTP Server Connections encrypted TCP connection" className="my-6" />
+
+How is it possible for the client and the server to create a secure connection from an insecure connection? Instead of using a shared password to encrypt and decrypt messages, computers on the internet use public-key cryptography where there are two separate “passwords” (referred to as keys).
+
+The public key is sent over the insecure connection and can be used to encrypt messages. However, only the private key can be used to decrypt messages, and it’s never sent over the network. The public key is included in the server’s TLS certificate.
+
+Certificates can be validated with a trusted certificate authority like DigiCet or Let’s Encrypt. That prevents devices en route from impersonating the website.
+
+You may also hear about **SSL certificates and SSL connections**. SSL is an older protocol that preceded TLS. While it’s no longer in use the old name is still often used to refer to an encrypted connection.
+
+To establish a secure connection the browser and website server perform a **TLS handshake** over the insecure TCP connection.
+
+## Making the HTTP request
+
+After establishing a secure TLS connection the browser can request the resource it wants to load from the server using the HTTP protocol.
+
+After the server starts sending the response the browser just has to download it.
+
+## What benefits does HTTP/2 have compared to HTTP/1.1?
+
+HTTP/2 is a new version of the HTTP protocol that was released in 2015.
+
+The primary benefit of HTTP/2 is that multiple simultaneous requests can be made over the same connection. To load multiple resources in parallel using HTTP/1.1 multiple server connections are required.
+
+Let’s take a look at a website that’s loaded over HTTP/1.1, focussing on connection number 88. When the connection is first established we can see the browser does the DNS lookup, connects over TCP and then performs the TLS handshake.
+
+The same connection can be reused again, but only after the initial request is complete.
+
+However, the browser also creates three additional connections to the same server in order to load additional resources. No DNS lookup is necessary as the IP address is already known.
+
+If you look closely you may also notice connection #84 which doesn’t show a connection step in this waterfall. This is a connection that Chrome creates speculatively, guessing that additional connections will likely be required after the HTML document has been loaded. So when making the first request Chrome actually creates two connections.
+
+Browsers only create up to 6 connections to a single origin. When the maximum number of connections has been reached other requests are queued up until a connection is available. In the waterfall this shows as “wait” time.
+
+Queuing up requests means they take longer to complete, and each connection consumes some extra bandwidth for example for the certificate exchange.
+
+Compare this to an HTTP/2 website which can use a single connection to load many resources in parallel.
+
+## What does HTTP/3 mean for server connections?
+
+HTTP/3 only requires a single round trip to establish a secure and reliable connection. Instead of using the TCP protocol it uses UDP and QUIC.
+
+However, not all servers support HTTP/3, so the browser still needs to start with a TCP connection and an older version of the HTTP protocol.
+
+The server then returns an HTTP header telling the browser that it supports HTTP/3 and the browser switches to that protocol. If another connection is created in the future HTTP/3 can be used from the start.
+
+## What is the performance difference between TLS 1.2 and TLS 1.3?
+
+TLS 1.3 is faster than version 1.2 as only one network round trip is required to establish a secure connection. A secure connection using TLS 1.2 requires two round trips and will take longer to establish.
+
+In this request waterfall you can see that a single round trip is used to connect to www.bbc.com, which uses TLS 1.3. However the two other servers use TLS 1.2 and establishing the connection takes longer.
+
+## How to view server connection steps in Chrome DevTools
+
+The Network tab in Chrome’s developer tools shows a request waterfall including connection round trips where applicable.
+
+<img src="/static/images/guides/HTTP-Server-Connections-Chrome-DevTools.png" alt="HTTP Server Connections Chrome DevTools" className="my-6" />
+
+However, if you’ve previously loaded the page the connection steps may not show up in the request breakdown.
+
+<img src="/static/images/guides/HTTP-Server-Connections-Chrome-DevTools-cahed.png" alt="HTTP Server Connections Chrome DevTools cahed" className="my-6" />
+
+That’s because Chrome reuses existing connections and the DNS response is also cached by the operating system. If you need this information you can clear those caches before reloading the page.

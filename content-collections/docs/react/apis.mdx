@@ -1,0 +1,32 @@
+---
+title: Build-in React APIs
+description: APIs that are useful for defining components.
+tags: [react]
+layout: docs
+---
+
+- [`createContext`](#createcontext) lets you define and provide context to the child components. Used with [useContext](/docs/react/context-hooks#usecontext).
+
+- [`forwardRef`](#forwardref) lets your component expose a DOM node as a ref to the parent. Used with useRef.
+
+- [`lazy`](#lazy) lets you defer loading a component’s code until it’s rendered for the first time.
+
+- [`memo`](#memo) lets your component skip re-renders with same props. Used with useMemo and [useCallback](/docs/react/performance-hooks#usecallback).
+
+- [`startTransition`](#starttransition) lets you mark a state update as non-urgent. Similar to [useTransition](/docs/react/performance-hooks#usetransition).
+
+## createContext
+
+## forwardRef
+
+## lazy
+
+## memo
+
+[memo](https://react.dev/reference/react/memo) is a wrapper that will memoize the version of that component. This memoized version of your component will usually not be re-rendered when its parent component is re-rendered as long as its props have not changed. But React may still re-render it: memoization is a performance optimization, not a guarantee.
+
+- Component: The component that you want to memoize. The memo does not modify this component, but returns a new, memoized component instead.
+
+TODO: Nije gotovo.
+
+## startTransition

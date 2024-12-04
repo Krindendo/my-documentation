@@ -1,0 +1,43 @@
+---
+title: Basics
+description: Basic stuff
+tags: [node.js]
+layout: docs
+---
+
+### Difference between requred and import
+
+### Difference between HTTP and HTTPS
+
+- HTTP (Hypertext Transfer Protocol): This is the foundation of web communication. It dictates how data is formatted and transmitted between a web browser and a server.
+
+- This is a secure version of HTTP. It adds a layer of encryption on top of the HTTP protocol using TLS (Transport Layer Security) or its predecessor SSL (Secure Sockets Layer). This encryption scrambles the data as it travels between the browser and server, making it unreadable to anyone who might intercept it
+
+### Difference between restfull and graphql
+
+RESTful APIs: 
+
+- Architectural Style: REST (REpresentational State Transfer) is a set of guidelines for designing web services. It leverages HTTP verbs (GET, POST, PUT, DELETE) to interact with resources on a server.
+
+- Multiple Endpoints: REST APIs have multiple endpoints, each corresponding to a specific resource (users, posts, etc.). Clients make separate requests to each endpoint to fetch data.
+
+- Data Structure: The server dictates the data structure returned in responses. Clients receive data whether they need it or not (overfetching).
+
+GraphQL:
+
+- Query Language: GraphQL is a query language for APIs. It allows clients to specify exactly the data they need from the server in a single request.
+
+- Single Endpoint: GraphQL uses a single endpoint for all queries. Clients send a query that defines the desired data.
+
+- Flexible Structure: The client defines the data structure it needs, reducing overfetching and improving efficiency.
+
+### CORS
+
+CORS stands for Cross-Origin Resource Sharing. It's a security mechanism built into web browsers that restricts how a web page from one domain can access resources from another domain.
+
+1. SPA Makes a Request: The SPA sends a request to the API to fetch data.
+2. Origin Header: The browser includes an "Origin" header in the request, which specifies the domain of the SPA.
+3. CORS Configuration: The API server is configured with CORS rules. These rules specify which origins (domains) are allowed to access its data.
+4. Access Check: The API server checks the "Origin" header against its CORS rules.
+5. Access Granted: If the API server finds url from SPA in its allowed list, it grants access to the requested data. The server responds with the data and includes CORS headers in the response, like "Access-Control-Allow-Origin: url". This tells the browser that the data can be safely used by the SPA.
+5. Access Denied: If url from SPA is not authorized, the API server rejects the request, and the SPA won't receive the data.

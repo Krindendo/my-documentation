@@ -1,0 +1,36 @@
+---
+title: Trie Tree
+description: test
+tags: []
+layout: docs
+---
+
+If its not a priority queue, its a trie. People keep calling them try trees / prefix tree / digital tree.
+
+Tre easiest way to visualize a trie is to think of auto-complete.
+
+It can do it in O(1) time given that the **keys meet some sort of minimum length**, not to be very long, like length of 50.
+
+Example: English language tree 
+
+That means our tree could have 1 of 26 posible symbols as its children
+
+Tries example
+
+<img src="/static/images/algorithms/tries-graph.png" alt="Queue example" className="my-6" />
+
+<h3 className="text-lg font-semibold">- How it works</h3>
+
+It is look like tree. It have root but root doenst have any value. And if user start typing C, autocomplete need to go to C branch and start traverse down with depth first search to get list of words with first letter C. 
+
+You can also add value score so most common word to popup first.
+
+Insertion is walking to the end of word and insert every character to Tries. Deletion is exact opposite, you need to get to the node and when go back, you need to delete way back up characters until you see isWord=true.
+
+<h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
+
+- Get value is **O(1)**
+
+- Insert is **O(N)**
+
+- Deleting is  **O(N)**
