@@ -1,16 +1,24 @@
 import type { Metadata } from "next";
+import { Inter as FontSans } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ThemeProvider } from "next-themes";
+import { Pattern } from "./_components/pattern";
+import { Footer } from "./_components/footer";
+import { Header } from "./_components/header";
+import {
+  Sidebar,
+  SidebarInset,
+  SidebarProvider,
+} from "@/components/ui/sidebar";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+const calSans = localFont({
+  src: "./fonts/CalSans-SemiBold.woff",
+  variable: "--font-heading",
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -25,10 +33,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${calSans.variable} ${fontSans.variable} antialiased`}>
+        <ThemeProvider>
+          <SidebarProvider>
+            <Sidebar />
+            <Header />
+
+            <SidebarInset>
+              <Pattern />
+              {children}
+              <Footer />
+            </SidebarInset>
+          </SidebarProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
