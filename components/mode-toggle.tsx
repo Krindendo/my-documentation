@@ -10,34 +10,40 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-const themes = [
-  { label: "Light", value: "light" },
-  { label: "Dark", value: "dark" },
-  { label: "System", value: "system" },
-];
-
 export const ModeToggle = () => {
   const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="shrink-0 text-foreground"
-        >
-          <Icons.sun className="dark:-rotate-90 h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:scale-0" />
-          <Icons.moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+        <Button variant="ghost" size="sm" className="h-8 w-8 px-0">
+          <Icons.sun className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Icons.moon className="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {themes.map(({ label, value }) => (
-          <DropdownMenuItem key={value} onClick={() => setTheme(value)}>
-            {label}
-          </DropdownMenuItem>
-        ))}
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem
+          className="text-muted-foreground hover:text-foreground"
+          onClick={() => setTheme("light")}
+        >
+          <Icons.sun className="mr-2 h-4 w-4" />
+          <span>Light</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="text-muted-foreground hover:text-foreground"
+          onClick={() => setTheme("dark")}
+        >
+          <Icons.moon className="mr-2 h-4 w-4" />
+          <span>Dark</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="text-muted-foreground hover:text-foreground"
+          onClick={() => setTheme("system")}
+        >
+          <Icons.laptop className="mr-2 h-4 w-4" />
+          <span>System</span>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

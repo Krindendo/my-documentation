@@ -4,13 +4,10 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Pattern } from "./_components/pattern";
-import { Footer } from "./_components/footer";
-import { Header } from "./_components/header";
-import {
-  Sidebar,
-  SidebarInset,
-  SidebarProvider,
-} from "@/components/ui/sidebar";
+import { SiteFooter } from "./_components/footer";
+import { SiteHeader } from "./_components/header";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SiteSidebar } from "./_components/sidebar";
 
 const calSans = localFont({
   src: "./fonts/CalSans-SemiBold.woff",
@@ -36,13 +33,12 @@ export default function RootLayout({
       <body className={`${calSans.variable} ${fontSans.variable} antialiased`}>
         <ThemeProvider>
           <SidebarProvider>
-            <Sidebar />
-            <Header />
-
+            <SiteSidebar />
             <SidebarInset>
+              <SiteHeader />
               <Pattern />
               {children}
-              <Footer />
+              <SiteFooter />
             </SidebarInset>
           </SidebarProvider>
         </ThemeProvider>
