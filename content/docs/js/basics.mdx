@@ -3,6 +3,7 @@ title: Basics
 description: Basic stuff
 tags: [JavaScript]
 layout: docs
+date: 2023-10-18
 ---
 
 ### Difference between null and undefined
@@ -19,21 +20,22 @@ Both null and undefined represent the absence of a value.
 
 Despite the difference, null == undefined evaluates to true due to JavaScript's type coercion rules (check for equality without strict type checking). However, null === undefined is false (strict comparison checks both type and value).
 
- 
 ### Array methods:
 
 **every**
 
 - tests whether all elements in the array pass the test implemented by the provided function
+
 ```javascript
-array1.every((currentValue) => currentValue < 40)
+array1.every((currentValue) => currentValue < 40);
 ```
 
 **some**
 
 - tests whether at least one element in the array passes the test implemented by the provided function
+
 ```javascript
-array1.some((element) => element % 2 === 0)
+array1.some((element) => element % 2 === 0);
 ```
 
 **reduce**
@@ -42,9 +44,9 @@ array1.some((element) => element % 2 === 0)
 
 1. Reducer Function: This is a custom function you define that specifies how each element should be processed and accumulated.
 
-    - Accumulator: This holds the accumulated value from previous iterations (initially the first element or a provided starting value).
+   - Accumulator: This holds the accumulated value from previous iterations (initially the first element or a provided starting value).
 
-    - Current Element: This is the element from the array being processed in the current iteration.
+   - Current Element: This is the element from the array being processed in the current iteration.
 
 2. (Optional) Initial Value: This is an optional first argument that sets the starting value for the accumulator. If not provided, the first element of the array becomes the accumulator in the first iteration.
 
@@ -60,7 +62,7 @@ Example:
 ```javascript title="Summing an array of numbers"
 const numbers = [1, 2, 3, 4, 5];
 
-const sum = numbers.reduce(function(accumulator, currentValue) {
+const sum = numbers.reduce(function (accumulator, currentValue) {
   return accumulator + currentValue;
 }, 0);
 
@@ -68,14 +70,14 @@ console.log(sum); // Outputs: 15
 ```
 
 ```javascript title="Summing an array of numbers"
-const pets = ['Dog', 'Cat', 'Fish'];
+const pets = ["Dog", "Cat", "Fish"];
 
-const petObject = pets.reduce(function(obj, pet) {
+const petObject = pets.reduce(function (obj, pet) {
   obj[pet] = pet;
   return obj;
 }, {});
 
-console.log(petObject); 
+console.log(petObject);
 // Outputs: { 'Dog': 'Dog', 'Cat': 'Cat', 'Fish': 'Fish' }
 ```
 
@@ -83,14 +85,14 @@ console.log(petObject);
 let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 // Filter out odd numbers and square the even numbers
-let result = numbers.reduce(function(accumulator, currentValue) {
+let result = numbers.reduce(function (accumulator, currentValue) {
   if (currentValue % 2 === 0) {
     accumulator.push(currentValue * currentValue);
   }
   return accumulator;
 }, []);
 
-console.log(result); 
+console.log(result);
 // Outputs: [4, 16, 36, 64, 100]
 ```
 
@@ -101,7 +103,7 @@ console.log(result);
 ```javascript
 const array1 = [1, 2, 3];
 const firstElement = array1.shift();
-console.log(array1); 
+console.log(array1);
 // Expected output: Array [2, 3]
 ```
 
@@ -124,7 +126,7 @@ console.log(array1);
 - removes the last element from an array and returns that element.
 
 ```javascript
-const plants = ['cabbage', 'kale', 'tomato'];
+const plants = ["cabbage", "kale", "tomato"];
 
 console.log(plants.pop());
 // Expected output: "tomato"
@@ -138,9 +140,9 @@ console.log(plants);
 - adds the specified elements to the end of an array and returns the new length of the array.
 
 ```javascript
-const animals = ['pigs', 'goats', 'sheep'];
+const animals = ["pigs", "goats", "sheep"];
 
-const count = animals.push('cows');
+const count = animals.push("cows");
 console.log(count);
 // Expected output: 4
 console.log(animals);
@@ -152,7 +154,7 @@ console.log(animals);
 - returns a shallow copy of a portion of an array into a new array object selected from start to end (end not included) where start and end represent the index of items in that array.
 
 ```javascript
-const animals = ['ant', 'bison', 'camel', 'duck', 'elephant'];
+const animals = ["ant", "bison", "camel", "duck", "elephant"];
 
 console.log(animals.slice(2));
 // Expected output: Array ["camel", "duck", "elephant"]
@@ -166,17 +168,18 @@ console.log(animals.slice(2, 4));
 - changes the contents of an array by removing or replacing existing elements and/or adding new elements.
 
 ```javascript
-const months = ['Jan', 'March', 'April', 'June'];
-months.splice(1, 0, 'Feb');
+const months = ["Jan", "March", "April", "June"];
+months.splice(1, 0, "Feb");
 // Inserts at index 1
 console.log(months);
 // Expected output: Array ["Jan", "Feb", "March", "April", "June"]
 
-months.splice(4, 1, 'May');
+months.splice(4, 1, "May");
 // Replaces 1 element at index 4
 console.log(months);
 // Expected output: Array ["Jan", "Feb", "March", "April", "May"]
 ```
+
 ---
 
 **flat**
@@ -238,9 +241,8 @@ There are no ways to enumerate a `Weak Map` or to get all it's values. In `Weak 
 - Object presence as a key in a `Weak Map` does not prevent from being garbage collected.
 
 ```ts
-
-var k1 = {a:1};
-var k2 = {b:2};
+var k1 = { a: 1 };
+var k2 = { b: 2 };
 
 var map = new Map();
 var weakMap = new WeakMap();
@@ -250,9 +252,8 @@ weakMap.set(k2, "k2");
 
 k1 = k2 = null;
 
-console.log(map.get(k1)) // {a: 1}
-console.log(weakMap.get(k2)) // undefined
-
+console.log(map.get(k1)); // {a: 1}
+console.log(weakMap.get(k2)); // undefined
 ```
 
 #### Map vs objects
@@ -269,7 +270,6 @@ console.log(weakMap.get(k2)) // undefined
 2. Object properties do not have a guaranteed order.
 3. Objects have a prototype chain and inherit properties and methods from their prototype objects.
 
-
 ### Set (weak Set)
 
 The **Set** objects are collections of values. A value in the set **may occur once**. It can store any type of values.
@@ -284,16 +284,15 @@ Example:
 
 #### Set vs Weak Set
 
-The **Weak Set** can only store objects and does not prevent those objects from being garbage collected when they are no longer in use. 
+The **Weak Set** can only store objects and does not prevent those objects from being garbage collected when they are no longer in use.
 
-Examples: 
+Examples:
 
 - You want to store a collection of objects and don't want to prevent them from being garbage collected.
 
 - You need to associate metadata or additional information with objects.
 
 - You want to create relationships between objects without preventing them from being released when they are no longer needed.
-
 
 ### How to iterate through object
 
@@ -311,31 +310,30 @@ for (const key in person) {
 - `Object.values(object)`: Returns an array of all enumerable property values of the object.
 - `Object.entries(object)`: Returns an array of key-value pairs as sub-arrays.
 
-
 ### How to define functions, how to have dynamic arguments?
 
 1. Function Declaration
 
 ```javascript
 function functionName(parameter1, parameter2) {
-    // Function body containing statements to be executed
-    return value; // Optional return statement
+  // Function body containing statements to be executed
+  return value; // Optional return statement
 }
 ```
 
 2. Function Expression
 
 ```javascript
-const functionName = function(parameter1, parameter2) {
-    // Function body
-    return value;
+const functionName = function (parameter1, parameter2) {
+  // Function body
+  return value;
 };
 ```
 
 JavaScript provides the rest parameter syntax to capture an indefinite number of arguments passed to a function
 
 ```javascript
-function functionName(...parameter){
+function functionName(...parameter) {
   return parameter;
 }
 ```
@@ -355,7 +353,9 @@ A **Promise** is an object returned by an a synchronous function, which represen
 Deeper explanation:
 
 ```javascript
-new Promise((resolve, rejected) => {}).then((result) => {console.log("result", result)})
+new Promise((resolve, rejected) => {}).then((result) => {
+  console.log("result", result);
+});
 ```
 
 When new Promise constructor is executed a new Promise object is created in memory. That object have properties like: PromiseState, PromiseResult, PromiseFulfillReactions, PromiseRejectReactions, PromiseIsHandled.
@@ -380,18 +380,18 @@ There's a special syntax to work with promises in a more comfortable fashion.
 
 ### Callback hell
 
-Callback Hell is essentially nested callbacks stacked below one another forming a pyramid structure. Every callback depends/waits for the previous callback, thereby making a pyramid structure that affects the readability and maintainability of the code. 
+Callback Hell is essentially nested callbacks stacked below one another forming a pyramid structure. Every callback depends/waits for the previous callback, thereby making a pyramid structure that affects the readability and maintainability of the code.
 
 ```javascript
+setTimeout(() => {
+  animate(words[0]);
+  setTimeout(() => {
+    animate(words[1]);
     setTimeout(() => {
-        animate(words[0]);
-        setTimeout(() => {
-            animate(words[1]);
-            setTimeout(() => {
-                animate(words[2]);
-            }, 1000)
-        }, 1000)
-    }, 1000)
+      animate(words[2]);
+    }, 1000);
+  }, 1000);
+}, 1000);
 ```
 
 ### Difference between function and arrow function
@@ -406,7 +406,6 @@ Callback Hell is essentially nested callbacks stacked below one another forming 
 2. `this` Binding:
 
 <a href="/docs/js/this">Press this to see more about this</a>
-
 
 ### Closure
 
@@ -440,21 +439,19 @@ To create a deep copy, we can use:
 
 - Third party libraries like Lodash
 
-
 ### Functions geter and setter
 
 Getter methods are used to access the properties of an object.
 
 ```javascript
 const student = {
+  // data property
+  firstName: "Monica",
 
-    // data property
-    firstName: 'Monica',
-    
-    // accessor property(getter)
-    get getName() {
-        return this.firstName;
-    }
+  // accessor property(getter)
+  get getName() {
+    return this.firstName;
+  },
 };
 
 // accessing getter methods
@@ -465,18 +462,18 @@ Setter methods are used to change the values of an object
 
 ```javascript
 const student = {
-    firstName: 'Monica',
-    
-    //accessor property(setter)
-    set changeName(newName) {
-        this.firstName = newName;
-    }
+  firstName: "Monica",
+
+  //accessor property(setter)
+  set changeName(newName) {
+    this.firstName = newName;
+  },
 };
 
 console.log(student.firstName); // Monica
 
 // change(set) object property using a setter
-student.changeName = 'Sarah';
+student.changeName = "Sarah";
 
 console.log(student.firstName); // Sarah
 ```
@@ -490,11 +487,10 @@ These patterns are used with the `exec()` and `test()` methods of RegExp, and wi
 ```javascript
 const re = /ab+c/i;
 // OR
-const re = new RegExp("ab+c", "i"); 
+const re = new RegExp("ab+c", "i");
 // OR
-const re = new RegExp(/ab+c/, "i"); 
+const re = new RegExp(/ab+c/, "i");
 ```
-
 
 ### call, apply, bind
 
@@ -508,34 +504,34 @@ While functions in JavaScript are powerful on their own, the **call**, **apply**
 
 ```js
 var user = {
-    firstname: 'Lorem',
-    lastname: 'Ipsum',
-    getUserName: function() {
-        var fullname = this.firstname + ' ' + this.lastname;
-        return fullname;
-    }
+  firstname: "Lorem",
+  lastname: "Ipsum",
+  getUserName: function () {
+    var fullname = this.firstname + " " + this.lastname;
+    return fullname;
+  },
 };
 
-var userName = function(snack, hobby) {
-    console.log(this.getUserName() + ' loves ' + snack + ' and ' + hobby);
+var userName = function (snack, hobby) {
+  console.log(this.getUserName() + " loves " + snack + " and " + hobby);
 };
 
-userName.call(user,'sushi', 'algorithms'); // Lorem Ipsum loves sushi and algorithms
-userName.apply(user,['sushi', 'algorithms']); // Lorem Ipsum loves sushi and algorithms
+userName.call(user, "sushi", "algorithms"); // Lorem Ipsum loves sushi and algorithms
+userName.apply(user, ["sushi", "algorithms"]); // Lorem Ipsum loves sushi and algorithms
 ```
 
 ```js
 var user = {
-    firstname: 'Lorem',
-    lastname: 'Ipsum',
-    getUserName: function() {
-        var fullname = this.firstname + ' ' + this.lastname;
-        return fullname;
-    }
+  firstname: "Lorem",
+  lastname: "Ipsum",
+  getUserName: function () {
+    var fullname = this.firstname + " " + this.lastname;
+    return fullname;
+  },
 };
 
-var userName = function() {
-    console.log(this.getPokeName());
+var userName = function () {
+  console.log(this.getPokeName());
 };
 
 var logUserName = userName.bind(user); // creates new object and binds user. 'this' of user === user now

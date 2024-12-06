@@ -3,8 +3,8 @@ title: Algorithms
 description: Things that make you happy and have fun
 tags: []
 layout: docs
+data: 2024-12-06
 ---
-
 
 binary search - binary search on tree or array
 
@@ -12,9 +12,7 @@ subarray
 
 avl trees
 
-
 https://frontendmasters.com/courses/algorithms/
-
 
 ## Big O Time Complexity
 
@@ -25,18 +23,18 @@ Often it will help us make decisions about what data strucures and algorithms to
 ```ts
 function sum_char_codes(n: string): number {
   let sum = 0;
-  for(let i = 0; i < n.length; ++i){
+  for (let i = 0; i < n.length; ++i) {
     // convert the string as a sequence of UTF-16 code units
-    sum += n.charCodeAt(i)
+    sum += n.charCodeAt(i);
   }
 
-  return sum
+  return sum;
 }
 ```
 
 How can you tell that this code is O(N) time complexity?
 
-Simplest trick for complexity is ``Look for loops``
+Simplest trick for complexity is `Look for loops`
 
 Important concepts
 
@@ -51,17 +49,17 @@ Example below is also O(N)
 ```ts
 function sum_char_codes(n: string): number {
   let sum = 0;
-  for(let i = 0; i < n.length; ++i){
+  for (let i = 0; i < n.length; ++i) {
     // convert the string as a sequence of UTF-16 code units
-    sum += n.charCodeAt(i)
+    sum += n.charCodeAt(i);
   }
 
-    for(let i = 0; i < n.length; ++i){
+  for (let i = 0; i < n.length; ++i) {
     // convert the string as a sequence of UTF-16 code units
-    sum += n.charCodeAt(i)
+    sum += n.charCodeAt(i);
   }
 
-  return sum
+  return sum;
 }
 ```
 
@@ -87,7 +85,6 @@ Therefore O(100N) is faster then O(N^2) but practically speaking, you would prob
 
 But just like in sorting algorithms, often it will use insertion sort for smaller subsets of data. Because insertion sort, though slower in theoretical terms, because it is O(N^2) is actually faster then say quicksort witch is log(N) when it comes to small datasets
 
-
 Worst Case
 
 In BigO we often consider the worst case. Especially in interviews.
@@ -98,15 +95,15 @@ ITS STILL 0(N)
 ```ts
 function sum_char_codes(n: string): number {
   let sum = 0;
-  for(let i=0; i< n.length; ++i){
+  for (let i = 0; i < n.length; ++i) {
     const charCode = n.charCodeAt(i);
     // Capital E
-    if(charCode === 69){
-      return sum
+    if (charCode === 69) {
+      return sum;
     }
     sum += charCode;
   }
-  return sum
+  return sum;
 }
 ```
 
@@ -123,10 +120,10 @@ Important concepts
 ### O(N^2)
 
 ```ts
-function sum_char_codes(n: string): number{
+function sum_char_codes(n: string): number {
   let sum = 0;
-  for(let i=0; i < n.length; ++i){
-    for(let j=0; j < n.length; ++j){
+  for (let i = 0; i < n.length; ++i) {
+    for (let j = 0; j < n.length; ++j) {
       sum += charCode;
     }
   }
@@ -137,11 +134,11 @@ function sum_char_codes(n: string): number{
 ### O(N^3)
 
 ```ts
-function sum_char_codes(n: string): number{
+function sum_char_codes(n: string): number {
   let sum = 0;
-  for(let i=0; i < n.length; ++i){
-    for(let j=0; j < n.length; ++j){
-      for(let k=0; k < n.length; ++k){
+  for (let i = 0; i < n.length; ++i) {
+    for (let j = 0; j < n.length; ++j) {
+      for (let k = 0; k < n.length; ++k) {
         sum += charCode;
       }
     }
@@ -154,6 +151,7 @@ function sum_char_codes(n: string): number{
 Big O trick
 
 If the input halves at each step, its likely O(LogN) or O(NlogN)
+
 </Callout>
 
 ### O(n log n)
@@ -168,19 +166,17 @@ Binary search trees
 
 There is technically a bunch of different ways to measure the complexity of algorithms like Stata, little omega, but in general the easiest one to use is the "Upper Bound".
 
-
 ## Arrays Data Structure
 
-Array is unbreaking memory space in which conains a certain amount of bytes. 
+Array is unbreaking memory space in which conains a certain amount of bytes.
 
-How memory is interpreted is based on what you tell the compiler how to interpret it. 
+How memory is interpreted is based on what you tell the compiler how to interpret it.
 
 Because an array is simply a collection of bits, we'll instruct the compiler on how to interpret that memory.
 
 This means we'll take one bunch of bits from the array and treat them like a single number. This means we'll notify the compiler that that particular group of bytes in memory has a special meaning.
 
 Just because it's contiguous, just because is's all one piece of memory doesn't mean that it has any specific meaning until you give it meaning. So, an array is effectively just a big, long version of group of bites.
-
 
 If we have A=int[3] that meains i want three ints in contiguous space, unbreakable like for me to be able to use.
 
@@ -190,13 +186,13 @@ When you want to insert something in array, it doesn't insert it, it actually ov
 
 What is BigO for array?
 
-If you want to insert something into array, it will do with this formula: 
+If you want to insert something into array, it will do with this formula:
 
-a + width * offset
+a + width \* offset
 
 a is memory address
 
-width of type which is usualy specified in bytes like, 32 bit integer is 4 bytes 
+width of type which is usualy specified in bytes like, 32 bit integer is 4 bytes
 
 offset is position for that place in array - a[2] - offset is 2
 
@@ -204,10 +200,9 @@ BigO for array is O(1) - constant time, because nothing in this formula goes ove
 
 It doesn't mean we literally only do one thing. It just means we do constant amount of things no matter what the input is, it does not grow with input at all.
 
-
 ## Example on how to count on Big(o)
 
-Assume we have a sorted array and want to find our value. 
+Assume we have a sorted array and want to find our value.
 
 We don't have to start searching from the beginning. We can skip right to 10% of N and see if that number equals my value.
 If we don't find value, we'll jump another 10% and see if that value is equivalent to my value and again it is not equals, but it is higher than my value.

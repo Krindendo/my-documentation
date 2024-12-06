@@ -3,6 +3,7 @@ title: Effect Hooks
 description: Effect includes dealing with network, browser DOM, animations, widgets written using a different UI library, and other non-React code.
 tags: [react]
 layout: docs
+data: 2024-12-06
 ---
 
 - `useEffect` connects a component to an external system.
@@ -11,7 +12,7 @@ layout: docs
 
 ## useEffect
 
-### Parameters 
+### Parameters
 
 - **setup**: The function with your Effect’s logic. Your setup function may also optionally return a cleanup function. When your component is added to the DOM, React will run your setup function. After every re-render with changed dependencies, React will first run the cleanup function (if you provided it) with the old values, and then run your setup function with the new values. After your component is removed from the DOM, React will run your cleanup function.
 
@@ -39,20 +40,19 @@ layout: docs
 
 </Callout>
 
-
 ```tsx
-import { useEffect } from 'react';
-import { createConnection } from './chat.js';
+import { useEffect } from "react";
+import { createConnection } from "./chat.js";
 
 function ChatRoom({ roomId }) {
-  const [serverUrl, setServerUrl] = useState('https://localhost:1234');
+  const [serverUrl, setServerUrl] = useState("https://localhost:1234");
 
   useEffect(() => {
-  	const connection = createConnection(serverUrl, roomId);
+    const connection = createConnection(serverUrl, roomId);
     connection.connect();
-  	return () => {
+    return () => {
       connection.disconnect();
-  	};
+    };
   }, [serverUrl, roomId]);
   // ...
 }
@@ -83,7 +83,7 @@ function useChatRoom({ serverUrl, roomId }) {
   useEffect(() => {
     const options = {
       serverUrl: serverUrl,
-      roomId: roomId
+      roomId: roomId,
     };
     const connection = createConnection(options);
     connection.connect();
@@ -92,11 +92,11 @@ function useChatRoom({ serverUrl, roomId }) {
 }
 
 function ChatRoom({ roomId }) {
-  const [serverUrl, setServerUrl] = useState('https://localhost:1234');
+  const [serverUrl, setServerUrl] = useState("https://localhost:1234");
 
   useChatRoom({
     roomId: roomId,
-    serverUrl: serverUrl
+    serverUrl: serverUrl,
   });
   // ...
 }
@@ -120,8 +120,6 @@ When dependencies don’t match the code, there is a high risk of introducing bu
 
 ### You Might Not Need an Effect
 
-
-
 ## useLayoutEffect
 
 useLayoutEffect is a version of useEffect that fires before the browser repaints the screen.
@@ -131,7 +129,7 @@ useEffect does not block the browser from repainting but useLayoutEffect blocks.
 The code inside useLayoutEffect and all state updates scheduled from it, prevent the browser from repainting the screen. When used excessively, this makes your app slow. When possible, prefer useEffect.
 
 ```tsx
-import { useState, useRef, useLayoutEffect } from 'react';
+import { useState, useRef, useLayoutEffect } from "react";
 
 function Tooltip() {
   const ref = useRef(null);
@@ -194,11 +192,11 @@ export function TooltipContainer({ children, x, y, contentRef }) {
   return (
     <div
       style={{
-        position: 'absolute',
-        pointerEvents: 'none',
+        position: "absolute",
+        pointerEvents: "none",
         left: 0,
         top: 0,
-        transform: `translate3d(${x}px, ${y}px, 0)`
+        transform: `translate3d(${x}px, ${y}px, 0)`,
       }}
     >
       <div ref={contentRef} className="tooltip">
@@ -227,7 +225,7 @@ useInsertionEffect allows inserting elements into the DOM before any layout effe
 
 useInsertionEffect is for CSS-in-JS library authors.
 
-### Caveats 
+### Caveats
 
 - You can’t update state from inside `useInsertionEffect`.
 
@@ -267,7 +265,7 @@ let collectedRulesSet = new Set();
 function useCSS(rule) {
   // useInsertionEffect does not run on the server
   // If you need to collect which CSS rules have been used on the server, you can do it during rendering:
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     collectedRulesSet.add(rule);
   }
   useInsertionEffect(() => {
@@ -282,10 +280,11 @@ function useCSS(rule) {
 }
 
 function Button() {
-  const className = useCSS('...');
+  const className = useCSS("...");
   return <div className={className} />;
 }
 ```
+
 ## React Lifecycle
 
 Each component in React has a lifecycle which you can monitor and manipulate during its three main phases.

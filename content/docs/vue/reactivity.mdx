@@ -3,6 +3,7 @@ title: Reactivity in Depth
 description: When you modify reactive JavaScript object, the view updates.
 tags: [vue]
 layout: docs
+data: 2024-12-06
 ---
 
 ## Reactivity in Depth
@@ -12,9 +13,9 @@ If we have one value (A1) that is related to another value (A2) and want to conn
 
 Reactivity in Vue works diferently.
 
-There are two ways of intercepting property access in JavaScript: getter / setters and Proxies. 
+There are two ways of intercepting property access in JavaScript: getter / setters and Proxies.
 
-Vue 2 used getter / setters exclusively due to browser support limitations. 
+Vue 2 used getter / setters exclusively due to browser support limitations.
 
 In Vue 3, Proxies are used for reactive objects and getter / setters are used for refs.
 
@@ -45,7 +46,6 @@ Vue's reactivity system is primarily runtime-based: the tracking and triggering 
 
 Some frameworks, such as Svelte, choose to overcome such limitations by implementing reactivity during compilation. It analyzes and transforms the code in order to simulate reactivity.
 
-
 ## Reactivity Debugging
 
 Debug hooks only work in development mode.
@@ -54,15 +54,15 @@ We can debug what dependencies are used during a component's render and which de
 
 ```vue
 <script setup>
-import { onRenderTracked, onRenderTriggered } from 'vue'
+import { onRenderTracked, onRenderTriggered } from "vue";
 
 onRenderTracked((event) => {
   debugger;
-})
+});
 
 onRenderTriggered((event) => {
   debugger;
-})
+});
 </script>
 ```
 
@@ -81,14 +81,14 @@ const plusOne = computed(() => count.value + 1, {
   onTrigger(e) {
     // triggered when count.value is mutated
     debugger;
-  }
-})
+  },
+});
 
 // access plusOne, should trigger onTrack
-console.log(plusOne.value)
+console.log(plusOne.value);
 
 // mutate count.value, should trigger onTrigger
-count.value++
+count.value++;
 ```
 
 ```javascript
@@ -98,8 +98,8 @@ watch(source, callback, {
   },
   onTrigger(e) {
     debugger;
-  }
-})
+  },
+});
 
 watchEffect(callback, {
   onTrack(e) {
@@ -107,8 +107,8 @@ watchEffect(callback, {
   },
   onTrigger(e) {
     debugger;
-  }
-})
+  },
+});
 ```
 
 ## Integration with External State Systems
@@ -124,16 +124,16 @@ If you are implementing an undo / redo feature, you likely want to take a snapsh
 Immutable data structures solve this by never mutating the state objects - instead, it creates new objects that share the same, unchanged parts with old ones. There are different ways of using immutable data in JavaScript, but we recommend using Immer with Vue because it allows you to use immutable data while keeping the more ergonomic, mutable syntax.
 
 ```javascript
-import produce from 'immer'
-import { shallowRef } from 'vue'
+import produce from "immer";
+import { shallowRef } from "vue";
 
 export function useImmer(baseState) {
-  const state = shallowRef(baseState)
+  const state = shallowRef(baseState);
   const update = (updater) => {
-    state.value = produce(state.value, updater)
-  }
+    state.value = produce(state.value, updater);
+  };
 
-  return [state, update]
+  return [state, update];
 }
 ```
 
@@ -142,18 +142,18 @@ export function useImmer(baseState) {
 State Machine is a model for describing all the possible states an application can be in, and all the possible ways it can transition from one state to another. While it may be overkill for simple components, it can help make complex state flows more robust and manageable.
 
 ```javascript
-import { createMachine, interpret } from 'xstate'
-import { shallowRef } from 'vue'
+import { createMachine, interpret } from "xstate";
+import { shallowRef } from "vue";
 
 export function useMachine(options) {
-  const machine = createMachine(options)
-  const state = shallowRef(machine.initialState)
+  const machine = createMachine(options);
+  const state = shallowRef(machine.initialState);
   const service = interpret(machine)
     .onTransition((newState) => (state.value = newState))
-    .start()
-  const send = (event) => service.send(event)
+    .start();
+  const send = (event) => service.send(event);
 
-  return [state, send]
+  return [state, send];
 }
 ```
 
@@ -168,57 +168,56 @@ Although not a necessary trait for something to qualify as signals, today the co
 In Solid you can passed down value without the setter. This ensures that the state can never be mutated unless the setter is also explicitly exposed. Whether this safety guarantee justifies the more verbose syntax could be subject to the requirement of the project and personal taste.
 
 ```javascript
-import { shallowRef, triggerRef } from 'vue'
+import { shallowRef, triggerRef } from "vue";
 
 export function createSignal(value, options) {
-  const r = shallowRef(value)
-  const get = () => r.value
+  const r = shallowRef(value);
+  const get = () => r.value;
   const set = (v) => {
-    r.value = typeof v === 'function' ? v(r.value) : v
-    if (options?.equals === false) triggerRef(r)
-  }
-  return [get, set]
+    r.value = typeof v === "function" ? v(r.value) : v;
+    if (options?.equals === false) triggerRef(r);
+  };
+  return [get, set];
 }
 
-const [count, setCount] = createSignal(0)
+const [count, setCount] = createSignal(0);
 
-count() // access the value
-setCount(1) // update the value
+count(); // access the value
+setCount(1); // update the value
 ```
 
 Angular signals
 
 ```javascript
-import { shallowRef, triggerRef } from 'vue'
+import { shallowRef, triggerRef } from "vue";
 
 export function signal(initialValue) {
-  const r = shallowRef(initialValue)
-  const s = () => r.value
+  const r = shallowRef(initialValue);
+  const s = () => r.value;
   s.set = (value) => {
-    r.value = value
-  }
+    r.value = value;
+  };
   s.update = (updater) => {
-    r.value = updater(r.value)
-  }
+    r.value = updater(r.value);
+  };
   s.mutate = (mutator) => {
-    mutator(r.value)
-    triggerRef(r)
-  }
-  return s
+    mutator(r.value);
+    triggerRef(r);
+  };
+  return s;
 }
 
-const count = signal(0)
+const count = signal(0);
 
-count() // access the value
-count.set(1) // set new value
-count.update((v) => v + 1) // update based on previous value
+count(); // access the value
+count.set(1); // set new value
+count.update((v) => v + 1); // update based on previous value
 
 // mutate deep objects with same identity
-const state = signal({ count: 0 })
+const state = signal({ count: 0 });
 state.mutate((o) => {
-  o.count++
-})
-
+  o.count++;
+});
 ```
 
 Compared to Vue refs, Solid and Angular's getter-based API style provide some interesting trade-offs when used in Vue components:

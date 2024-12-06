@@ -3,6 +3,7 @@ title: Quick sort
 description: Simplest sorting
 tags: []
 layout: docs
+data: 2024-12-06
 ---
 
 <h3 className="text-lg font-semibold">- How it works</h3>
@@ -11,33 +12,37 @@ Quick sort works in such a way that it divides and it conquers.
 
 First we need to pick some value in our array, we will call it **p** (pivot). Then we will pick first and last item in array. Then we will walk from first to the last item in array. Any element that is less than or equal to our pivot will be put in the first position and previous item will move to next index. After we passed through all items in array we now have sorted array that looks like this. All the ones that are smaller than, or equal to our pivot are on one side of the array, then goes pivot, then on the other side are all the ones that are bigger than pivot.
 
-First part is done, then we will split that array into 2 smaller arrays so left of pivot is one array and right of pivot is another array. The pivot is excluded from these two arrays. Then we will repeat process again from begin. We are doing this until we dont have any item in array or we have single item in our array. 
+First part is done, then we will split that array into 2 smaller arrays so left of pivot is one array and right of pivot is another array. The pivot is excluded from these two arrays. Then we will repeat process again from begin. We are doing this until we dont have any item in array or we have single item in our array.
 
-<img src="/static/images/algorithms/quick-sort.png" alt="Quick sort example" className="my-6" />
+<img
+  src="/static/images/algorithms/quick-sort.png"
+  alt="Quick sort example"
+  className="my-6"
+/>
 
-<h3 className="text-lg font-semibold mt-7">- Big(O)</h3> 
+<h3 className="text-lg font-semibold mt-7">- Big(O)</h3>{" "}
 
 best case is **O(logN)**.
 
 worst case is **O(N^2)**.
 
 ```ts
-function qs(arr: number[], lo: number, hi: number): void{
-  if(lo >= hi){
+function qs(arr: number[], lo: number, hi: number): void {
+  if (lo >= hi) {
     return;
   }
 
-  const pivotIdx = partition(arr,lo,hi);
+  const pivotIdx = partition(arr, lo, hi);
 
   qs(arr, lo, pivotIdx - 1);
   qs(arr, pivotIdx + 1, hi);
 }
-function partition(arr:number[], lo: number, hi: number): number{
+function partition(arr: number[], lo: number, hi: number): number {
   const pivot = arr[hi];
   let idx = lo - 1;
 
-  for(let i = lo; i < hi; ++i){
-    if(arr[i] <= pivot){
+  for (let i = lo; i < hi; ++i) {
+    if (arr[i] <= pivot) {
       idx++;
       const tmp = arr[i];
       arr[i] = arr[idx];
@@ -52,7 +57,7 @@ function partition(arr:number[], lo: number, hi: number): number{
   return idx;
 }
 
-export default function quick_sort(arr:number[]): void{
-  qs(arr,0,arr.length - 1)
+export default function quick_sort(arr: number[]): void {
+  qs(arr, 0, arr.length - 1);
 }
 ```

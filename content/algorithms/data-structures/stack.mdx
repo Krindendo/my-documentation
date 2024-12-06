@@ -3,6 +3,7 @@ title: Stack
 description: test
 tags: []
 layout: docs
+data: 2024-12-06
 ---
 
 Stack is list in witch looks like a queue or acts like a queue.
@@ -10,11 +11,15 @@ It's a singly linked list in which you only add and remove from the head.
 
 <h3 className="text-lg font-semibold">- How it works</h3>
 
-Let asume that we have list with node A,B,C,D. To make stack work we also need node head. 
+Let asume that we have list with node A,B,C,D. To make stack work we also need node head.
 
 You can imagne stack like stack of plates where you put node on top of another node and when you want to remove node, you can do it only from the top.
 
-<img src="/static/images/algorithms/stack-base.png" alt="Stack example" className="my-6" />
+<img
+  src="/static/images/algorithms/stack-base.png"
+  alt="Stack example"
+  className="my-6"
+/>
 
 If we want to add node E to stack, we will take node E to point to node D then we will update head to point to node E.
 
@@ -30,9 +35,9 @@ It's **O(1)**
 
 ```ts
 type SNode<T> = {
-  value: T,
-  prev?: SNode<T>,
-}
+  value: T;
+  prev?: SNode<T>;
+};
 export default class Stack<T> {
   public length: number;
   private head?: SNode<T>;
@@ -42,11 +47,11 @@ export default class Stack<T> {
     this.length = 0;
   }
 
-  push(item: T): void{
-    const node = {value: item} as SNode<T>;
+  push(item: T): void {
+    const node = { value: item } as SNode<T>;
 
     this.length++;
-    if(!this.head){
+    if (!this.head) {
       this.head = node;
       return;
     }
@@ -54,9 +59,9 @@ export default class Stack<T> {
     node.prev = this.head;
     this.head = node;
   }
-  pop(): T | undefined{
+  pop(): T | undefined {
     this.length = Math.max(0, this.length - 1);
-    if(this.length === 0){
+    if (this.length === 0) {
       const head = this.head;
       this.head = undefined;
       return head?.value;
@@ -67,7 +72,7 @@ export default class Stack<T> {
     return head.value;
   }
 
-  peek(): T | undefined{
+  peek(): T | undefined {
     return this.head?.value;
   }
 }

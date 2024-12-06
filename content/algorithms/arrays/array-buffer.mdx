@@ -3,6 +3,7 @@ title: Array buffer / Ring buffer
 description: test
 tags: []
 layout: docs
+data: 2024-12-06
 ---
 
 <h3 className="text-lg font-semibold">- How it works</h3>
@@ -10,7 +11,7 @@ layout: docs
 Array buffer is array like storage that we have array from 0 to N, but also need to imagane array inside that we will acululy use.
 We will have index based head and index based tail.
 
-\[null,null,null,null,4,12,6,null,null,null\] 
+\[null,null,null,null,4,12,6,null,null,null\]
 
 head is 4 and tail is 6
 
@@ -20,11 +21,15 @@ But what if you go off the edge?
 
 This is why this array called ring buffer. Because tail will go to the begining of the array. To tail can go first and then can go head.
 
-this.tail % length 
+this.tail % length
 
 if you have array size 10 and you have tail that is 12, then 12 % 10 = 2 so tail will point to index 2.
 
-<img src="/static/images/algorithms/array-buffer-point.png" alt="Queue example" className="my-6" />
+<img
+  src="/static/images/algorithms/array-buffer-point.png"
+  alt="Queue example"
+  className="my-6"
+/>
 
 The only problem is when tail exceeds head. Then we need to resize array. Main thing in ring buffer is they also maintain order. If this happend you only need to do is start from head go the length and write that into a new larger capacity buffer.
 

@@ -3,6 +3,7 @@ title: Heap
 description: Heap or Priority Queue
 tags: []
 layout: docs
+data: 2024-12-06
 ---
 
 The simplest way to put it is a binary tree where every child and grand child is smaller (MaxHeap), or larger (MinHeap) than the current node. It is self-balancing.
@@ -15,7 +16,11 @@ Heaps maintain week ordering, meaning that they are ordered, but it is not perfe
 
 Example below is MinHeap.
 
-<img src="/static/images/algorithms/heap-graph.png" alt="Heap graph" className="my-6" />
+<img
+  src="/static/images/algorithms/heap-graph.png"
+  alt="Heap graph"
+  className="my-6"
+/>
 
 <h3 className="text-lg font-semibold">- How it works</h3>
 
@@ -27,7 +32,7 @@ A binary tree or heap is usually full or complete tree, that means it's always a
 
 How to add new node?
 
-The simplest way is to put new value in the final spot in tree. Then, we need to sort tree so it be heap condition ordered. 
+The simplest way is to put new value in the final spot in tree. Then, we need to sort tree so it be heap condition ordered.
 
 ### Example: We need to add new value - 3 and we will use example from above
 
@@ -55,19 +60,18 @@ Use this formula:
   }
 ```
 
-
 <h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
 
 - Insert is **O(N)**
 
-- Deleting is  **O(N)**
+- Deleting is **O(N)**
 
 ```ts
-export default class MinHeap{
+export default class MinHeap {
   public length: number;
   private data: number[];
 
-  constructor(){
+  constructor() {
     this.data = [];
     this.length = 0;
   }
@@ -77,30 +81,29 @@ export default class MinHeap{
     this.heapifyUp(this.length);
     this.length++;
   }
-  delete(): number | undefined{
-    if(this.length === 0){
+  delete(): number | undefined {
+    if (this.length === 0) {
       return undefined;
     }
 
     const out = this.data[0];
     this.length--;
 
-    if(this.length === 0){
-      this.data = []
+    if (this.length === 0) {
+      this.data = [];
       return out;
     }
 
     this.data[0] = this.data[this.length];
     this.heapifyDown(0);
     return out;
-
   }
 
   private heapifyDown(idx: number): void {
     const lIdx = this.leftChild(idx);
     const rIdx = this.rightChild(idx);
 
-    if(idx >= this.lenghth || lIdx >= this.lenght){
+    if (idx >= this.lenghth || lIdx >= this.lenght) {
       return;
     }
 
@@ -108,28 +111,26 @@ export default class MinHeap{
     const rV = this.data[rIdx];
     const v = this.data[Idx];
 
-    if(lV > rV && v > rV){
+    if (lV > rV && v > rV) {
       this.data[idx] = rV;
       this.data[rIdx] = v;
       this.heapifyDown(rIdx);
-    }
-    else if(rV > lV && v > lV){
+    } else if (rV > lV && v > lV) {
       this.data[idx] = lV;
       this.data[lIdx] = v;
       this.heapifyDown(lIdx);
     }
-
   }
 
   private heapifyUp(idx: number): void {
-    if(idx === 0){
+    if (idx === 0) {
       return;
     }
     const p = this.parent(idx);
     const parentV = this.data[p];
     const v = this.data[idx];
 
-    if(parentV > v){
+    if (parentV > v) {
       this.data[idx] = parentV;
       this.data[p] = v;
       this.heapifyUp(p);
@@ -137,14 +138,13 @@ export default class MinHeap{
   }
 
   private parent(idx: number): number {
-    return Math.floor((idx - 1) / 2)
+    return Math.floor((idx - 1) / 2);
   }
   private leftChild(idx: number): number {
-    return idx * 2 + 1
+    return idx * 2 + 1;
   }
   private rightChild(idx: number): number {
-    return idx * 2 + 2
+    return idx * 2 + 2;
   }
 }
-
 ```

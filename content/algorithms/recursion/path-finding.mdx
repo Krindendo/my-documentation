@@ -3,18 +3,25 @@ title: Path finding
 description: test
 tags: []
 layout: docs
+data: 2024-12-06
 ---
 
-Maze Solver: 
+Maze Solver:
 
 We have:
-- S where maze start, 
-- E where maze ends,
-- \# where is wall 
 
-<img src="/static/images/algorithms/alogrihtms-maze.png" alt="Maze" className="my-6" />
+- S where maze start,
+- E where maze ends,
+- \# where is wall
+
+<img
+  src="/static/images/algorithms/alogrihtms-maze.png"
+  alt="Maze"
+  className="my-6"
+/>
 
 At any one square we can go up, we can go right, down and left. So we need to check:
+
 - if go off the map,
 - if we run into walls
 - if it's the end
@@ -29,28 +36,40 @@ const dir = [
   [-1, 0],
   [1, 0],
   [0, -1],
-  [0, 1]
-]
-function walk(maze: string[], wall: string, curr: Point, end: Point, seen: boolean[][], path: Point[]):boolean {
+  [0, 1],
+];
+function walk(
+  maze: string[],
+  wall: string,
+  curr: Point,
+  end: Point,
+  seen: boolean[][],
+  path: Point[]
+): boolean {
   // 1. Base Case
   // off the map
-  if(curr.x < 0 || curr.x >= maze[0].length || curr.y < 0 || curr.y >= maze.length){
+  if (
+    curr.x < 0 ||
+    curr.x >= maze[0].length ||
+    curr.y < 0 ||
+    curr.y >= maze.length
+  ) {
     return false;
   }
 
   // on a wall
-  if(maze[curr.y][curr.x] === wall) {
+  if (maze[curr.y][curr.x] === wall) {
     return false;
   }
 
-  // on end 
-  if(curr.x === end.x && curr.y === end.y){
+  // on end
+  if (curr.x === end.x && curr.y === end.y) {
     path.push(end);
     return true;
   }
 
   // already been there
-  if(seen[curr.y][curr.x]){
+  if (seen[curr.y][curr.x]) {
     return false;
   }
 
@@ -60,24 +79,29 @@ function walk(maze: string[], wall: string, curr: Point, end: Point, seen: boole
   path.push(curr);
 
   // recurse
-  for(let i = 0; i < dir.length; ++i){
-    const [x,y] = dir[i];
-    if(walk(maze,wall,{x: curr.x + x, y: curr.y + y}, end, seen, path)){ 
-      return true
+  for (let i = 0; i < dir.length; ++i) {
+    const [x, y] = dir[i];
+    if (walk(maze, wall, { x: curr.x + x, y: curr.y + y }, end, seen, path)) {
+      return true;
     }
   }
   // post - if he can't go forward, remove current point
-  path.pop()
+  path.pop();
   // Tell point behind that current point is dead end
   return false;
 }
 
-export default function solve(maze: string[], wall: string, start: Point, end: Point): Point[]{
+export default function solve(
+  maze: string[],
+  wall: string,
+  start: Point,
+  end: Point
+): Point[] {
   const seen: boolean[][] = [];
   const path: Point[] = [];
 
-  for(let i = 0; i < maze.length; ++i){
-    seen.push(new Array(maze[0].length).fill(false))
+  for (let i = 0; i < maze.length; ++i) {
+    seen.push(new Array(maze[0].length).fill(false));
   }
 
   walk(maze, wall, start, end, seen, path);
@@ -86,7 +110,10 @@ export default function solve(maze: string[], wall: string, start: Point, end: P
 }
 ```
 
-<Callout>Move everything you can into the base case, your complexity will go massively down, and it's a lot easier to solve.</Callout>
+<Callout>
+  Move everything you can into the base case, your complexity will go massively
+  down, and it's a lot easier to solve.
+</Callout>
 
 When do i use recursion?
 

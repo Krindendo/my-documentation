@@ -3,6 +3,7 @@ title: Performance Hooks
 description: test
 tags: [react]
 layout: docs
+data: 2024-12-06
 ---
 
 This hooks can tell React to reuse a cached calculation or to skip a re-render if the data has not changed since the previous render.
@@ -23,10 +24,10 @@ During renders, useMemo will return a stored value if the dependencies haven't c
 callback function, calculateValue, will be calculated again and store a new value from calculateValue.
 
 ```tsx
-import { useMemo } from "react"
+import { useMemo } from "react";
 
 function TodoList({ todos, tab }) {
-  const visibleTodos = useMemo(() => filterTodos(todos, tab), [todos, tab])
+  const visibleTodos = useMemo(() => filterTodos(todos, tab), [todos, tab]);
   // ...
 }
 ```
@@ -75,7 +76,7 @@ With a transition, your UI stays responsive in the middle of a re-render. For ex
 ```tsx
 function TabContainer() {
   const [isPending, startTransition] = useTransition();
-  const [tab, setTab] = useState('about');
+  const [tab, setTab] = useState("about");
 
   function selectTab(nextTab) {
     startTransition(() => {
@@ -88,7 +89,7 @@ function TabContainer() {
 
 ### startTransition function
 
-startTransition function have one parametar 
+startTransition function have one parametar
 
 scope: A function that updates some state by calling one or more set functions. React immediately calls scope with no parameters and marks all state updates scheduled synchronously during the scope function call as transitions. They will be non-blocking and will not display unwanted loading indicators.
 
@@ -114,32 +115,31 @@ useDeferredValue returns a single value that will be the same as the value you p
 
 - During updates, the deferred value will “lag behind” the latest value. In particular, React will first re-render without updating the deferred value, and then try to re-render with the newly received value in background.
 
-
 ```tsx
 function App() {
-const [name, setName] = useState<string>('');
-const deferredName = useDeferredValue(name);
+  const [name, setName] = useState<string>("");
+  const deferredName = useDeferredValue(name);
 
-const LIST_SIZE: number = 10000;
+  const LIST_SIZE: number = 10000;
 
-const list = useMemo(() => {
-  const dataList: string[] = [];
-  for (let i: number = 0; i < LIST_SIZE; i++) {
-    dataList.push(deferredName);
-  }
-  return dataList;
-}, [deferredName]);
-//....
+  const list = useMemo(() => {
+    const dataList: string[] = [];
+    for (let i: number = 0; i < LIST_SIZE; i++) {
+      dataList.push(deferredName);
+    }
+    return dataList;
+  }, [deferredName]);
+  //....
 }
 ```
 
 ### Caveats
 
-- The values you pass to `useDeferredValue` should either be [primitive values](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) or 
-objects created outside of rendering. If you create a new object during rendering and immediately pass it to useDeferredValue, it will be different on every render,
-causing unnecessary background re-renders.
+- The values you pass to `useDeferredValue` should either be [primitive values](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) or
+  objects created outside of rendering. If you create a new object during rendering and immediately pass it to useDeferredValue, it will be different on every render,
+  causing unnecessary background re-renders.
 
-- When `useDeferredValue` receives a different value, it schedules a re-render in the background with the new value. 
+- When `useDeferredValue` receives a different value, it schedules a re-render in the background with the new value.
 
 - The background re-render is interruptible if there’s another update to the value, React will restart the background re-render from scratch.
 
@@ -158,24 +158,26 @@ Example: If the user is typing into an input faster than a chart receiving its d
 ### Example: search
 
 ```tsx
-import { Suspense, useState } from 'react';
-import SearchResults from './SearchResults.js';
+import { Suspense, useState } from "react";
+import SearchResults from "./SearchResults.js";
 
 export default function App() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
   const isStale = query !== deferredQuery;
   return (
     <>
       <label>
         Search albums:
-        <input value={query} onChange={e => setQuery(e.target.value)} />
+        <input value={query} onChange={(e) => setQuery(e.target.value)} />
       </label>
       <Suspense fallback={<h2>Loading...</h2>}>
-        <div style="{{
+        <div
+          style="{{
           opacity: isStale ? 0.5 : 1,
           transition: isStale ? 'opacity 0.2s 0.2s linear' : 'opacity 0s 0s linear'
-        }}">
+        }}"
+        >
           <SearchResults query={deferredQuery} />
         </div>
       </Suspense>
@@ -202,11 +204,11 @@ This optimization requires SlowList to be wrapped in memo. This is because whene
 
 ```tsx
 export default function App() {
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const deferredText = useDeferredValue(text);
   return (
     <>
-      <input value={text} onChange={e => setText(e.target.value)} />
+      <input value={text} onChange={(e) => setText(e.target.value)} />
       <SlowList text={deferredText} />
     </>
   );
@@ -219,11 +221,7 @@ const SlowList = memo(function SlowList({ text }) {
   for (let i = 0; i < 250; i++) {
     items.push(<SlowItem key={i} text={text} />);
   }
-  return (
-    <ul className="items">
-      {items}
-    </ul>
-  );
+  return <ul className="items">{items}</ul>;
 });
 ```
 
@@ -241,4 +239,4 @@ Unlike debouncing or throttling, it doesn’t require choosing any fixed delay. 
 
 Also, unlike with debouncing or throttling, deferred re-renders done by useDeferredValue are interruptible by default. This means that if React is in the middle of re-rendering a large list, but the user makes another keystroke, React will abandon that re-render, handle the keystroke, and then start rendering in background again. By contrast, debouncing and throttling still produce a janky experience because they’re blocking: they merely postpone the moment when rendering blocks the keystroke.
 
- the work you’re optimizing doesn’t happen during rendering, debouncing and throttling are still useful. For example, they can let you fire fewer network requests. You can also use these techniques together.
+the work you’re optimizing doesn’t happen during rendering, debouncing and throttling are still useful. For example, they can let you fire fewer network requests. You can also use these techniques together.

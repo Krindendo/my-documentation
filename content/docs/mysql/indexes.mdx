@@ -3,6 +3,7 @@ title: Indexes
 description: The building blocks of database performance
 tags: [MySQL]
 layout: docs
+data: 2024-12-06
 ---
 
 Indexes are an entirely separate data structure that maintain a **copy of part of your data**. When you create an index, it creates a second data structure, which is different from your primary data structure (the table). It's crucial to understand that each index maintains a copy of part of your data, which means that if you have multiple indexes, **there will be multiple copies of different parts of your data.**
@@ -17,7 +18,7 @@ As far as the rules for creating indexes are concerned, you should aim to create
 
 It's essential to strike a balance between how many indexes you need and how few you can get away with. Establishing this balance depends on the size of your database, frequency of updates, and other factors that might influence the performance of your application. With that in mind, it's crucial to look at access patterns when deciding which indexes to create.
 
-### B+ trees 
+### B+ trees
 
 Indexes speed up data retrieval. Without an index, MySQL would have to read through the entire table to find a specific value.
 
@@ -25,7 +26,11 @@ This data structure resembles a [tree structure with nodes](/algorithms/data-str
 
 The root node isn't very relevant to us right now, so we'll shift our focus to the leaf nodes. Each name in the table has its own corresponding node in the B+ tree. The leaf nodes contain the data that we have indexed, in this case, first names.
 
-<img src="/static/images/docs/BplusTrees.png" alt="Stack example" className="my-6" />
+<img
+  src="/static/images/docs/BplusTrees.png"
+  alt="Stack example"
+  className="my-6"
+/>
 
 **Searching**
 
@@ -64,14 +69,13 @@ The primary key determines how your data is stored on disk. In MySQL's InnoDB en
 
 Choosing a good primary key is important because it can impact the performance of your queries. For example, using a GUID or hash as a primary key can be slow because it requires more storage space and can lead to slower insert performance as the tree has to be rebalanced. On the other hand, using an auto-incrementing integer as a primary key can be more efficient because it requires less storage space and new values always go at the end.
 
-
 ### Secondary keys
 
 Secondary key (also known as indexes) is any key (or index) that is not the primary key. **It has a special relationship to the primary key.**
 
 A secondary key is simply any index that is not the primary key of a table. Every MySQL table has one primary key and can have multiple secondary keys. It is crucial to note that primary and secondary keys are still related to each other, and understanding this relationship is crucial to working with them effectively.
 
-Example: 
+Example:
 
 Consider a people table with the columns id, name, and email. We can create a secondary key on name using the following MySQL query:
 
@@ -138,9 +142,10 @@ Here are some general rules of thumb to consider when deciding whether or not to
 ```sql
 alter table people add index birthday_index (birthday);
 ```
+
 This creates an index named birthday_index on the birthday column of the people table.
 
-Example: 
+Example:
 
 Let's take a closer look at how indexes can optimize specific queries. We will be using the people table we used in the previous section, which includes an id, first_name, last_name, state, email, and birthday column.
 
@@ -159,6 +164,7 @@ select * from people where birthday between '2006-01-01' and '2006-12-31';
 ```sql title="Sorting"
 select * from people order by birthday limit 10;
 ```
+
 This query will return the first 10 rows of the people table sorted by the birthday column. Since there is an index on the birthday column, MySQL can use this index for sorting instead of doing a full table scan.
 
 ```sql title="Grouping"
@@ -171,7 +177,7 @@ This query groups all people by their birthdays and returns a count of all peopl
 
 Indexing is a crucial aspect of MySQL database optimization. It involves adding indexes to important columns to speed up query performance. The process of selecting the best index for specific database columns can be a bit tricky.
 
-Cardinality refers to the number of distinct values in a particular column that an index covers. When you use the SHOW INDEXES command in MySQL, the cardinality column in the output shows you the approximate total number of unique values in a given index column. 
+Cardinality refers to the number of distinct values in a particular column that an index covers. When you use the SHOW INDEXES command in MySQL, the cardinality column in the output shows you the approximate total number of unique values in a given index column.
 
 ```sql title="Example of cardinality of column birthday"
 select count(distinct id) / count(*) from people
@@ -202,7 +208,7 @@ ALTER TABLE people ADD INDEX (first_name(5));
 
 Now that we know how to create prefix indexes let's determine the ideal prefix length of a column. To determine the prefix length of a column to index, we have to calculate the overall selectivity of the column and compare it to the selectivity of the prefix.
 
-Example: 
+Example:
 
 Let’s consider an example where we have a table with a column first_name, consisting of 3009 unique first names out of 500,000 people. In this case, the selectivity of the column is:
 
@@ -248,7 +254,6 @@ SHOW INDEXES FROM people;
 | people |          1 | multi    |            2 | last_name   | A         |      419540 | BTREE      |
 | people |          1 | multi    |            3 | birthday    | A         |      491583 | BTREE      |
 ```
-
 
 When you inspect the indexes on the people table, you'll notice the multi index with a sequence in the index column. This sequence indicates the order of the columns in the index, which is crucial for how the index can be used.
 
@@ -313,7 +318,7 @@ Covering indexes are powerful tools that can significantly improve query perform
 
 ### Functional indexes
 
-Function-based indexes are used in cases where you need to create an index on a function rather than a column. 
+Function-based indexes are used in cases where you need to create an index on a function rather than a column.
 
 For example, consider a scenario where you need to retrieve all the records where the birth month is February. You might have a **birthday** column in your table, but applying a function such as **month()** to it will not allow you to use an index. This is where function-based indexes come in handy.
 
@@ -339,7 +344,7 @@ MySQL doesn't support indexing JSON blobs.
 
 How to index JSON in MySQL:
 
-- generated columns 
+- generated columns
 - function-based indexes
 
 We need to index email address inside the JSON blob.
@@ -373,7 +378,7 @@ This method only works in MySQL 8. Using this method we skip the intermediate co
 
 Here, we're using the CAST function to turn the JSON extract into a CHAR(255) value that can be indexed and setting the collation to **utf8mb4_bin**.
 
-If you do not collate, it may collate to something else, and you will not receive value with index. 
+If you do not collate, it may collate to something else, and you will not receive value with index.
 
 ```sql
 ALTER TABLE json_data ADD INDEX ((
@@ -456,6 +461,7 @@ To add a full-text index to a table in MySQL, you can use an ALTER TABLE stateme
 ```sql
 ALTER TABLE people ADD FULLTEXT INDEX `fulltext`(first_name, last_name, bio);
 ```
+
 Note the use of the FULLTEXT keyword to create a full-text index instead of a regular B-tree index.
 
 Creating a full-text index can take some time, so be prepared for it to take longer than a regular index. You can check that the index was created successfully by running SHOW INDEXES FROM people; which should display the new full-text index.

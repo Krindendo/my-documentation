@@ -3,6 +3,7 @@ title: Recursion
 description: test
 tags: []
 layout: docs
+data: 2024-12-06
 ---
 
 - [Path finding](/algorithms/recursion/path-finding)
@@ -10,9 +11,9 @@ layout: docs
 The simplest way to think of recursion is a function that calls itself until the problem is solved. This usually involves what is referred to as a "base case." A base case is the point in which the problem is solved at.
 
 ```ts title="The simplest example"
-function foo(n: number):number {
+function foo(n: number): number {
   // Base Case
-  if(n === 1){
+  if (n === 1) {
     return 1;
   }
 
@@ -34,22 +35,22 @@ There's something that's very important to understand about recursion and really
 procedure for recursion function above:
 
 | return address | return value | arguments |
-| ---- | ---- | ---- |
-| foo5 | 5 + 10 | 5 |
-| foo4 | 4 + 6 | 4 |
-| foo3 | 3 + 3 | 3 |
-| foo2 | 2 + 1 | 2 |
-| foo1 | 1 | 1 |
+| -------------- | ------------ | --------- |
+| foo5           | 5 + 10       | 5         |
+| foo4           | 4 + 6        | 4         |
+| foo3           | 3 + 3        | 3         |
+| foo2           | 2 + 1        | 2         |
+| foo1           | 1            | 1         |
 
 when we get value 1 then we finally stopped recursing. We've hit a base case and we no loger need to keep calling functions.
 Now it goes back. 2 plus return value 1, then 3 plus returned value 3 ...
 
-First it will go down the stack, then up the stack. So there is two steps: 
+First it will go down the stack, then up the stack. So there is two steps:
 
 - base case
 - recurse
 
-when we hit base case then we stop recursing and we undo our function stack. 
+when we hit base case then we stop recursing and we undo our function stack.
 
 Recurse can actually be broken into three steps:
 

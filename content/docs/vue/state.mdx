@@ -3,11 +3,12 @@ title: State
 description: How to store information in components and refresh them?
 tags: [vue, state, ref, reactive, computed, readonly]
 layout: docs
+data: 2024-12-06
 ---
 
 For storing information in component use one of these functions:
 
-- `ref` 
+- `ref`
 - `reactive`
 - `computed`
 - `readonly`
@@ -18,7 +19,6 @@ For storing information that are reactive only root level properties use one of 
 - `shallowReactive`
 - `shallowReadonly`
 
-
 ## ref()
 
 Takes an inner value and returns a reactive and mutable ref object, which has a single property .value that points to the inner value.
@@ -27,20 +27,21 @@ ref method is used to convert non-object variables into objects and then to gran
 ref is pretty much the reactive that works also with primitives.
 
 The ref object is mutable.
-- you can assign new values to .value - it is also reactive 
+
+- you can assign new values to .value - it is also reactive
 - any read operations to .value are tracked, and write operations will trigger associated effects.
 
 <Callout>
 
-**If an object is assigned as a ref's value**, the object is made deeply reactive with reactive(). 
+**If an object is assigned as a ref's value**, the object is made deeply reactive with reactive().
 This also means if the object contains nested refs, they will be deeply unwrapped.
 
 </Callout>
 
 ```javascript
-const count = ref(0)
-count.value++
-console.log(count.value) // 1
+const count = ref(0);
+count.value++;
+console.log(count.value); // 1
 ```
 
 ## reactive()
@@ -54,50 +55,51 @@ The reactive conversion affects all nested properties. A reactive object also de
 If your original variable is already an object (or array), a ref wrapping is not needed because it is already a reference type. It only needs Vue's reactive functionality.
 
 ```javascript
-const obj = reactive({ count: 0 })
-obj.count++
-console.log(obj.value.count) // 1
+const obj = reactive({ count: 0 });
+obj.count++;
+console.log(obj.value.count); // 1
 ```
 
 ```javascript
-const count = ref(1)
-const obj = reactive({ count })
+const count = ref(1);
+const obj = reactive({ count });
 
 // ref will be unwrapped
-console.log(obj.count === count.value) // true
+console.log(obj.count === count.value); // true
 
 // it will update `obj.count`
-count.value++
-console.log(count.value) // 2
-console.log(obj.count) // 2
+count.value++;
+console.log(count.value); // 2
+console.log(obj.count); // 2
 
 // it will also update `count` ref
-obj.count++
-console.log(obj.count) // 3
-console.log(count.value) // 3
+obj.count++;
+console.log(obj.count); // 3
+console.log(count.value); // 3
 ```
+
 Note that refs are not unwrapped when accessed as array or collection elements:
 
 ```javascript
-const books = reactive([ref('Vue 3 Guide')])
+const books = reactive([ref("Vue 3 Guide")]);
 // need .value here
-console.log(books[0].value)
+console.log(books[0].value);
 
-const map = reactive(new Map([['count', ref(0)]]))
+const map = reactive(new Map([["count", ref(0)]]));
 // need .value here
-console.log(map.get('count').value)
+console.log(map.get("count").value);
 ```
 
 When assigning a ref to a reactive property, that ref will also be automatically unwrapped:
 
 ```javascript
-const count = ref(1)
-const obj = reactive({})
+const count = ref(1);
+const obj = reactive({});
 
-obj.count = count
+obj.count = count;
 
-console.log(obj.count) // 1
-console.log(obj.count === count.value) // true
+console.log(obj.count); // 1
+console.log(obj.count === count.value); // true
 ```
 
 ### edge cases to watch
@@ -107,14 +109,14 @@ console.log(obj.count === count.value) // true
 2. if you extract a nest proxy out to a variable, it is detached from its original parent. This can be made clearer with an example. The second assignment below `(state.foo = {bar: 3})` does not destroy the reactivity of foo, but state.foo will be a new proxy object while the foo variable still points the to original proxy object.
 
 ```javascript
-const state = reactive({foo: {bar: 1}});
+const state = reactive({ foo: { bar: 1 } });
 const foo = state.foo;
 
 state.foo.bar = 2;
 foo.bar === 2; // true, because foo and state.foo are the same
 
-state.foo = {bar: 3};
-foo.bar === 3; // false, foo.bar will still be 2 
+state.foo = { bar: 3 };
+foo.bar === 3; // false, foo.bar will still be 2
 ```
 
 ## computed()
@@ -126,20 +128,20 @@ Takes an object (reactive or plain) or a ref and returns a readonly proxy to the
 Any nested property accessed will be readonly as well. It also has the same ref-unwrapping behavior as reactive(), except the unwrapped values will also be made readonly.
 
 ```javascript
-const original = reactive({ count: 0 })
+const original = reactive({ count: 0 });
 
-const copy = readonly(original)
+const copy = readonly(original);
 
 watchEffect(() => {
   // works for reactivity tracking
-  console.log(copy.count)
-})
+  console.log(copy.count);
+});
 
 // mutating original will trigger watchers relying on the copy
-original.count++
+original.count++;
 
 // mutating the copy will fail and result in a warning
-copy.count++ // warning!
+copy.count++; // warning!
 ```
 
 ## shallowRef()
@@ -147,17 +149,18 @@ copy.count++ // warning!
 Shallow version of ref().
 
 ```javascript
-const state = shallowRef({ count: 1 })
+const state = shallowRef({ count: 1 });
 
 // does NOT trigger change
-state.value.count = 2
+state.value.count = 2;
 
 // does trigger change
-state.value = { count: 2 }
+state.value = { count: 2 };
 ```
 
 <Callout>
-shallowRef() is typically used for performance optimizations of large data structures, or integration with external state management systems.
+  shallowRef() is typically used for performance optimizations of large data
+  structures, or integration with external state management systems.
 </Callout>
 
 ## shallowReactive()
@@ -170,22 +173,23 @@ Unlike reactive(), there is no deep conversion: only root-level properties are r
 const state = shallowReactive({
   foo: 1,
   nested: {
-    bar: 2
-  }
-})
+    bar: 2,
+  },
+});
 
 // mutating state's own properties is reactive
-state.foo++
+state.foo++;
 
 // ...but does not convert nested objects
-isReactive(state.nested) // false
+isReactive(state.nested); // false
 
 // NOT reactive
-state.nested.bar++
+state.nested.bar++;
 ```
 
 <Callout type="warning">
-Shallow data structures should only be used for root level state in a component. Avoid nesting it inside a deep reactive objects.
+  Shallow data structures should only be used for root level state in a
+  component. Avoid nesting it inside a deep reactive objects.
 </Callout>
 
 ## shallowReadonly()
@@ -196,21 +200,21 @@ Shallow version of readonly().
 const state = shallowReadonly({
   foo: 1,
   nested: {
-    bar: 2
-  }
-})
+    bar: 2,
+  },
+});
 
 // mutating state's own properties will fail
-state.foo++
+state.foo++;
 
 // ...but works on nested objects
-isReadonly(state.nested) // false
+isReadonly(state.nested); // false
 
 // works
-state.nested.bar++
+state.nested.bar++;
 ```
 
 <Callout>
-Shallow data structures should only be used for root level state in a component.
+  Shallow data structures should only be used for root level state in a
+  component.
 </Callout>
-

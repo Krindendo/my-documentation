@@ -3,6 +3,7 @@ title: Examples
 description: Examples of common MySQL queries
 tags: [MySQL]
 layout: docs
+data: 2024-12-06
 ---
 
 ## MD5 column
@@ -184,7 +185,6 @@ To convert this to an integer value, we can add up the decimal value of each bit
 ```
 
 We can store this value, 17, in the flags column for this user.
-
 
 ### Querying the flags
 
@@ -561,31 +561,31 @@ When it comes to pagination, developers often turn to either offset limit or cur
 Before diving deeper into cursor-based pagination, it's important to note that we're not talking about database cursors. While database cursors are interesting, they're not what we're discussing here. Cursor-based pagination references a method of pagination that is different from offset limit.
 
 ```sql
-select 
-  * 
-from 
+select
+  *
+from
   people
-where 
-  id > 5 
-order by 
+where
+  id > 5
+order by
   id -- ?cursor=5
-limit 
+limit
   5
 ```
 
 ```sql
-select 
-  * 
-from 
+select
+  *
+from
   people
-where 
+where
   birthday > '1973-02-04'
   or
   (birthday = '1973-02-04' and id > 31766)
 order by
   birthday,
   id -- ?cursor=(id=31766&birthday=1973-02-04)
-limit 
+limit
   5
 ```
 

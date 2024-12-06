@@ -3,6 +3,7 @@ title: Queries
 description: Introduction to queries
 tags: [MySQL]
 layout: docs
+data: 2024-12-06
 ---
 
 ## EXPLAIN overview
@@ -90,7 +91,6 @@ We're providing with the following output, which estimates the cost of each part
 The JSON format provides a more detailed view of the same information as provided in the tree format. You can specify this format by adding format=json at the beginning of the explain statement.
 
 In the JSON format, MySQL provides information about the query's index usage, key parts, and query cost in a machine-readable, JSON format.
-
 
 #### Explain analyze format
 
@@ -188,7 +188,7 @@ By being mindful of these principles and leveraging the solutions provided, you 
 
 **The importance of only selecting what you need**
 
-Let's start with why you should only select what you need. Suppose you run a SELECT * statement on a database table. In that case, you’ll retrieve all the data in that table, including every row and column. Retrieving all this data can lead to significant performance issues, especially if you're dealing with large columns like JSON or TEXT.
+Let's start with why you should only select what you need. Suppose you run a SELECT \* statement on a database table. In that case, you’ll retrieve all the data in that table, including every row and column. Retrieving all this data can lead to significant performance issues, especially if you're dealing with large columns like JSON or TEXT.
 
 There's no need to retrieve all the data if you're not going to use it! It's essential only to pull back the columns you plan on actually using. Doing this will reduce network utilization, disk access, and memory usage.
 
@@ -196,7 +196,7 @@ There's no need to retrieve all the data if you're not going to use it! It's ess
 
 One caveat to the "select only what you need" principle is when you are partially populating an Active Record style model.
 
-Suppose your framework issues a SELECT * statement that then populates an Active Record type model. It will assign every column to a property in the model. You might want to select only a particular set of columns, but in doing so, you might miss essential columns unintentionally. If your framework doesn't protect you from accessing the properties that weren't selected, you might be dealing with a partially populated model and not be aware of it!
+Suppose your framework issues a SELECT \* statement that then populates an Active Record type model. It will assign every column to a property in the model. You might want to select only a particular set of columns, but in doing so, you might miss essential columns unintentionally. If your framework doesn't protect you from accessing the properties that weren't selected, you might be dealing with a partially populated model and not be aware of it!
 
 The good news is that most frameworks have protections against this problem. You can turn on "safety mechanisms" that prevent you from accessing attributes that haven't been pulled from the database. If your framework has this protection, you can limit your select statements and feel safe that you won't accidentally access any column that you didn't retrieve.
 
@@ -842,7 +842,6 @@ ADD INDEX birthday (birthday);
 
 This time, it is able to use the birthday index to sort the results, and the "using file sort" method is gone.
 
-
 ### Deterministic sorting
 
 In order to ensure that our rows are returned in the same order every time, our sorting must be "deterministic." In many cases, this involves sorting by a unique identifier or primary key.
@@ -958,7 +957,7 @@ MySQL allows you to count multiple things using expressions by taking advantage 
 
 Before diving into counting multiple things using expressions, let's have a quick refresher on two basic counting techniques.
 
-- Counting Rows: To count the number of rows in a table, use the COUNT(*) function. This function counts all rows, regardless of whether they contain null values.
+- Counting Rows: To count the number of rows in a table, use the COUNT(\*) function. This function counts all rows, regardless of whether they contain null values.
 - Counting Non-Null Values in Columns: To count the number of non-null values in a column, use the COUNT(column_name) function. This function counts only non-null values in the specified column.
 
 ### Using expressions to count multiple things
@@ -980,7 +979,7 @@ Running this query shows us the rental date and the corresponding day of the wee
 
 ### Using the count and if functions
 
-Now that we have identified the rental dates that fall on weekends, we can use the **COUNT()** function to count them. However, instead of using the basic **COUNT(*)** or **COUNT(column_name)** functions, we will use the **COUNT(if_statement)** function. This function allows us to count values based on a specified condition.
+Now that we have identified the rental dates that fall on weekends, we can use the **COUNT()** function to count them. However, instead of using the basic **COUNT(\*)** or **COUNT(column_name)** functions, we will use the **COUNT(if_statement)** function. This function allows us to count values based on a specified condition.
 
 In our case, we want to count the number of rentals that occurred on weekends. We can use the **IF(condition, value_if_true, value_if_false)** function to create a column that assigns a value of 1 for rental dates that fall on weekends and a value of null for those that do not.
 

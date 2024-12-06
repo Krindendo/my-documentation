@@ -3,6 +3,7 @@ title: Ref Hooks
 description: Refs let a component hold some information that isnt used for rendering and they are useful when you need to work with non-React systems.
 tags: [react]
 layout: docs
+data: 2024-12-06
 ---
 
 - `useRef` You can hold any value in it, but most often its used to hold DOM node.
@@ -26,12 +27,12 @@ Used for saving DOM node and timeout ID.
 function Main() {
   useEffect(() => {
     // You can read or write refs in effects
-    ref.current = "something"
-  })
+    ref.current = "something";
+  });
 
   function handleClick() {
     // You can read or write refs in event handlers
-    doSomething(myOtherRef.current)
+    doSomething(myOtherRef.current);
   }
 }
 ```
@@ -39,10 +40,10 @@ function Main() {
 ```tsx title="don'ts"
 function Main() {
   // Don't write a ref during rendering
-  ref.current = "something"
+  ref.current = "something";
 
   // Don't read a ref during rendering
-  return <h1>{myOtherRef.current}</h1>
+  return <h1>{myOtherRef.current}</h1>;
 }
 ```
 
@@ -50,7 +51,7 @@ function Main() {
 
 ```tsx
 function Calculator() {
-  const [sum, setSum] = useState(0)
+  const [sum, setSum] = useState(0);
   // ...
 }
 ```
@@ -78,38 +79,42 @@ If you can express something as a prop, you should not use a ref. For example, i
 ### Example: basic
 
 ```tsx title="MyInput.tsx" {8-13}
-import { forwardRef, useImperativeHandle, useRef } from "react"
+import { forwardRef, useImperativeHandle, useRef } from "react";
 
 const MyInput = forwardRef(function MyInput(props, ref) {
-  const inputRef = useRef(null)
+  const inputRef = useRef(null);
 
-  useImperativeHandle(ref, () => {
+  useImperativeHandle(
+    ref,
+    () => {
       return {
         focus() {
-          inputRef.current.focus()
+          inputRef.current.focus();
         },
         scrollIntoView() {
-          inputRef.current.scrollIntoView()
+          inputRef.current.scrollIntoView();
         },
-      }
-  }, [])
+      };
+    },
+    []
+  );
 
-  return <input {...props} ref={inputRef} />
-})
+  return <input {...props} ref={inputRef} />;
+});
 
-export default MyInput
+export default MyInput;
 ```
 
 ```tsx title="App.tsx"
-import { useRef } from "react"
+import { useRef } from "react";
 
-import MyInput from "./MyInput.js"
+import MyInput from "./MyInput.js";
 
 export default function Form() {
-  const ref = useRef(null)
+  const ref = useRef(null);
 
   function handleClick() {
-    ref.current.focus()
+    ref.current.focus();
     // This won't work because the DOM node isn't exposed:
     // ref.current.style.opacity = 0.5;
   }
@@ -121,6 +126,6 @@ export default function Form() {
         Edit
       </button>
     </form>
-  )
+  );
 }
 ```

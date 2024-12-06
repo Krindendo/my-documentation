@@ -3,6 +3,7 @@ title: Effect
 description: asd
 tags: [vue]
 layout: docs
+data: 2024-12-06
 ---
 
 ## watch()
@@ -11,7 +12,7 @@ Watches one or more reactive data sources and invokes a callback function when t
 
 watch() is lazy by default - i.e. the callback is only called when the watched source has changed.
 
-### Parameters 
+### Parameters
 
 **First argument**
 
@@ -24,7 +25,7 @@ watch() is lazy by default - i.e. the callback is only called when the watched s
 
 Callback that will be called when the source changes.
 
-The callback receives three arguments: the new value, the old value, and a function for registering a side effect cleanup callback. 
+The callback receives three arguments: the new value, the old value, and a function for registering a side effect cleanup callback.
 
 The cleanup callback will be called right before the next time the effect is re-run, and can be used to clean up invalidated side effects, e.g. a pending async request.
 
@@ -37,30 +38,28 @@ The cleanup callback will be called right before the next time the effect is re-
 
 ```ts
 interface WatchOptions extends WatchEffectOptions {
-  immediate?: boolean // default: false
-  deep?: boolean // default: false
-  flush?: 'pre' | 'post' | 'sync' // default: 'pre'
-  onTrack?: (event: DebuggerEvent) => void
-  onTrigger?: (event: DebuggerEvent) => void
+  immediate?: boolean; // default: false
+  deep?: boolean; // default: false
+  flush?: "pre" | "post" | "sync"; // default: 'pre'
+  onTrack?: (event: DebuggerEvent) => void;
+  onTrigger?: (event: DebuggerEvent) => void;
 }
 ```
-
-
 
 ### Example: Stopping the watcher
 
 ```javascript
-const stop = watch(source, callback)
+const stop = watch(source, callback);
 
 // when the watcher is no longer needed:
-stop()
+stop();
 ```
 
 ## watchEffect()
 
 Runs a function immediately while reactively tracking its dependencies and re-runs it whenever the dependencies are changed.
 
-### Parameters 
+### Parameters
 
 **First argument**
 
@@ -77,12 +76,12 @@ Object that can be used to adjust the effect's flush timing or to debug the effe
 ### Example: simple
 
 ```javascript
-const count = ref(0)
+const count = ref(0);
 
-watchEffect(() => console.log(count.value))
+watchEffect(() => console.log(count.value));
 // -> logs 0
 
-count.value++
+count.value++;
 // -> logs 1
 ```
 
@@ -90,15 +89,14 @@ count.value++
 
 ```javascript
 watchEffect(async (onCleanup) => {
-  const { response, cancel } = doAsyncWork(id.value)
+  const { response, cancel } = doAsyncWork(id.value);
   // `cancel` will be called if `id` changes
   // so that previous pending request will be cancelled
   // if not yet completed
-  onCleanup(cancel)
-  data.value = await response
-})
+  onCleanup(cancel);
+  data.value = await response;
+});
 ```
-
 
 ## watchPostEffect()
 

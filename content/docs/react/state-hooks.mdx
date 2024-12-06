@@ -3,6 +3,7 @@ title: State Hooks
 description: Hooks that remember information that is stored in components and refresh them when information is changed
 tags: [React, useState, useReducer]
 layout: docs
+data: 2024-12-06
 ---
 
 For storing information in component use one of these Hooks:
@@ -36,45 +37,45 @@ useState returns an array with exactly two values:
 - You can reset a component’s state by passing a different key to a component. [Resetting state with a key](#)
 
 ```tsx
-  const [sum, setSum] = useState(0)
-  function handleClick(value) {
-    setSum((a) => a + value)
-  }
+const [sum, setSum] = useState(0);
+function handleClick(value) {
+  setSum((a) => a + value);
+}
 ```
 
 ### Example: update value in current render
 
 ```tsx
 function handleClick() {
-  console.log(count) // 0
+  console.log(count); // 0
 
-  setCount(count + 1) // Request a re-render with 1
-  console.log(count) // Still 0!
+  setCount(count + 1); // Request a re-render with 1
+  console.log(count); // Still 0!
 
   setTimeout(() => {
-    console.log(count) // Also 0!
-  }, 5000)
+    console.log(count); // Also 0!
+  }, 5000);
 }
 ```
 
 ### Example: Storing information from previous renders
 
 ```tsx
-import { useState } from "react"
+import { useState } from "react";
 
 export default function CountLabel({ count }) {
-  const [prevCount, setPrevCount] = useState(count)
-  const [trend, setTrend] = useState(null)
+  const [prevCount, setPrevCount] = useState(count);
+  const [trend, setTrend] = useState(null);
   if (prevCount !== count) {
-    setPrevCount(count)
-    setTrend(count > prevCount ? "increasing" : "decreasing")
+    setPrevCount(count);
+    setTrend(count > prevCount ? "increasing" : "decreasing");
   }
   return (
     <>
       <h1>{count}</h1>
       {trend && <p>The count is {trend}</p>}
     </>
-  )
+  );
 }
 ```
 
@@ -82,14 +83,14 @@ export default function CountLabel({ count }) {
 
 ```tsx
 // Don't mutate an object in state like this:
-form.firstName = "Taylor"
+form.firstName = "Taylor";
 
 // Replace state with a new object
 
 setForm({
   ...form,
   firstName: "Taylor",
-})
+});
 ```
 
 ### Example: Avoiding recreating the initial state
@@ -100,7 +101,7 @@ you’re still calling this function on every render. This can be wasteful if it
 ```tsx
 function TodoList() {
   // React will call this function on every render.
-  const [todos, setTodos] = useState(createInitialTodos())
+  const [todos, setTodos] = useState(createInitialTodos());
 
   // React will only call it during initialization.
   const [blogs, setBlogs] = useState(createInitialBlogs);
@@ -156,7 +157,7 @@ function handleClick() {
 
 This hook is similar to useState, but it is used when you have complext state logic. State is imutable.
 
-### Parameters 
+### Parameters
 
 - reducer: The reducer function that specifies how the state gets updated. Should take the state and action as arguments, and should return the next state. State and action can be of any types.
 
@@ -176,16 +177,18 @@ This hook is similar to useState, but it is used when you have complext state lo
 function Counter() {
   const [counter, setCounter] = useReducer<Reducer<number, number>>(
     (prev, next) => {
-      if (next <= 5) return next
-      return prev
-    }, 0)
+      if (next <= 5) return next;
+      return prev;
+    },
+    0
+  );
 
   return (
     <div>
       <p>Counter: {counter}</p>
       <button onClick={() => setCounter(counter + 1)}>Add to counter</button>
     </div>
-  )
+  );
 }
 ```
 
@@ -195,36 +198,36 @@ function Counter() {
 const changeText = (newText: string) => ({
   type: "CHANGE_TEXT" as const,
   payload: { newText },
-})
+});
 
 const addTodo = () => ({
   type: "ADD_TODO" as const,
-})
+});
 
 const changeTodo = (id: number) => ({
   type: "UPDATE_TODO" as const,
   payload: { id },
-})
+});
 
 const deleteTodo = (id: number) => ({
   type: "DELETE_TODO" as const,
   payload: { id },
-})
+});
 
 type Action =
   | ReturnType<typeof changeText>
   | ReturnType<typeof addTodo>
   | ReturnType<typeof changeTodo>
-  | ReturnType<typeof deleteTodo>
+  | ReturnType<typeof deleteTodo>;
 type State = {
-  draft: string
-  todos: { id: number; text: string }[]
-}
+  draft: string;
+  todos: { id: number; text: string }[];
+};
 
 const initialState: State = {
   draft: "",
   todos: [],
-}
+};
 
 function reducer(state: State, action: Action) {
   switch (action.type) {
@@ -232,34 +235,34 @@ function reducer(state: State, action: Action) {
       return {
         ...state,
         draft: action.payload.newText,
-      }
+      };
     }
     case "ADD_TODO": {
       return {
         todos: [...state.todos, { id: state.todos.length, text: state.draft }],
         draft: "",
-      }
+      };
     }
     case "UPDATE_TODO": {
       return {
         todos: state.todos.map((t) => {
           if (t.id === action.payload.id) {
-            return { ...t, text: state.draft }
+            return { ...t, text: state.draft };
           } else {
-            return t
+            return t;
           }
         }),
         draft: "",
-      }
+      };
     }
     case "DELETE_TODO": {
       return {
         todos: state.todos.filter((t) => t.id !== action.payload.id),
         draft: "",
-      }
+      };
     }
     default: {
-      throw Error("Unknown action: " + action["type"])
+      throw Error("Unknown action: " + action["type"]);
     }
   }
 }
@@ -268,24 +271,24 @@ export default function ToDo() {
   const [state, dispatch] = React.useReducer<React.Reducer<State, Action>>(
     reducer,
     initialState
-  )
+  );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
       type: "CHANGE_TEXT",
       payload: { newText: e.target.value },
-    })
-  }
+    });
+  };
   const handleAddTodo = () => {
-    dispatch({ type: "ADD_TODO" })
-  }
+    dispatch({ type: "ADD_TODO" });
+  };
   const handleUpdateTodo = (id: number) => {
-    dispatch({ type: "UPDATE_TODO", payload: { id } })
-  }
+    dispatch({ type: "UPDATE_TODO", payload: { id } });
+  };
 
   const handleDeleteTodo = (id: number) => {
-    dispatch({ type: "DELETE_TODO", payload: { id } })
-  }
+    dispatch({ type: "DELETE_TODO", payload: { id } });
+  };
 
   return (
     <div>
@@ -302,22 +305,24 @@ export default function ToDo() {
           <p>{todo.text}</p>
           <button
             className="bg-yellow-500"
-            onClick={() => handleUpdateTodo(todo.id)}>
+            onClick={() => handleUpdateTodo(todo.id)}
+          >
             Update todo
           </button>
           <button
             className="bg-red-500"
-            onClick={() => handleDeleteTodo(todo.id)}>
+            onClick={() => handleDeleteTodo(todo.id)}
+          >
             Delete todo
           </button>
         </div>
       ))}
     </div>
-  )
+  );
 }
 ```
 
-### Example: Avoiding recreating the initial state 
+### Example: Avoiding recreating the initial state
 
 ```tsx {13}
 function createInitialState(username) {
@@ -335,7 +340,6 @@ function BlogList({ username }) {
   const [state, dispatch] = useReducer(reducer, username, createInitialState);
   // ...
 }
-
 ```
 
 ### Example: Show calculated value in same function
@@ -344,10 +348,10 @@ You need to do two calculations.
 
 ```tsx
 function handleClick() {
-  console.log(state.age);  // 42
+  console.log(state.age); // 42
 
-  dispatch({ type: 'incremented_age' }); // Request a re-render with 43
-  console.log(state.age);  // Still 42!
+  dispatch({ type: "incremented_age" }); // Request a re-render with 43
+  console.log(state.age); // Still 42!
 
   setTimeout(() => {
     console.log(state.age); // Also 42!
@@ -356,11 +360,11 @@ function handleClick() {
 ```
 
 ```tsx
-const action = { type: 'incremented_age' };
+const action = { type: "incremented_age" };
 dispatch(action);
 
 const nextState = reducer(state, action);
-console.log(state);     // { age: 42 }
+console.log(state); // { age: 42 }
 console.log(nextState); // { age: 43 }
 ```
 
@@ -370,12 +374,11 @@ useState and useReducer differ from each other in the logic used to save state. 
 
 It is recommended that you use a reducer if you often encounter bugs due to incorrect state updates in some components and want to introduce more structure to their code.
 
-- **Code size:** useReducer requires you to write both a reducer function and dispatch actions, but with useState you will not have to write that. 
-However, useReducer can reduce the amount of code if numerous event handlers change state similarly.
+- **Code size:** useReducer requires you to write both a reducer function and dispatch actions, but with useState you will not have to write that.
+  However, useReducer can reduce the amount of code if numerous event handlers change state similarly.
 
 - **Readability:** useState is very easy to read when the state updates are simple. When they get more complex, they can bloat your component’s code and make it difficult to scan. In this case, useReducer lets you cleanly separate the how of update logic from the what happened of event handlers.
 
 - **Debugging:** When you have a bug with useState, it can be difficult to tell where the state was set incorrectly, and why. With useReducer, you can add a console log into your reducer to see every state update, and why it happened (due to which action).
 
 - **Testing:** A reducer is a pure function that doesn’t depend on your component. This means that you can export and test it separately in isolation.
-

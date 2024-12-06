@@ -3,6 +3,7 @@ title: React
 description: open-source front-end JavaScript library for building user interface
 tags: [react]
 layout: docs
+data: 2024-12-06
 ---
 
 React is JavaScript library that lets you build user interface out of individual pieces.
@@ -72,6 +73,7 @@ function BookStore{
 }
 
 ```
+
 ---
 
 **inline conditional expressions**
@@ -90,7 +92,6 @@ function BookStore{
 
 ---
 
-
 ## Typescript
 
 ### ReactNode vs Element type
@@ -98,7 +99,6 @@ function BookStore{
 React.ReactNode -> can accept: -> `<div />`, "Hello!", 123, undefined
 
 JSX.Element -> can accept only: -> `<div />`
-
 
 ### It will call function when variable is dispose.
 
@@ -143,7 +143,7 @@ const loadingStatus = useStatuses(["loading", "idle"]);
 ```ts
 declare function useStatuses2<const T>(statuses: T[]): T;
 
-const loadingStatus2 = useStatuses2(["loading","idle"]);
+const loadingStatus2 = useStatuses2(["loading", "idle"]);
 // const loadingStatus2: "loading" | "idle"
 ```
 
@@ -156,7 +156,7 @@ type Role = (typeof roles)[number];
 // "user" | "admin" | "superadmin"
 ```
 
-### 
+###
 
 ```tsx
 const Component = () => {

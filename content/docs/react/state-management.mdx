@@ -3,6 +3,7 @@ title: State Management for React
 description: Redux, Zustand
 tags: [React, useState, useReducer, Redux, Zustand]
 layout: docs
+data: 2024-12-06
 ---
 
 When to use Global state manager?
@@ -13,7 +14,6 @@ When to use Global state manager?
 
 - It provides better control over state updates, preventing unnecessary re-renders and improving performance.
 
-
 ## Redux
 
 <img
@@ -23,9 +23,10 @@ When to use Global state manager?
 />
 
 <Callout>
-Redux toolkit will allow you to easily set redux up and connect it to your react application. 
+Redux toolkit will allow you to easily set redux up and connect it to your react application.
 
 Because we are using createSlice from Redux toolkit this will do things behind the scenes without us having to set up anthing.
+
 </Callout>
 
 3 main concepts of Redux: **Store**, **Actions** and **Reducers**
@@ -66,9 +67,7 @@ Reducer will never directly make an update to the Redux store. It will immutable
 Reducer will take the state and it will make a copy of the state, then it will make changes to that copy of the state and after that will completely replace the state as a whole
 with the copy that has the changes applied.
 
-<Callout>
-Redux will not work if you mutate the state.
-</Callout>
+<Callout>Redux will not work if you mutate the state.</Callout>
 
 Example:
 

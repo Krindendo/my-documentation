@@ -3,16 +3,20 @@ title: Advanced guides
 description: Description test
 tags: [react]
 layout: docs
+data: 2024-12-06
 ---
 
 ## Compound Pattern
 
-
-<a href="/docs/react/context-hooks#example-complext-component">Example of complext component</a>
+<a href="/docs/react/context-hooks#example-complext-component">
+  Example of complext component
+</a>
 
 ## Higher-Order Components (HOC)
 
-<Callout type="danger">Higher-order components are not commonly used in modern React code.</Callout>
+<Callout type="danger">
+  Higher-order components are not commonly used in modern React code.
+</Callout>
 
 One way of being able to reuse the same logic in multiple components, is by using the higher order component pattern.
 
@@ -33,12 +37,12 @@ const withAuth = <P extends Record<string, unknown>>(
     const { status } = useSession({
       required: true,
       onUnauthenticated() {
-        router.push('/welcome/login');
+        router.push("/welcome/login");
       },
     });
 
-    if (status === 'loading') {
-      return 'Loading ...';
+    if (status === "loading") {
+      return "Loading ...";
     }
 
     return <Component {...props} />;
@@ -52,19 +56,14 @@ export default withAuth;
 
 ```tsx title="dashboard.tsx"
 function DashboardPage() {
-    const user = useUser();
-    return (
-        <div>
-            Hello Admin
-        </div>
-    );
+  const user = useUser();
+  return <div>Hello Admin</div>;
 }
 
 export default withAuth(Control);
-
 ```
 
-## Custom hooks 
+## Custom hooks
 
 ```jsx
 function useKeyPress(targetKey) {

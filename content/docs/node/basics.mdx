@@ -3,6 +3,7 @@ title: Basics
 description: Basic stuff
 tags: [node.js]
 layout: docs
+data: 2024-12-06
 ---
 
 ### Difference between requred and import
@@ -15,7 +16,7 @@ layout: docs
 
 ### Difference between restfull and graphql
 
-RESTful APIs: 
+RESTful APIs:
 
 - Architectural Style: REST (REpresentational State Transfer) is a set of guidelines for designing web services. It leverages HTTP verbs (GET, POST, PUT, DELETE) to interact with resources on a server.
 
@@ -40,4 +41,4 @@ CORS stands for Cross-Origin Resource Sharing. It's a security mechanism built i
 3. CORS Configuration: The API server is configured with CORS rules. These rules specify which origins (domains) are allowed to access its data.
 4. Access Check: The API server checks the "Origin" header against its CORS rules.
 5. Access Granted: If the API server finds url from SPA in its allowed list, it grants access to the requested data. The server responds with the data and includes CORS headers in the response, like "Access-Control-Allow-Origin: url". This tells the browser that the data can be safely used by the SPA.
-5. Access Denied: If url from SPA is not authorized, the API server rejects the request, and the SPA won't receive the data.
+6. Access Denied: If url from SPA is not authorized, the API server rejects the request, and the SPA won't receive the data.

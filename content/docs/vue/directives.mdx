@@ -3,6 +3,7 @@ title: Directives
 description: asd
 tags: [vue]
 layout: docs
+data: 2024-12-06
 ---
 
 ## v-text
@@ -49,7 +50,7 @@ Scoped styles will not apply to content inside v-html, because that HTML is not 
 
 Limited to: input, select, textarea and components
 
-Modifiers: 
+Modifiers:
 
 - `.lazy` - listen to `change` events instead of `input`
 - `.number` - cast valid input string to numbers
@@ -58,10 +59,7 @@ Modifiers:
 ```vue
 <input v-model="searchText" />
 // same as
-<input
-  :value="searchText"
-  @input="searchText = $event.target.value"
-/>
+<input :value="searchText" @input="searchText = $event.target.value" />
 ```
 
 When used on a component, v-model instead expands to this:
@@ -69,31 +67,32 @@ When used on a component, v-model instead expands to this:
 ```vue
 <CustomInput
   :model-value="searchText"
-  @update:model-value="newValue => searchText = newValue"
+  @update:model-value="(newValue) => (searchText = newValue)"
 />
 ```
 
 ```vue title="CustomInput.vue"
 <script setup>
-import { computed } from 'vue'
+import { computed } from "vue";
 
-const props = defineProps(['modelValue'])
-const emit = defineEmits(['update:modelValue'])
+const props = defineProps(["modelValue"]);
+const emit = defineEmits(["update:modelValue"]);
 
 const value = computed({
   get() {
-    return props.modelValue
+    return props.modelValue;
   },
   set(value) {
-    emit('update:modelValue', value)
-  }
-})
+    emit("update:modelValue", value);
+  },
+});
 </script>
 
 <template>
   <input v-model="value" />
 </template>
 ```
+
 Now v-model should work perfectly with this component:
 
 ```vue
@@ -110,8 +109,8 @@ By default, v-model on a component uses modelValue as the prop and update:modelV
 
 ```vue title="MyComponent.vue"
 <script setup>
-defineProps(['title'])
-defineEmits(['update:title'])
+defineProps(["title"]);
+defineEmits(["update:title"]);
 </script>
 
 <template>
@@ -135,19 +134,19 @@ Make custom modifiers
 <script setup>
 const props = defineProps({
   modelValue: String,
-  modelModifiers: { default: () => ({}) }
-})
+  modelModifiers: { default: () => ({}) },
+});
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(["update:modelValue"]);
 
-console.log(props.modelModifiers) // { capitalize: true }
+console.log(props.modelModifiers); // { capitalize: true }
 
 function emitValue(e) {
-  let value = e.target.value
+  let value = e.target.value;
   if (props.modelModifiers.capitalize) {
-    value = value.charAt(0).toUpperCase() + value.slice(1)
+    value = value.charAt(0).toUpperCase() + value.slice(1);
   }
-  emit('update:modelValue', value)
+  emit("update:modelValue", value);
 }
 </script>
 
@@ -169,10 +168,10 @@ For `v-model` bindings with both argument and modifiers, the generated prop name
 ```
 
 ```javascript
-const props = defineProps(['title', 'titleModifiers'])
-defineEmits(['update:title'])
+const props = defineProps(["title", "titleModifiers"]);
+defineEmits(["update:title"]);
 
-console.log(props.titleModifiers) // { capitalize: true }
+console.log(props.titleModifiers); // { capitalize: true }
 ```
 
 ## v-slot
@@ -201,6 +200,6 @@ On subsequent re-renders, the element/component and all its children will be tre
 </ul>
 ```
 
-## v-memo 
+## v-memo
 
 ## v-cloak

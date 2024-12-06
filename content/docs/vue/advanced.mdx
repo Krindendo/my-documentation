@@ -3,6 +3,7 @@ title: Advanced
 description: asd
 tags: [vue, triggerRef, customRef, markRaw, effectScope, getCurrentScope]
 layout: docs
+data: 2024-12-06
 ---
 
 - `triggerRef`
@@ -17,19 +18,19 @@ Force trigger effects that depends on a shallow ref. This is typically used afte
 
 ```javascript
 const shallow = shallowRef({
-  greet: 'Hello, world'
-})
+  greet: "Hello, world",
+});
 
 // Logs "Hello, world" once for the first run-through
 watchEffect(() => {
-  console.log(shallow.value.greet)
-})
+  console.log(shallow.value.greet);
+});
 
 // This won't trigger the effect because the ref is shallow
-shallow.value.greet = 'Hello, universe'
+shallow.value.greet = "Hello, universe";
 
 // Logs "Hello, universe"
-triggerRef(shallow)
+triggerRef(shallow);
 ```
 
 ## customRef()
@@ -43,32 +44,32 @@ In general, track() should be called inside get(), and trigger() should be calle
 ### Example: debounced ref
 
 ```javascript
-import { customRef } from 'vue'
+import { customRef } from "vue";
 
 export function useDebouncedRef(value, delay = 200) {
-  let timeout
+  let timeout;
   return customRef((track, trigger) => {
     return {
       get() {
-        track()
-        return value
+        track();
+        return value;
       },
       set(newValue) {
-        clearTimeout(timeout)
+        clearTimeout(timeout);
         timeout = setTimeout(() => {
-          value = newValue
-          trigger()
-        }, delay)
-      }
-    }
-  })
+          value = newValue;
+          trigger();
+        }, delay);
+      },
+    };
+  });
 }
 ```
 
 ```vue
 <script setup>
-import { useDebouncedRef } from './debouncedRef'
-const text = useDebouncedRef('hello')
+import { useDebouncedRef } from "./debouncedRef";
+const text = useDebouncedRef("hello");
 </script>
 
 <template>
@@ -81,12 +82,12 @@ const text = useDebouncedRef('hello')
 Marks an object so that it will never be converted to a proxy. Returns the object itself.
 
 ```javascript
-const foo = markRaw({})
-console.log(isReactive(reactive(foo))) // false
+const foo = markRaw({});
+console.log(isReactive(reactive(foo))); // false
 
 // also works when nested inside other reactive objects
-const bar = reactive({ foo })
-console.log(isReactive(bar.foo)) // false
+const bar = reactive({ foo });
+console.log(isReactive(bar.foo)); // false
 ```
 
 ## effectScope()
@@ -94,25 +95,24 @@ console.log(isReactive(bar.foo)) // false
 Creates an effect scope object which can capture the reactive effects created within it so that these effects can be disposed together.
 
 ```javascript
-const scope = effectScope()
+const scope = effectScope();
 
 scope.run(() => {
-  const doubled = computed(() => counter.value * 2)
+  const doubled = computed(() => counter.value * 2);
 
-  watch(doubled, () => console.log(doubled.value))
+  watch(doubled, () => console.log(doubled.value));
 
-  watchEffect(() => console.log('Count: ', doubled.value))
-})
+  watchEffect(() => console.log("Count: ", doubled.value));
+});
 
 // to dispose all effects in the scope
-scope.stop()
+scope.stop();
 ```
 
 ## getCurrentScope()
 
-Returns the current active  [effect scope](#effectscope) if there is one.
+Returns the current active [effect scope](#effectscope) if there is one.
 
 ## onScopeDispose()
 
 Registers a dispose callback on the current active [effect scope](#effectscope). The callback will be invoked when the associated effect scope is stopped.
-

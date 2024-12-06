@@ -3,40 +3,41 @@ title: Least recently used
 description: LRU
 tags: []
 layout: docs
+data: 2024-12-06
 ---
 
 An LRU stands for least recently used and it is a caching mechanism that says that we will evict the least recently used item.
 
-
 <h3 className="text-lg font-semibold">- How it works</h3>
-
 
 It is some sort of node container based system in which contains some sort of value. Value is what the user gave us to cache. It is like doubly linked list but when user what node V2 then we will remove node that position and we will put that node on beginning of the list. Like on the image below.
 
-LRU doent use only doubly linked list it is also use it with combination with HashMaps. So any value have keys. And in our case our value will be contained class of node. 
+LRU doent use only doubly linked list it is also use it with combination with HashMaps. So any value have keys. And in our case our value will be contained class of node.
 
 So we will have HashMap that has items inside of it that also have pointers to other items.
 
-<img src="/static/images/algorithms/lru.png" alt="Least recently used" className="my-6" />
-
+<img
+  src="/static/images/algorithms/lru.png"
+  alt="Least recently used"
+  className="my-6"
+/>
 
 <h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
 
-For getting value it's  **7 O(1)**
-
+For getting value it's **7 O(1)**
 
 ```ts
 type LRUNode<T> = {
-  value: T,
-  next?: LRUNode<T>,
-  prev?: LRUNode<T>,
-}
+  value: T;
+  next?: LRUNode<T>;
+  prev?: LRUNode<T>;
+};
 
 function createNode<V>(value: V): Node<V> {
-  return {value}
+  return { value };
 }
 
-export default class LRU<K,V> {
+export default class LRU<K, V> {
   private length: number;
   private head?: LRUNode<V>;
   private tail?: LRUNode<V>;
@@ -44,21 +45,20 @@ export default class LRU<K,V> {
   private lookup: Map<K, LRUNode<V>>;
   private reverseLookup: Map<K, LRUNode<V>>;
 
-  constructor(private capacity: number = 10){
+  constructor(private capacity: number = 10) {
     this.length = 0;
     this.head = this.tail = undefined;
-    this.lookup = new Map<K,LRUNode<V>>();
+    this.lookup = new Map<K, LRUNode<V>>();
     this.reverseLookup = new Map<LRUNode<V>, K>();
   }
   update(key: K, value: V): void {
-
     // does it exists?
     // if it doesnt we need to insert
     //  - check capacity and evict if over
     // if it does, we need to update to the front of the list
 
     let node = this.lookup.get(key);
-    if(!node){
+    if (!node) {
       node = createNode(value);
       this.length++;
       this.prepend(node);
@@ -66,7 +66,7 @@ export default class LRU<K,V> {
 
       this.lookup.set(key, node);
       this.reverseLookup.set(node, key);
-    }else{
+    } else {
       this.detach(node);
       this.prepend(node);
       node.value = value;
@@ -74,10 +74,9 @@ export default class LRU<K,V> {
   }
 
   get(key: K): V | undefined {
-
     // check the cache for existence
     const node = this.lookup.get(key);
-    if(!node){
+    if (!node) {
       return undefined;
     }
 
@@ -89,20 +88,20 @@ export default class LRU<K,V> {
     return node.value;
   }
 
-  private detach(node: LRUNode<V>){
-    if(node.prev){
+  private detach(node: LRUNode<V>) {
+    if (node.prev) {
       node.prev.next = node.next;
     }
 
-    if(node.next){
+    if (node.next) {
       node.next.prev = node.prev;
     }
 
-    if(this.head === node){
+    if (this.head === node) {
       this.head = this.head.next;
     }
 
-    if(this.tail === node) {
+    if (this.tail === node) {
       this.tail = this.tail.prev;
     }
 
@@ -110,8 +109,8 @@ export default class LRU<K,V> {
     node.prev = undefined;
   }
 
-  private prepend(node: LRUNode<V>){
-    if(!this.head){
+  private prepend(node: LRUNode<V>) {
+    if (!this.head) {
       this.head = this.tail = node;
       return;
     }
@@ -120,11 +119,10 @@ export default class LRU<K,V> {
     this.head.prev = node;
 
     this.head = node;
-
   }
 
   private trimCache(): void {
-    if(this.length > this.capacity){
+    if (this.length > this.capacity) {
       return;
     }
 
@@ -137,5 +135,4 @@ export default class LRU<K,V> {
     this.length--;
   }
 }
-
 ```
