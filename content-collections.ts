@@ -22,7 +22,7 @@ const docs = defineCollection({
     title: z.string().min(1),
     description: z.string().min(1),
     date: z.string().min(1),
-    published: z.boolean(),
+    published: z.boolean().default(true),
   }),
   transform: async (page, context) => {
     const body = await context.cache(page.content, async () =>
