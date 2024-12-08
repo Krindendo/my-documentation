@@ -3,7 +3,6 @@ title: HTTP Server Connections
 description: DNS | TCP | TLS/SSL
 publishedAt: 2024-10-03
 tags: [HTTP, connection, handshake]
-layout: post
 ---
 
 Before making an HTTP request for a resource browsers first need to create a connection to the web server that they want to load the resource from.
@@ -54,11 +53,19 @@ Once a TCP connection has been established browsers can in theory start requesti
 
 That means the router in your home that your phone or laptop are connected to can read your message. Your internet service provider can see the content of the message. An internet backbone provider who owns an undersea cable on the way to the website server can see your message. All of these network nodes can also intercept messages and pretend to be the website you were trying to load.
 
-<img src="/static/images/guides/HTTP-Server-Connections-unencrypted-TCP-connection.png" alt="HTTP Server Connections unencrypted TCP connection" className="my-6" />
+<img
+  src="/static/images/guides/HTTP-Server-Connections-unencrypted-TCP-connection.png"
+  alt="HTTP Server Connections unencrypted TCP connection"
+  className="my-6"
+/>
 
 The TLS protocol (Transport Layer Security) is used to secure the TCP connection. The client encrypts the message it wants to send to the server, so that network nodes on the way can only see metadata like the number of packages or the destination IP address. So they’ll know what website you’re loading but not what page or what data you’re sending to the website.
 
-<img src="/static/images/guides/HTTP-Server-Connections-encrypted-TCP-connection.png" alt="HTTP Server Connections encrypted TCP connection" className="my-6" />
+<img
+  src="/static/images/guides/HTTP-Server-Connections-encrypted-TCP-connection.png"
+  alt="HTTP Server Connections encrypted TCP connection"
+  className="my-6"
+/>
 
 How is it possible for the client and the server to create a secure connection from an insecure connection? Instead of using a shared password to encrypt and decrypt messages, computers on the internet use public-key cryptography where there are two separate “passwords” (referred to as keys).
 
@@ -114,10 +121,18 @@ In this request waterfall you can see that a single round trip is used to connec
 
 The Network tab in Chrome’s developer tools shows a request waterfall including connection round trips where applicable.
 
-<img src="/static/images/guides/HTTP-Server-Connections-Chrome-DevTools.png" alt="HTTP Server Connections Chrome DevTools" className="my-6" />
+<img
+  src="/static/images/guides/HTTP-Server-Connections-Chrome-DevTools.png"
+  alt="HTTP Server Connections Chrome DevTools"
+  className="my-6"
+/>
 
 However, if you’ve previously loaded the page the connection steps may not show up in the request breakdown.
 
-<img src="/static/images/guides/HTTP-Server-Connections-Chrome-DevTools-cahed.png" alt="HTTP Server Connections Chrome DevTools cahed" className="my-6" />
+<img
+  src="/static/images/guides/HTTP-Server-Connections-Chrome-DevTools-cahed.png"
+  alt="HTTP Server Connections Chrome DevTools cahed"
+  className="my-6"
+/>
 
 That’s because Chrome reuses existing connections and the DNS response is also cached by the operating system. If you need this information you can clear those caches before reloading the page.

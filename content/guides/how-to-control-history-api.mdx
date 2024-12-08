@@ -3,7 +3,6 @@ title: How to control history API
 description: Make the dialog behave like a page
 publishedAt: 2023-08-29
 tags: []
-layout: post
 ---
 
 ### history
@@ -15,11 +14,11 @@ The state object is a JavaScript object which is associated with the new history
 url parametar is used when user attempt to load the URL later, for instance, after the user restarts the browser. The new URL does not need to be absolute; if it's relative, it's resolved relative to the current URL. The new URL must be of the same origin as the current URL; otherwise, pushState() will throw an exception.
 
 ```ts
-const state = { name: "Example" }
-const unused = "pushState example" // it doesn't matter
-const url = "page3.html" // this is optional
+const state = { name: "Example" };
+const unused = "pushState example"; // it doesn't matter
+const url = "page3.html"; // this is optional
 
-history.pushState(state, unused, url)
+history.pushState(state, unused, url);
 ```
 
 ### popstate

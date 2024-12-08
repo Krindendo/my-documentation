@@ -3,7 +3,6 @@ title: Design Patterns
 description: Solutions to common problems in software design
 publishedAt: 2024-09-27
 tags: [Design Patterns]
-layout: post
 ---
 
 https://www.youtube.com/watch?v=tv-_1er1mWI
@@ -59,7 +58,7 @@ All patterns can be categorized by their purpose:
 
 ### Factory Method
 
-Factory Method is a creational design pattern that provides an interface for creating objects in a superclass, but allows subclasses to alter the type of objects that will be created. 
+Factory Method is a creational design pattern that provides an interface for creating objects in a superclass, but allows subclasses to alter the type of objects that will be created.
 
 Factory methods can be recognized by creation methods that construct objects from concrete classes. While concrete classes are used during the object creation, the return type of the factory methods is usually declared as either an abstract class or an interface.
 
@@ -70,25 +69,25 @@ Factory methods can be recognized by creation methods that construct objects fro
  * implementation of this method.
  */
 abstract class Creator {
-    /**
-     * Note that the Creator may also provide some default implementation of the
-     * factory method.
-     */
-    public abstract factoryMethod(): Product;
+  /**
+   * Note that the Creator may also provide some default implementation of the
+   * factory method.
+   */
+  public abstract factoryMethod(): Product;
 
-    /**
-     * Also note that, despite its name, the Creator's primary responsibility is
-     * not creating products. Usually, it contains some core business logic that
-     * relies on Product objects, returned by the factory method. Subclasses can
-     * indirectly change that business logic by overriding the factory method
-     * and returning a different type of product from it.
-     */
-    public someOperation(): string {
-        // Call the factory method to create a Product object.
-        const product = this.factoryMethod();
-        // Now, use the product.
-        return `Creator: The same creator's code has just worked with ${product.operation()}`;
-    }
+  /**
+   * Also note that, despite its name, the Creator's primary responsibility is
+   * not creating products. Usually, it contains some core business logic that
+   * relies on Product objects, returned by the factory method. Subclasses can
+   * indirectly change that business logic by overriding the factory method
+   * and returning a different type of product from it.
+   */
+  public someOperation(): string {
+    // Call the factory method to create a Product object.
+    const product = this.factoryMethod();
+    // Now, use the product.
+    return `Creator: The same creator's code has just worked with ${product.operation()}`;
+  }
 }
 
 /**
@@ -96,21 +95,21 @@ abstract class Creator {
  * resulting product's type.
  */
 class ConcreteCreator1 extends Creator {
-    /**
-     * Note that the signature of the method still uses the abstract product
-     * type, even though the concrete product is actually returned from the
-     * method. This way the Creator can stay independent of concrete product
-     * classes.
-     */
-    public factoryMethod(): Product {
-        return new ConcreteProduct1();
-    }
+  /**
+   * Note that the signature of the method still uses the abstract product
+   * type, even though the concrete product is actually returned from the
+   * method. This way the Creator can stay independent of concrete product
+   * classes.
+   */
+  public factoryMethod(): Product {
+    return new ConcreteProduct1();
+  }
 }
 
 class ConcreteCreator2 extends Creator {
-    public factoryMethod(): Product {
-        return new ConcreteProduct2();
-    }
+  public factoryMethod(): Product {
+    return new ConcreteProduct2();
+  }
 }
 
 /**
@@ -118,22 +117,22 @@ class ConcreteCreator2 extends Creator {
  * implement.
  */
 interface Product {
-    operation(): string;
+  operation(): string;
 }
 
 /**
  * Concrete Products provide various implementations of the Product interface.
  */
 class ConcreteProduct1 implements Product {
-    public operation(): string {
-        return '{Result of the ConcreteProduct1}';
-    }
+  public operation(): string {
+    return "{Result of the ConcreteProduct1}";
+  }
 }
 
 class ConcreteProduct2 implements Product {
-    public operation(): string {
-        return '{Result of the ConcreteProduct2}';
-    }
+  public operation(): string {
+    return "{Result of the ConcreteProduct2}";
+  }
 }
 
 /**
@@ -142,21 +141,23 @@ class ConcreteProduct2 implements Product {
  * the base interface, you can pass it any creator's subclass.
  */
 function clientCode(creator: Creator) {
-    // ...
-    console.log('Client: I\'m not aware of the creator\'s class, but it still works.');
-    console.log(creator.someOperation());
-    // ...
+  // ...
+  console.log(
+    "Client: I'm not aware of the creator's class, but it still works."
+  );
+  console.log(creator.someOperation());
+  // ...
 }
 
 /**
  * The Application picks a creator's type depending on the configuration or
  * environment.
  */
-console.log('App: Launched with the ConcreteCreator1.');
+console.log("App: Launched with the ConcreteCreator1.");
 clientCode(new ConcreteCreator1());
-console.log('');
+console.log("");
 
-console.log('App: Launched with the ConcreteCreator2.');
+console.log("App: Launched with the ConcreteCreator2.");
 clientCode(new ConcreteCreator2());
 ```
 
@@ -174,9 +175,9 @@ clientCode(new ConcreteCreator2());
  * another.
  */
 interface AbstractFactory {
-    createProductA(): AbstractProductA;
+  createProductA(): AbstractProductA;
 
-    createProductB(): AbstractProductB;
+  createProductB(): AbstractProductB;
 }
 
 /**
@@ -186,26 +187,26 @@ interface AbstractFactory {
  * while inside the method a concrete product is instantiated.
  */
 class ConcreteFactory1 implements AbstractFactory {
-    public createProductA(): AbstractProductA {
-        return new ConcreteProductA1();
-    }
+  public createProductA(): AbstractProductA {
+    return new ConcreteProductA1();
+  }
 
-    public createProductB(): AbstractProductB {
-        return new ConcreteProductB1();
-    }
+  public createProductB(): AbstractProductB {
+    return new ConcreteProductB1();
+  }
 }
 
 /**
  * Each Concrete Factory has a corresponding product variant.
  */
 class ConcreteFactory2 implements AbstractFactory {
-    public createProductA(): AbstractProductA {
-        return new ConcreteProductA2();
-    }
+  public createProductA(): AbstractProductA {
+    return new ConcreteProductA2();
+  }
 
-    public createProductB(): AbstractProductB {
-        return new ConcreteProductB2();
-    }
+  public createProductB(): AbstractProductB {
+    return new ConcreteProductB2();
+  }
 }
 
 /**
@@ -213,22 +214,22 @@ class ConcreteFactory2 implements AbstractFactory {
  * variants of the product must implement this interface.
  */
 interface AbstractProductA {
-    usefulFunctionA(): string;
+  usefulFunctionA(): string;
 }
 
 /**
  * These Concrete Products are created by corresponding Concrete Factories.
  */
 class ConcreteProductA1 implements AbstractProductA {
-    public usefulFunctionA(): string {
-        return 'The result of the product A1.';
-    }
+  public usefulFunctionA(): string {
+    return "The result of the product A1.";
+  }
 }
 
 class ConcreteProductA2 implements AbstractProductA {
-    public usefulFunctionA(): string {
-        return 'The result of the product A2.';
-    }
+  public usefulFunctionA(): string {
+    return "The result of the product A2.";
+  }
 }
 
 /**
@@ -237,55 +238,53 @@ class ConcreteProductA2 implements AbstractProductA {
  * the same concrete variant.
  */
 interface AbstractProductB {
-    /**
-     * Product B is able to do its own thing...
-     */
-    usefulFunctionB(): string;
+  /**
+   * Product B is able to do its own thing...
+   */
+  usefulFunctionB(): string;
 
-    /**
-     * ...but it also can collaborate with the ProductA.
-     *
-     * The Abstract Factory makes sure that all products it creates are of the
-     * same variant and thus, compatible.
-     */
-    anotherUsefulFunctionB(collaborator: AbstractProductA): string;
+  /**
+   * ...but it also can collaborate with the ProductA.
+   *
+   * The Abstract Factory makes sure that all products it creates are of the
+   * same variant and thus, compatible.
+   */
+  anotherUsefulFunctionB(collaborator: AbstractProductA): string;
 }
 
 /**
  * These Concrete Products are created by corresponding Concrete Factories.
  */
 class ConcreteProductB1 implements AbstractProductB {
+  public usefulFunctionB(): string {
+    return "The result of the product B1.";
+  }
 
-    public usefulFunctionB(): string {
-        return 'The result of the product B1.';
-    }
-
-    /**
-     * The variant, Product B1, is only able to work correctly with the variant,
-     * Product A1. Nevertheless, it accepts any instance of AbstractProductA as
-     * an argument.
-     */
-    public anotherUsefulFunctionB(collaborator: AbstractProductA): string {
-        const result = collaborator.usefulFunctionA();
-        return `The result of the B1 collaborating with the (${result})`;
-    }
+  /**
+   * The variant, Product B1, is only able to work correctly with the variant,
+   * Product A1. Nevertheless, it accepts any instance of AbstractProductA as
+   * an argument.
+   */
+  public anotherUsefulFunctionB(collaborator: AbstractProductA): string {
+    const result = collaborator.usefulFunctionA();
+    return `The result of the B1 collaborating with the (${result})`;
+  }
 }
 
 class ConcreteProductB2 implements AbstractProductB {
+  public usefulFunctionB(): string {
+    return "The result of the product B2.";
+  }
 
-    public usefulFunctionB(): string {
-        return 'The result of the product B2.';
-    }
-
-    /**
-     * The variant, Product B2, is only able to work correctly with the variant,
-     * Product A2. Nevertheless, it accepts any instance of AbstractProductA as
-     * an argument.
-     */
-    public anotherUsefulFunctionB(collaborator: AbstractProductA): string {
-        const result = collaborator.usefulFunctionA();
-        return `The result of the B2 collaborating with the (${result})`;
-    }
+  /**
+   * The variant, Product B2, is only able to work correctly with the variant,
+   * Product A2. Nevertheless, it accepts any instance of AbstractProductA as
+   * an argument.
+   */
+  public anotherUsefulFunctionB(collaborator: AbstractProductA): string {
+    const result = collaborator.usefulFunctionA();
+    return `The result of the B2 collaborating with the (${result})`;
+  }
 }
 
 /**
@@ -294,22 +293,24 @@ class ConcreteProductB2 implements AbstractProductB {
  * product subclass to the client code without breaking it.
  */
 function clientCode(factory: AbstractFactory) {
-    const productA = factory.createProductA();
-    const productB = factory.createProductB();
+  const productA = factory.createProductA();
+  const productB = factory.createProductB();
 
-    console.log(productB.usefulFunctionB());
-    console.log(productB.anotherUsefulFunctionB(productA));
+  console.log(productB.usefulFunctionB());
+  console.log(productB.anotherUsefulFunctionB(productA));
 }
 
 /**
  * The client code can work with any concrete factory class.
  */
-console.log('Client: Testing client code with the first factory type...');
+console.log("Client: Testing client code with the first factory type...");
 clientCode(new ConcreteFactory1());
 
-console.log('');
+console.log("");
 
-console.log('Client: Testing the same client code with the second factory type...');
+console.log(
+  "Client: Testing the same client code with the second factory type..."
+);
 clientCode(new ConcreteFactory2());
 ```
 
@@ -327,9 +328,9 @@ A builder doesn’t expose the unfinished product while running construction ste
  * the Product objects.
  */
 interface Builder {
-    producePartA(): void;
-    producePartB(): void;
-    producePartC(): void;
+  producePartA(): void;
+  producePartB(): void;
+  producePartC(): void;
 }
 
 /**
@@ -338,54 +339,54 @@ interface Builder {
  * variations of Builders, implemented differently.
  */
 class ConcreteBuilder1 implements Builder {
-    private product: Product1;
+  private product: Product1;
 
-    /**
-     * A fresh builder instance should contain a blank product object, which is
-     * used in further assembly.
-     */
-    constructor() {
-        this.reset();
-    }
+  /**
+   * A fresh builder instance should contain a blank product object, which is
+   * used in further assembly.
+   */
+  constructor() {
+    this.reset();
+  }
 
-    public reset(): void {
-        this.product = new Product1();
-    }
+  public reset(): void {
+    this.product = new Product1();
+  }
 
-    /**
-     * All production steps work with the same product instance.
-     */
-    public producePartA(): void {
-        this.product.parts.push('PartA1');
-    }
+  /**
+   * All production steps work with the same product instance.
+   */
+  public producePartA(): void {
+    this.product.parts.push("PartA1");
+  }
 
-    public producePartB(): void {
-        this.product.parts.push('PartB1');
-    }
+  public producePartB(): void {
+    this.product.parts.push("PartB1");
+  }
 
-    public producePartC(): void {
-        this.product.parts.push('PartC1');
-    }
+  public producePartC(): void {
+    this.product.parts.push("PartC1");
+  }
 
-    /**
-     * Concrete Builders are supposed to provide their own methods for
-     * retrieving results. That's because various types of builders may create
-     * entirely different products that don't follow the same interface.
-     * Therefore, such methods cannot be declared in the base Builder interface
-     * (at least in a statically typed programming language).
-     *
-     * Usually, after returning the end result to the client, a builder instance
-     * is expected to be ready to start producing another product. That's why
-     * it's a usual practice to call the reset method at the end of the
-     * `getProduct` method body. However, this behavior is not mandatory, and
-     * you can make your builders wait for an explicit reset call from the
-     * client code before disposing of the previous result.
-     */
-    public getProduct(): Product1 {
-        const result = this.product;
-        this.reset();
-        return result;
-    }
+  /**
+   * Concrete Builders are supposed to provide their own methods for
+   * retrieving results. That's because various types of builders may create
+   * entirely different products that don't follow the same interface.
+   * Therefore, such methods cannot be declared in the base Builder interface
+   * (at least in a statically typed programming language).
+   *
+   * Usually, after returning the end result to the client, a builder instance
+   * is expected to be ready to start producing another product. That's why
+   * it's a usual practice to call the reset method at the end of the
+   * `getProduct` method body. However, this behavior is not mandatory, and
+   * you can make your builders wait for an explicit reset call from the
+   * client code before disposing of the previous result.
+   */
+  public getProduct(): Product1 {
+    const result = this.product;
+    this.reset();
+    return result;
+  }
 }
 
 /**
@@ -397,11 +398,11 @@ class ConcreteBuilder1 implements Builder {
  * always follow the same interface.
  */
 class Product1 {
-    public parts: string[] = [];
+  public parts: string[] = [];
 
-    public listParts(): void {
-        console.log(`Product parts: ${this.parts.join(', ')}\n`);
-    }
+  public listParts(): void {
+    console.log(`Product parts: ${this.parts.join(", ")}\n`);
+  }
 }
 
 /**
@@ -411,30 +412,30 @@ class Product1 {
  * optional, since the client can control builders directly.
  */
 class Director {
-    private builder: Builder;
+  private builder: Builder;
 
-    /**
-     * The Director works with any builder instance that the client code passes
-     * to it. This way, the client code may alter the final type of the newly
-     * assembled product.
-     */
-    public setBuilder(builder: Builder): void {
-        this.builder = builder;
-    }
+  /**
+   * The Director works with any builder instance that the client code passes
+   * to it. This way, the client code may alter the final type of the newly
+   * assembled product.
+   */
+  public setBuilder(builder: Builder): void {
+    this.builder = builder;
+  }
 
-    /**
-     * The Director can construct several product variations using the same
-     * building steps.
-     */
-    public buildMinimalViableProduct(): void {
-        this.builder.producePartA();
-    }
+  /**
+   * The Director can construct several product variations using the same
+   * building steps.
+   */
+  public buildMinimalViableProduct(): void {
+    this.builder.producePartA();
+  }
 
-    public buildFullFeaturedProduct(): void {
-        this.builder.producePartA();
-        this.builder.producePartB();
-        this.builder.producePartC();
-    }
+  public buildFullFeaturedProduct(): void {
+    this.builder.producePartA();
+    this.builder.producePartB();
+    this.builder.producePartC();
+  }
 }
 
 /**
@@ -443,22 +444,22 @@ class Director {
  * builder object.
  */
 function clientCode(director: Director) {
-    const builder = new ConcreteBuilder1();
-    director.setBuilder(builder);
+  const builder = new ConcreteBuilder1();
+  director.setBuilder(builder);
 
-    console.log('Standard basic product:');
-    director.buildMinimalViableProduct();
-    builder.getProduct().listParts();
+  console.log("Standard basic product:");
+  director.buildMinimalViableProduct();
+  builder.getProduct().listParts();
 
-    console.log('Standard full featured product:');
-    director.buildFullFeaturedProduct();
-    builder.getProduct().listParts();
+  console.log("Standard full featured product:");
+  director.buildFullFeaturedProduct();
+  builder.getProduct().listParts();
 
-    // Remember, the Builder pattern can be used without a Director class.
-    console.log('Custom product:');
-    builder.producePartA();
-    builder.producePartC();
-    builder.getProduct().listParts();
+  // Remember, the Builder pattern can be used without a Director class.
+  console.log("Custom product:");
+  builder.producePartA();
+  builder.producePartC();
+  builder.getProduct().listParts();
 }
 
 const director = new Director();
@@ -477,68 +478,72 @@ Use the Prototype pattern when your code shouldn’t depend on the concrete clas
  * with different types will be cloned.
  */
 class Prototype {
-    public primitive: any;
-    public component: object;
-    public circularReference: ComponentWithBackReference;
+  public primitive: any;
+  public component: object;
+  public circularReference: ComponentWithBackReference;
 
-    public clone(): this {
-        const clone = Object.create(this);
+  public clone(): this {
+    const clone = Object.create(this);
 
-        clone.component = Object.create(this.component);
+    clone.component = Object.create(this.component);
 
-        // Cloning an object that has a nested object with backreference
-        // requires special treatment. After the cloning is completed, the
-        // nested object should point to the cloned object, instead of the
-        // original object. Spread operator can be handy for this case.
-        clone.circularReference = {
-            ...this.circularReference,
-            prototype: { ...this },
-        };
+    // Cloning an object that has a nested object with backreference
+    // requires special treatment. After the cloning is completed, the
+    // nested object should point to the cloned object, instead of the
+    // original object. Spread operator can be handy for this case.
+    clone.circularReference = {
+      ...this.circularReference,
+      prototype: { ...this },
+    };
 
-        return clone;
-    }
+    return clone;
+  }
 }
 
 class ComponentWithBackReference {
-    public prototype;
+  public prototype;
 
-    constructor(prototype: Prototype) {
-        this.prototype = prototype;
-    }
+  constructor(prototype: Prototype) {
+    this.prototype = prototype;
+  }
 }
 
 /**
  * The client code.
  */
 function clientCode() {
-    const p1 = new Prototype();
-    p1.primitive = 245;
-    p1.component = new Date();
-    p1.circularReference = new ComponentWithBackReference(p1);
+  const p1 = new Prototype();
+  p1.primitive = 245;
+  p1.component = new Date();
+  p1.circularReference = new ComponentWithBackReference(p1);
 
-    const p2 = p1.clone();
-    if (p1.primitive === p2.primitive) {
-        console.log('Primitive field values have been carried over to a clone. Yay!');
-    } else {
-        console.log('Primitive field values have not been copied. Booo!');
-    }
-    if (p1.component === p2.component) {
-        console.log('Simple component has not been cloned. Booo!');
-    } else {
-        console.log('Simple component has been cloned. Yay!');
-    }
+  const p2 = p1.clone();
+  if (p1.primitive === p2.primitive) {
+    console.log(
+      "Primitive field values have been carried over to a clone. Yay!"
+    );
+  } else {
+    console.log("Primitive field values have not been copied. Booo!");
+  }
+  if (p1.component === p2.component) {
+    console.log("Simple component has not been cloned. Booo!");
+  } else {
+    console.log("Simple component has been cloned. Yay!");
+  }
 
-    if (p1.circularReference === p2.circularReference) {
-        console.log('Component with back reference has not been cloned. Booo!');
-    } else {
-        console.log('Component with back reference has been cloned. Yay!');
-    }
+  if (p1.circularReference === p2.circularReference) {
+    console.log("Component with back reference has not been cloned. Booo!");
+  } else {
+    console.log("Component with back reference has been cloned. Yay!");
+  }
 
-    if (p1.circularReference.prototype === p2.circularReference.prototype) {
-        console.log('Component with back reference is linked to original object. Booo!');
-    } else {
-        console.log('Component with back reference is linked to the clone. Yay!');
-    }
+  if (p1.circularReference.prototype === p2.circularReference.prototype) {
+    console.log(
+      "Component with back reference is linked to original object. Booo!"
+    );
+  } else {
+    console.log("Component with back reference is linked to the clone. Yay!");
+  }
 }
 
 clientCode();
@@ -560,51 +565,49 @@ This class doesn’t have a public constructor, so the only way to get its objec
  * the unique singleton instance.
  */
 class Singleton {
-    static #instance: Singleton;
+  static #instance: Singleton;
 
-    /**
-     * The Singleton's constructor should always be private to prevent direct
-     * construction calls with the `new` operator.
-     */
-    private constructor() { }
+  /**
+   * The Singleton's constructor should always be private to prevent direct
+   * construction calls with the `new` operator.
+   */
+  private constructor() {}
 
-    /**
-     * The static getter that controls access to the singleton instance.
-     *
-     * This implementation allows you to extend the Singleton class while
-     * keeping just one instance of each subclass around.
-     */
-    public static get instance(): Singleton {
-        if (!Singleton.#instance) {
-            Singleton.#instance = new Singleton();
-        }
-
-        return Singleton.#instance;
+  /**
+   * The static getter that controls access to the singleton instance.
+   *
+   * This implementation allows you to extend the Singleton class while
+   * keeping just one instance of each subclass around.
+   */
+  public static get instance(): Singleton {
+    if (!Singleton.#instance) {
+      Singleton.#instance = new Singleton();
     }
 
-    /**
-     * Finally, any singleton can define some business logic, which can be
-     * executed on its instance.
-     */
-    public someBusinessLogic() {
-        // ...
-    }
+    return Singleton.#instance;
+  }
+
+  /**
+   * Finally, any singleton can define some business logic, which can be
+   * executed on its instance.
+   */
+  public someBusinessLogic() {
+    // ...
+  }
 }
 
 /**
  * The client code.
  */
 function clientCode() {
-    const s1 = Singleton.instance;
-    const s2 = Singleton.instance;
+  const s1 = Singleton.instance;
+  const s2 = Singleton.instance;
 
-    if (s1 === s2) {
-        console.log(
-            'Singleton works, both variables contain the same instance.'
-        );
-    } else {
-        console.log('Singleton failed, variables contain different instances.');
-    }
+  if (s1 === s2) {
+    console.log("Singleton works, both variables contain the same instance.");
+  } else {
+    console.log("Singleton failed, variables contain different instances.");
+  }
 }
 
 clientCode();
@@ -616,16 +619,16 @@ clientCode();
 
 **Adapter** is a structural design pattern that allows objects with incompatible interfaces to collaborate.
 
- The Adapter pattern lets you create a middle-layer class that serves as a translator between your code and a legacy class, a 3rd-party class or any other class with a weird interface.
+The Adapter pattern lets you create a middle-layer class that serves as a translator between your code and a legacy class, a 3rd-party class or any other class with a weird interface.
 
- ```ts
+```ts
 /**
  * The Target defines the domain-specific interface used by the client code.
  */
 class Target {
-    public request(): string {
-        return 'Target: The default target\'s behavior.';
-    }
+  public request(): string {
+    return "Target: The default target's behavior.";
+  }
 }
 
 /**
@@ -634,9 +637,9 @@ class Target {
  * client code can use it.
  */
 class Adaptee {
-    public specificRequest(): string {
-        return '.eetpadA eht fo roivaheb laicepS';
-    }
+  public specificRequest(): string {
+    return ".eetpadA eht fo roivaheb laicepS";
+  }
 }
 
 /**
@@ -644,51 +647,53 @@ class Adaptee {
  * interface.
  */
 class Adapter extends Target {
-    private adaptee: Adaptee;
+  private adaptee: Adaptee;
 
-    constructor(adaptee: Adaptee) {
-        super();
-        this.adaptee = adaptee;
-    }
+  constructor(adaptee: Adaptee) {
+    super();
+    this.adaptee = adaptee;
+  }
 
-    public request(): string {
-        const result = this.adaptee.specificRequest().split('').reverse().join('');
-        return `Adapter: (TRANSLATED) ${result}`;
-    }
+  public request(): string {
+    const result = this.adaptee.specificRequest().split("").reverse().join("");
+    return `Adapter: (TRANSLATED) ${result}`;
+  }
 }
 
 /**
  * The client code supports all classes that follow the Target interface.
  */
 function clientCode(target: Target) {
-    console.log(target.request());
+  console.log(target.request());
 }
 
-console.log('Client: I can work just fine with the Target objects:');
+console.log("Client: I can work just fine with the Target objects:");
 const target = new Target();
 clientCode(target);
 
-console.log('');
+console.log("");
 
 const adaptee = new Adaptee();
-console.log('Client: The Adaptee class has a weird interface. See, I don\'t understand it:');
+console.log(
+  "Client: The Adaptee class has a weird interface. See, I don't understand it:"
+);
 console.log(`Adaptee: ${adaptee.specificRequest()}`);
 
-console.log('');
+console.log("");
 
-console.log('Client: But I can work with it via the Adapter:');
+console.log("Client: But I can work with it via the Adapter:");
 const adapter = new Adapter(adaptee);
 clientCode(adapter);
 
 /*
-    Client: I can work just fine with the Target objects:
-    Target: The default target's behavior.
+   Client: I can work just fine with the Target objects:
+   Target: The default target's behavior.
 
-    Client: The Adaptee class has a weird interface. See, I don't understand it:
-    Adaptee: .eetpadA eht fo roivaheb laicepS
+   Client: The Adaptee class has a weird interface. See, I don't understand it:
+   Adaptee: .eetpadA eht fo roivaheb laicepS
 
-    Client: But I can work with it via the Adapter:
-    Adapter: (TRANSLATED) Special behavior of the Adaptee.
+   Client: But I can work with it via the Adapter:
+   Adapter: (TRANSLATED) Special behavior of the Adaptee.
 */
 ```
 
@@ -709,26 +714,26 @@ Following this approach, we can extract the color-related code into its own clas
  * hierarchy and delegates all of the real work to this object.
  */
 class Abstraction {
-    protected implementation: Implementation;
+  protected implementation: Implementation;
 
-    constructor(implementation: Implementation) {
-        this.implementation = implementation;
-    }
+  constructor(implementation: Implementation) {
+    this.implementation = implementation;
+  }
 
-    public operation(): string {
-        const result = this.implementation.operationImplementation();
-        return `Abstraction: Base operation with:\n${result}`;
-    }
+  public operation(): string {
+    const result = this.implementation.operationImplementation();
+    return `Abstraction: Base operation with:\n${result}`;
+  }
 }
 
 /**
  * You can extend the Abstraction without changing the Implementation classes.
  */
 class ExtendedAbstraction extends Abstraction {
-    public operation(): string {
-        const result = this.implementation.operationImplementation();
-        return `ExtendedAbstraction: Extended operation with:\n${result}`;
-    }
+  public operation(): string {
+    const result = this.implementation.operationImplementation();
+    return `ExtendedAbstraction: Extended operation with:\n${result}`;
+  }
 }
 
 /**
@@ -739,7 +744,7 @@ class ExtendedAbstraction extends Abstraction {
  * level operations based on those primitives.
  */
 interface Implementation {
-    operationImplementation(): string;
+  operationImplementation(): string;
 }
 
 /**
@@ -747,15 +752,15 @@ interface Implementation {
  * implements the Implementation interface using that platform's API.
  */
 class ConcreteImplementationA implements Implementation {
-    public operationImplementation(): string {
-        return 'ConcreteImplementationA: Here\'s the result on the platform A.';
-    }
+  public operationImplementation(): string {
+    return "ConcreteImplementationA: Here's the result on the platform A.";
+  }
 }
 
 class ConcreteImplementationB implements Implementation {
-    public operationImplementation(): string {
-        return 'ConcreteImplementationB: Here\'s the result on the platform B.';
-    }
+  public operationImplementation(): string {
+    return "ConcreteImplementationB: Here's the result on the platform B.";
+  }
 }
 
 /**
@@ -765,11 +770,11 @@ class ConcreteImplementationB implements Implementation {
  * implementation combination.
  */
 function clientCode(abstraction: Abstraction) {
-    // ..
+  // ..
 
-    console.log(abstraction.operation());
+  console.log(abstraction.operation());
 
-    // ..
+  // ..
 }
 
 /**
@@ -780,7 +785,7 @@ let implementation = new ConcreteImplementationA();
 let abstraction = new Abstraction(implementation);
 clientCode(abstraction);
 
-console.log('');
+console.log("");
 
 implementation = new ConcreteImplementationB();
 abstraction = new ExtendedAbstraction(implementation);
@@ -811,46 +816,46 @@ How would this method work? For a product, it’d simply return the product’s 
  * complex objects of a composition.
  */
 abstract class Component {
-    protected parent!: Component | null;
+  protected parent!: Component | null;
 
-    /**
-     * Optionally, the base Component can declare an interface for setting and
-     * accessing a parent of the component in a tree structure. It can also
-     * provide some default implementation for these methods.
-     */
-    public setParent(parent: Component | null) {
-        this.parent = parent;
-    }
+  /**
+   * Optionally, the base Component can declare an interface for setting and
+   * accessing a parent of the component in a tree structure. It can also
+   * provide some default implementation for these methods.
+   */
+  public setParent(parent: Component | null) {
+    this.parent = parent;
+  }
 
-    public getParent(): Component | null {
-        return this.parent;
-    }
+  public getParent(): Component | null {
+    return this.parent;
+  }
 
-    /**
-     * In some cases, it would be beneficial to define the child-management
-     * operations right in the base Component class. This way, you won't need to
-     * expose any concrete component classes to the client code, even during the
-     * object tree assembly. The downside is that these methods will be empty
-     * for the leaf-level components.
-     */
-    public add(component: Component): void { }
+  /**
+   * In some cases, it would be beneficial to define the child-management
+   * operations right in the base Component class. This way, you won't need to
+   * expose any concrete component classes to the client code, even during the
+   * object tree assembly. The downside is that these methods will be empty
+   * for the leaf-level components.
+   */
+  public add(component: Component): void {}
 
-    public remove(component: Component): void { }
+  public remove(component: Component): void {}
 
-    /**
-     * You can provide a method that lets the client code figure out whether a
-     * component can bear children.
-     */
-    public isComposite(): boolean {
-        return false;
-    }
+  /**
+   * You can provide a method that lets the client code figure out whether a
+   * component can bear children.
+   */
+  public isComposite(): boolean {
+    return false;
+  }
 
-    /**
-     * The base Component may implement some default behavior or leave it to
-     * concrete classes (by declaring the method containing the behavior as
-     * "abstract").
-     */
-    public abstract operation(): string;
+  /**
+   * The base Component may implement some default behavior or leave it to
+   * concrete classes (by declaring the method containing the behavior as
+   * "abstract").
+   */
+  public abstract operation(): string;
 }
 
 /**
@@ -861,9 +866,9 @@ abstract class Component {
  * objects only delegate to their sub-components.
  */
 class Leaf extends Component {
-    public operation(): string {
-        return 'Leaf';
-    }
+  public operation(): string {
+    return "Leaf";
+  }
 }
 
 /**
@@ -872,62 +877,62 @@ class Leaf extends Component {
  * then "sum-up" the result.
  */
 class Composite extends Component {
-    protected children: Component[] = [];
+  protected children: Component[] = [];
 
-    /**
-     * A composite object can add or remove other components (both simple or
-     * complex) to or from its child list.
-     */
-    public add(component: Component): void {
-        this.children.push(component);
-        component.setParent(this);
+  /**
+   * A composite object can add or remove other components (both simple or
+   * complex) to or from its child list.
+   */
+  public add(component: Component): void {
+    this.children.push(component);
+    component.setParent(this);
+  }
+
+  public remove(component: Component): void {
+    const componentIndex = this.children.indexOf(component);
+    this.children.splice(componentIndex, 1);
+
+    component.setParent(null);
+  }
+
+  public isComposite(): boolean {
+    return true;
+  }
+
+  /**
+   * The Composite executes its primary logic in a particular way. It
+   * traverses recursively through all its children, collecting and summing
+   * their results. Since the composite's children pass these calls to their
+   * children and so forth, the whole object tree is traversed as a result.
+   */
+  public operation(): string {
+    const results = [];
+    for (const child of this.children) {
+      results.push(child.operation());
     }
 
-    public remove(component: Component): void {
-        const componentIndex = this.children.indexOf(component);
-        this.children.splice(componentIndex, 1);
-
-        component.setParent(null);
-    }
-
-    public isComposite(): boolean {
-        return true;
-    }
-
-    /**
-     * The Composite executes its primary logic in a particular way. It
-     * traverses recursively through all its children, collecting and summing
-     * their results. Since the composite's children pass these calls to their
-     * children and so forth, the whole object tree is traversed as a result.
-     */
-    public operation(): string {
-        const results = [];
-        for (const child of this.children) {
-            results.push(child.operation());
-        }
-
-        return `Branch(${results.join('+')})`;
-    }
+    return `Branch(${results.join("+")})`;
+  }
 }
 
 /**
  * The client code works with all of the components via the base interface.
  */
 function clientCode(component: Component) {
-    // ...
+  // ...
 
-    console.log(`RESULT: ${component.operation()}`);
+  console.log(`RESULT: ${component.operation()}`);
 
-    // ...
+  // ...
 }
 
 /**
  * This way the client code can support the simple leaf components...
  */
 const simple = new Leaf();
-console.log('Client: I\'ve got a simple component:');
+console.log("Client: I've got a simple component:");
 clientCode(simple);
-console.log('');
+console.log("");
 
 /**
  * ...as well as the complex composites.
@@ -940,9 +945,9 @@ const branch2 = new Composite();
 branch2.add(new Leaf());
 tree.add(branch1);
 tree.add(branch2);
-console.log('Client: Now I\'ve got a composite tree:');
+console.log("Client: Now I've got a composite tree:");
 clientCode(tree);
-console.log('');
+console.log("");
 
 /**
  * Thanks to the fact that the child-management operations are declared in the
@@ -950,17 +955,19 @@ console.log('');
  * complex, without depending on their concrete classes.
  */
 function clientCode2(component1: Component, component2: Component) {
-    // ...
+  // ...
 
-    if (component1.isComposite()) {
-        component1.add(component2);
-    }
-    console.log(`RESULT: ${component1.operation()}`);
+  if (component1.isComposite()) {
+    component1.add(component2);
+  }
+  console.log(`RESULT: ${component1.operation()}`);
 
-    // ...
+  // ...
 }
 
-console.log('Client: I don\'t need to check the components classes even when managing the tree:');
+console.log(
+  "Client: I don't need to check the components classes even when managing the tree:"
+);
 clientCode2(tree, simple);
 
 /**
@@ -973,7 +980,6 @@ clientCode2(tree, simple);
     Client: I don't need to check the components classes even when managing the tree:
     RESULT: Branch(Branch(Leaf+Leaf)+Branch(Leaf)+Leaf)
  */
-
 ```
 
 ### Decorator
@@ -988,7 +994,7 @@ Wearing clothes is an example of using decorators. When you’re cold, you wrap 
  * decorators.
  */
 interface Component {
-    operation(): string;
+  operation(): string;
 }
 
 /**
@@ -996,9 +1002,9 @@ interface Component {
  * might be several variations of these classes.
  */
 class ConcreteComponent implements Component {
-    public operation(): string {
-        return 'ConcreteComponent';
-    }
+  public operation(): string {
+    return "ConcreteComponent";
+  }
 }
 
 /**
@@ -1009,32 +1015,32 @@ class ConcreteComponent implements Component {
  * it.
  */
 class Decorator implements Component {
-    protected component: Component;
+  protected component: Component;
 
-    constructor(component: Component) {
-        this.component = component;
-    }
+  constructor(component: Component) {
+    this.component = component;
+  }
 
-    /**
-     * The Decorator delegates all work to the wrapped component.
-     */
-    public operation(): string {
-        return this.component.operation();
-    }
+  /**
+   * The Decorator delegates all work to the wrapped component.
+   */
+  public operation(): string {
+    return this.component.operation();
+  }
 }
 
 /**
  * Concrete Decorators call the wrapped object and alter its result in some way.
  */
 class ConcreteDecoratorA extends Decorator {
-    /**
-     * Decorators may call parent implementation of the operation, instead of
-     * calling the wrapped object directly. This approach simplifies extension
-     * of decorator classes.
-     */
-    public operation(): string {
-        return `ConcreteDecoratorA(${super.operation()})`;
-    }
+  /**
+   * Decorators may call parent implementation of the operation, instead of
+   * calling the wrapped object directly. This approach simplifies extension
+   * of decorator classes.
+   */
+  public operation(): string {
+    return `ConcreteDecoratorA(${super.operation()})`;
+  }
 }
 
 /**
@@ -1042,9 +1048,9 @@ class ConcreteDecoratorA extends Decorator {
  * wrapped object.
  */
 class ConcreteDecoratorB extends Decorator {
-    public operation(): string {
-        return `ConcreteDecoratorB(${super.operation()})`;
-    }
+  public operation(): string {
+    return `ConcreteDecoratorB(${super.operation()})`;
+  }
 }
 
 /**
@@ -1053,20 +1059,20 @@ class ConcreteDecoratorB extends Decorator {
  * with.
  */
 function clientCode(component: Component) {
-    // ...
+  // ...
 
-    console.log(`RESULT: ${component.operation()}`);
+  console.log(`RESULT: ${component.operation()}`);
 
-    // ...
+  // ...
 }
 
 /**
  * This way the client code can support both simple components...
  */
 const simple = new ConcreteComponent();
-console.log('Client: I\'ve got a simple component:');
+console.log("Client: I've got a simple component:");
 clientCode(simple);
-console.log('');
+console.log("");
 
 /**
  * ...as well as decorated ones.
@@ -1076,7 +1082,7 @@ console.log('');
  */
 const decorator1 = new ConcreteDecoratorA(simple);
 const decorator2 = new ConcreteDecoratorB(decorator1);
-console.log('Client: Now I\'ve got a decorated component:');
+console.log("Client: Now I've got a decorated component:");
 clientCode(decorator2);
 
 /**
@@ -1086,7 +1092,6 @@ clientCode(decorator2);
     Client: Now I've got a decorated component:
     RESULT: ConcreteDecoratorB(ConcreteDecoratorA(ConcreteComponent))
  */
-
 ```
 
 ### Facade
@@ -1106,34 +1111,34 @@ For example, let’s return to our video conversion framework. It can be broken 
  * complexity of the subsystem.
  */
 class Facade {
-    protected subsystem1: Subsystem1;
+  protected subsystem1: Subsystem1;
 
-    protected subsystem2: Subsystem2;
+  protected subsystem2: Subsystem2;
 
-    /**
-     * Depending on your application's needs, you can provide the Facade with
-     * existing subsystem objects or force the Facade to create them on its own.
-     */
-    constructor(subsystem1?: Subsystem1, subsystem2?: Subsystem2) {
-        this.subsystem1 = subsystem1 || new Subsystem1();
-        this.subsystem2 = subsystem2 || new Subsystem2();
-    }
+  /**
+   * Depending on your application's needs, you can provide the Facade with
+   * existing subsystem objects or force the Facade to create them on its own.
+   */
+  constructor(subsystem1?: Subsystem1, subsystem2?: Subsystem2) {
+    this.subsystem1 = subsystem1 || new Subsystem1();
+    this.subsystem2 = subsystem2 || new Subsystem2();
+  }
 
-    /**
-     * The Facade's methods are convenient shortcuts to the sophisticated
-     * functionality of the subsystems. However, clients get only to a fraction
-     * of a subsystem's capabilities.
-     */
-    public operation(): string {
-        let result = 'Facade initializes subsystems:\n';
-        result += this.subsystem1.operation1();
-        result += this.subsystem2.operation1();
-        result += 'Facade orders subsystems to perform the action:\n';
-        result += this.subsystem1.operationN();
-        result += this.subsystem2.operationZ();
+  /**
+   * The Facade's methods are convenient shortcuts to the sophisticated
+   * functionality of the subsystems. However, clients get only to a fraction
+   * of a subsystem's capabilities.
+   */
+  public operation(): string {
+    let result = "Facade initializes subsystems:\n";
+    result += this.subsystem1.operation1();
+    result += this.subsystem2.operation1();
+    result += "Facade orders subsystems to perform the action:\n";
+    result += this.subsystem1.operationN();
+    result += this.subsystem2.operationZ();
 
-        return result;
-    }
+    return result;
+  }
 }
 
 /**
@@ -1142,30 +1147,30 @@ class Facade {
  * a part of the Subsystem.
  */
 class Subsystem1 {
-    public operation1(): string {
-        return 'Subsystem1: Ready!\n';
-    }
+  public operation1(): string {
+    return "Subsystem1: Ready!\n";
+  }
 
-    // ...
+  // ...
 
-    public operationN(): string {
-        return 'Subsystem1: Go!\n';
-    }
+  public operationN(): string {
+    return "Subsystem1: Go!\n";
+  }
 }
 
 /**
  * Some facades can work with multiple subsystems at the same time.
  */
 class Subsystem2 {
-    public operation1(): string {
-        return 'Subsystem2: Get ready!\n';
-    }
+  public operation1(): string {
+    return "Subsystem2: Get ready!\n";
+  }
 
-    // ...
+  // ...
 
-    public operationZ(): string {
-        return 'Subsystem2: Fire!';
-    }
+  public operationZ(): string {
+    return "Subsystem2: Fire!";
+  }
 }
 
 /**
@@ -1175,11 +1180,11 @@ class Subsystem2 {
  * approach lets you keep the complexity under control.
  */
 function clientCode(facade: Facade) {
-    // ...
+  // ...
 
-    console.log(facade.operation());
+  console.log(facade.operation());
 
-    // ...
+  // ...
 }
 
 /**
@@ -1200,7 +1205,6 @@ clientCode(facade);
     Subsystem1: Go!
     Subsystem2: Fire!
  */
-
 ```
 
 ### Flyweight
@@ -1215,7 +1219,7 @@ The benefit of applying the pattern depends heavily on how and where it’s used
 
 - the objects contain duplicate states which can be extracted and shared between multiple objects
 
-Example: 
+Example:
 Vast quantities of bullets, missiles, and shrapnel from explosions should fly all over the map.
 
 ```ts
@@ -1226,17 +1230,17 @@ Vast quantities of bullets, missiles, and shrapnel from explosions should fly al
  * method parameters.
  */
 class Flyweight {
-    private sharedState: any;
+  private sharedState: any;
 
-    constructor(sharedState: any) {
-        this.sharedState = sharedState;
-    }
+  constructor(sharedState: any) {
+    this.sharedState = sharedState;
+  }
 
-    public operation(uniqueState): void {
-        const s = JSON.stringify(this.sharedState);
-        const u = JSON.stringify(uniqueState);
-        console.log(`Flyweight: Displaying shared (${s}) and unique (${u}) state.`);
-    }
+  public operation(uniqueState): void {
+    const s = JSON.stringify(this.sharedState);
+    const u = JSON.stringify(uniqueState);
+    console.log(`Flyweight: Displaying shared (${s}) and unique (${u}) state.`);
+  }
 }
 
 /**
@@ -1246,44 +1250,46 @@ class Flyweight {
  * doesn't exist yet.
  */
 class FlyweightFactory {
-    private flyweights: {[key: string]: Flyweight} = <any>{};
+  private flyweights: { [key: string]: Flyweight } = <any>{};
 
-    constructor(initialFlyweights: string[][]) {
-        for (const state of initialFlyweights) {
-            this.flyweights[this.getKey(state)] = new Flyweight(state);
-        }
+  constructor(initialFlyweights: string[][]) {
+    for (const state of initialFlyweights) {
+      this.flyweights[this.getKey(state)] = new Flyweight(state);
+    }
+  }
+
+  /**
+   * Returns a Flyweight's string hash for a given state.
+   */
+  private getKey(state: string[]): string {
+    return state.join("_");
+  }
+
+  /**
+   * Returns an existing Flyweight with a given state or creates a new one.
+   */
+  public getFlyweight(sharedState: string[]): Flyweight {
+    const key = this.getKey(sharedState);
+
+    if (!(key in this.flyweights)) {
+      console.log(
+        "FlyweightFactory: Can't find a flyweight, creating new one."
+      );
+      this.flyweights[key] = new Flyweight(sharedState);
+    } else {
+      console.log("FlyweightFactory: Reusing existing flyweight.");
     }
 
-    /**
-     * Returns a Flyweight's string hash for a given state.
-     */
-    private getKey(state: string[]): string {
-        return state.join('_');
+    return this.flyweights[key];
+  }
+
+  public listFlyweights(): void {
+    const count = Object.keys(this.flyweights).length;
+    console.log(`\nFlyweightFactory: I have ${count} flyweights:`);
+    for (const key in this.flyweights) {
+      console.log(key);
     }
-
-    /**
-     * Returns an existing Flyweight with a given state or creates a new one.
-     */
-    public getFlyweight(sharedState: string[]): Flyweight {
-        const key = this.getKey(sharedState);
-
-        if (!(key in this.flyweights)) {
-            console.log('FlyweightFactory: Can\'t find a flyweight, creating new one.');
-            this.flyweights[key] = new Flyweight(sharedState);
-        } else {
-            console.log('FlyweightFactory: Reusing existing flyweight.');
-        }
-
-        return this.flyweights[key];
-    }
-
-    public listFlyweights(): void {
-        const count = Object.keys(this.flyweights).length;
-        console.log(`\nFlyweightFactory: I have ${count} flyweights:`);
-        for (const key in this.flyweights) {
-            console.log(key);
-        }
-    }
+  }
 }
 
 /**
@@ -1291,32 +1297,36 @@ class FlyweightFactory {
  * initialization stage of the application.
  */
 const factory = new FlyweightFactory([
-    ['Chevrolet', 'Camaro2018', 'pink'],
-    ['Mercedes Benz', 'C300', 'black'],
-    ['Mercedes Benz', 'C500', 'red'],
-    ['BMW', 'M5', 'red'],
-    ['BMW', 'X6', 'white'],
-    // ...
+  ["Chevrolet", "Camaro2018", "pink"],
+  ["Mercedes Benz", "C300", "black"],
+  ["Mercedes Benz", "C500", "red"],
+  ["BMW", "M5", "red"],
+  ["BMW", "X6", "white"],
+  // ...
 ]);
 factory.listFlyweights();
 
 // ...
 
 function addCarToPoliceDatabase(
-    ff: FlyweightFactory, plates: string, owner: string,
-    brand: string, model: string, color: string,
+  ff: FlyweightFactory,
+  plates: string,
+  owner: string,
+  brand: string,
+  model: string,
+  color: string
 ) {
-    console.log('\nClient: Adding a car to database.');
-    const flyweight = ff.getFlyweight([brand, model, color]);
+  console.log("\nClient: Adding a car to database.");
+  const flyweight = ff.getFlyweight([brand, model, color]);
 
-    // The client code either stores or calculates extrinsic state and passes it
-    // to the flyweight's methods.
-    flyweight.operation([plates, owner]);
+  // The client code either stores or calculates extrinsic state and passes it
+  // to the flyweight's methods.
+  flyweight.operation([plates, owner]);
 }
 
-addCarToPoliceDatabase(factory, 'CL234IR', 'James Doe', 'BMW', 'M5', 'red');
+addCarToPoliceDatabase(factory, "CL234IR", "James Doe", "BMW", "M5", "red");
 
-addCarToPoliceDatabase(factory, 'CL234IR', 'James Doe', 'BMW', 'X1', 'red');
+addCarToPoliceDatabase(factory, "CL234IR", "James Doe", "BMW", "X1", "red");
 
 factory.listFlyweights();
 
@@ -1357,7 +1367,7 @@ Proxy is a structural design pattern that lets you provide a substitute or place
  * you'll be able to pass it a proxy instead of a real subject.
  */
 interface Subject {
-    request(): void;
+  request(): void;
 }
 
 /**
@@ -1367,48 +1377,48 @@ interface Subject {
  * changes to the RealSubject's code.
  */
 class RealSubject implements Subject {
-    public request(): void {
-        console.log('RealSubject: Handling request.');
-    }
+  public request(): void {
+    console.log("RealSubject: Handling request.");
+  }
 }
 
 /**
  * The Proxy has an interface identical to the RealSubject.
  */
 class Proxy implements Subject {
-    private realSubject: RealSubject;
+  private realSubject: RealSubject;
 
-    /**
-     * The Proxy maintains a reference to an object of the RealSubject class. It
-     * can be either lazy-loaded or passed to the Proxy by the client.
-     */
-    constructor(realSubject: RealSubject) {
-        this.realSubject = realSubject;
+  /**
+   * The Proxy maintains a reference to an object of the RealSubject class. It
+   * can be either lazy-loaded or passed to the Proxy by the client.
+   */
+  constructor(realSubject: RealSubject) {
+    this.realSubject = realSubject;
+  }
+
+  /**
+   * The most common applications of the Proxy pattern are lazy loading,
+   * caching, controlling the access, logging, etc. A Proxy can perform one of
+   * these things and then, depending on the result, pass the execution to the
+   * same method in a linked RealSubject object.
+   */
+  public request(): void {
+    if (this.checkAccess()) {
+      this.realSubject.request();
+      this.logAccess();
     }
+  }
 
-    /**
-     * The most common applications of the Proxy pattern are lazy loading,
-     * caching, controlling the access, logging, etc. A Proxy can perform one of
-     * these things and then, depending on the result, pass the execution to the
-     * same method in a linked RealSubject object.
-     */
-    public request(): void {
-        if (this.checkAccess()) {
-            this.realSubject.request();
-            this.logAccess();
-        }
-    }
+  private checkAccess(): boolean {
+    // Some real checks should go here.
+    console.log("Proxy: Checking access prior to firing a real request.");
 
-    private checkAccess(): boolean {
-        // Some real checks should go here.
-        console.log('Proxy: Checking access prior to firing a real request.');
+    return true;
+  }
 
-        return true;
-    }
-
-    private logAccess(): void {
-        console.log('Proxy: Logging the time of request.');
-    }
+  private logAccess(): void {
+    console.log("Proxy: Logging the time of request.");
+  }
 }
 
 /**
@@ -1419,20 +1429,20 @@ class Proxy implements Subject {
  * your proxy from the real subject's class.
  */
 function clientCode(subject: Subject) {
-    // ...
+  // ...
 
-    subject.request();
+  subject.request();
 
-    // ...
+  // ...
 }
 
-console.log('Client: Executing the client code with a real subject:');
+console.log("Client: Executing the client code with a real subject:");
 const realSubject = new RealSubject();
 clientCode(realSubject);
 
-console.log('');
+console.log("");
 
-console.log('Client: Executing the same client code with a proxy:');
+console.log("Client: Executing the same client code with a proxy:");
 const proxy = new Proxy(realSubject);
 clientCode(proxy);
 
@@ -1446,16 +1456,16 @@ clientCode(proxy);
     Proxy: Logging the time of request.
  */
 ```
+
 ---
 
 ### Chain of Responsibility
 
-Chain of Responsibility is a behavioral design pattern that lets you pass requests along a chain of handlers. Upon receiving a request, each handler decides either to process the request or to pass it to the next handler in the chain. 
+Chain of Responsibility is a behavioral design pattern that lets you pass requests along a chain of handlers. Upon receiving a request, each handler decides either to process the request or to pass it to the next handler in the chain.
 
 The Chain of Responsibility relies on transforming particular behaviors into stand-alone objects called handlers
 
 A handler can decide not to pass the request further down the chain and effectively stop any further processing.
-
 
 Use the pattern when it’s essential to execute several handlers in a particular order.
 
@@ -1465,33 +1475,32 @@ Use the pattern when it’s essential to execute several handlers in a particula
  * It also declares a method for executing a request.
  */
 interface Handler<Request = string, Result = string> {
-    setNext(handler: Handler<Request, Result>): Handler<Request, Result>;
+  setNext(handler: Handler<Request, Result>): Handler<Request, Result>;
 
-    handle(request: Request): Result;
+  handle(request: Request): Result;
 }
 
 /**
  * The default chaining behavior can be implemented inside a base handler class.
  */
-abstract class AbstractHandler implements Handler
-{
-    private nextHandler: Handler;
+abstract class AbstractHandler implements Handler {
+  private nextHandler: Handler;
 
-    public setNext(handler: Handler): Handler {
-        this.nextHandler = handler;
-        // Returning a handler from here will let us link handlers in a
-        // convenient way like this:
-        // monkey.setNext(squirrel).setNext(dog);
-        return handler;
+  public setNext(handler: Handler): Handler {
+    this.nextHandler = handler;
+    // Returning a handler from here will let us link handlers in a
+    // convenient way like this:
+    // monkey.setNext(squirrel).setNext(dog);
+    return handler;
+  }
+
+  public handle(request: string): string {
+    if (this.nextHandler) {
+      return this.nextHandler.handle(request);
     }
 
-    public handle(request: string): string {
-        if (this.nextHandler) {
-            return this.nextHandler.handle(request);
-        }
-
-        return null;
-    }
+    return null;
+  }
 }
 
 /**
@@ -1499,31 +1508,30 @@ abstract class AbstractHandler implements Handler
  * in the chain.
  */
 class MonkeyHandler extends AbstractHandler {
-    public handle(request: string): string {
-        if (request === 'Banana') {
-            return `Monkey: I'll eat the ${request}.`;
-        }
-        return super.handle(request);
-
+  public handle(request: string): string {
+    if (request === "Banana") {
+      return `Monkey: I'll eat the ${request}.`;
     }
+    return super.handle(request);
+  }
 }
 
 class SquirrelHandler extends AbstractHandler {
-    public handle(request: string): string {
-        if (request === 'Nut') {
-            return `Squirrel: I'll eat the ${request}.`;
-        }
-        return super.handle(request);
+  public handle(request: string): string {
+    if (request === "Nut") {
+      return `Squirrel: I'll eat the ${request}.`;
     }
+    return super.handle(request);
+  }
 }
 
 class DogHandler extends AbstractHandler {
-    public handle(request: string): string {
-        if (request === 'MeatBall') {
-            return `Dog: I'll eat the ${request}.`;
-        }
-        return super.handle(request);
+  public handle(request: string): string {
+    if (request === "MeatBall") {
+      return `Dog: I'll eat the ${request}.`;
     }
+    return super.handle(request);
+  }
 }
 
 /**
@@ -1531,18 +1539,18 @@ class DogHandler extends AbstractHandler {
  * cases, it is not even aware that the handler is part of a chain.
  */
 function clientCode(handler: Handler) {
-    const foods = ['Nut', 'Banana', 'Cup of coffee'];
+  const foods = ["Nut", "Banana", "Cup of coffee"];
 
-    for (const food of foods) {
-        console.log(`Client: Who wants a ${food}?`);
+  for (const food of foods) {
+    console.log(`Client: Who wants a ${food}?`);
 
-        const result = handler.handle(food);
-        if (result) {
-            console.log(`  ${result}`);
-        } else {
-            console.log(`  ${food} was left untouched.`);
-        }
+    const result = handler.handle(food);
+    if (result) {
+      console.log(`  ${result}`);
+    } else {
+      console.log(`  ${food} was left untouched.`);
     }
+  }
 }
 
 /**
@@ -1558,11 +1566,11 @@ monkey.setNext(squirrel).setNext(dog);
  * The client should be able to send a request to any handler, not just the
  * first one in the chain.
  */
-console.log('Chain: Monkey > Squirrel > Dog\n');
+console.log("Chain: Monkey > Squirrel > Dog\n");
 clientCode(monkey);
-console.log('');
+console.log("");
 
-console.log('Subchain: Squirrel > Dog\n');
+console.log("Subchain: Squirrel > Dog\n");
 clientCode(squirrel);
 
 /*
@@ -1584,5 +1592,4 @@ clientCode(squirrel);
     Client: Who wants a Cup of coffee?
     Cup of coffee was left untouched.
 */
-
 ```

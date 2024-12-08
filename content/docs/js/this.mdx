@@ -2,7 +2,8 @@
 title: This
 description: What the fuck is this?!
 tags: [JavaScript]
-layout: docs
+
+date: 2024-12-06
 ---
 
 How
@@ -19,40 +20,40 @@ var point = {
   y: null,
 
   init(x, y) {
-    this.x = x
-    this.y = y
+    this.x = x;
+    this.y = y;
   },
   toString() {
-    return `(${this.x},${this.y})`
+    return `(${this.x},${this.y})`;
   },
-}
+};
 
-const init = point.init
-init(3, 4)
-console.log("output: ", point.toString())
+const init = point.init;
+init(3, 4);
+console.log("output: ", point.toString());
 // output: (null,null)
 
-console.log("x: ", x)
+console.log("x: ", x);
 // x: 3
 // Variable x and y is created ??!!
 
-console.log("this: ", this)
+console.log("this: ", this);
 //this: Window {window: Window, self: Window, document: document, name: '', location: Location, …}
 ```
 
 ```javascript
-"use strict"
+"use strict";
 
 var point = {
   // ...
-}
+};
 
-const init = point.init
-init(3, 4)
+const init = point.init;
+init(3, 4);
 // TypeError: Cannot set properties of
 // undefined (setting 'x')
 
-console.log("this: ", this)
+console.log("this: ", this);
 // this: undefined
 ```
 
@@ -61,14 +62,14 @@ This is proper way to do it
 ```javascript
 var point = {
   // ...
-}
+};
 
-const init = point.init
-init.call(point, 3, 4)
+const init = point.init;
+init.call(point, 3, 4);
 // or: init.apply( point, [ 3, 4 ] )
 
-point.x // 3
-point.y // 4
+point.x; // 3
+point.y; // 4
 ```
 
 So now you can borrow a function reference.
@@ -76,27 +77,27 @@ So now you can borrow a function reference.
 ```javascript
 var point = {
   // ...
-}
+};
 
-point.init(3, 4)
+point.init(3, 4);
 
-var anotherPoint = {}
-point.init.call(anotherPoint, 5, 6)
+var anotherPoint = {};
+point.init.call(anotherPoint, 5, 6);
 
 // or you can do this
 
 var similarPoint = {
   init: point.init,
   toString: point.toString,
-}
-similarPoint.init(7, 8)
+};
+similarPoint.init(7, 8);
 
-point.x // 3
-point.y // 4
-anotherPoint.x // 5
-anotherPoint.y // 6
-similarPoint.x // 7
-similarPoint.y // 8
+point.x; // 3
+point.y; // 4
+anotherPoint.x; // 5
+anotherPoint.y; // 6
+similarPoint.x; // 7
+similarPoint.y; // 8
 ```
 
 There is another way to use function from antoher object. You can use keyword `new`.
@@ -106,12 +107,12 @@ var point = {
   init: function () {
     /* .. */
   },
-}
+};
 
-var anotherPoint = new point.init(3, 4)
+var anotherPoint = new point.init(3, 4);
 
-anotherPoint.x // 3
-anotherPoint.y // 4
+anotherPoint.x; // 3
+anotherPoint.y; // 4
 ```
 
 `new` keyword hijacks a function and forces its behavior into a different mode than a normal invocation. Here are the 4 special steps that JS performs when a function is invoked with new:
@@ -127,22 +128,22 @@ anotherPoint.y // 4
 // alternative to:
 //   var anotherPoint = new point.init(3,4)
 
-var anotherPoint
+var anotherPoint;
 // this is a bare block to hide local
 // `let` declarations
 {
   // (Step 1)
-  let tmpObj = {}
+  let tmpObj = {};
 
   // (Step 2)
-  Object.setPrototypeOf(tmpObj, point.init.prototype)
+  Object.setPrototypeOf(tmpObj, point.init.prototype);
   // or: tmpObj.__proto__ = point.init.prototype
 
   // (Step 3)
-  let res = point.init.call(tmpObj, 3, 4)
+  let res = point.init.call(tmpObj, 3, 4);
 
   // (Step 4)
-  anotherPoint = typeof res !== "object" ? tmpObj : res
+  anotherPoint = typeof res !== "object" ? tmpObj : res;
 }
 ```
 

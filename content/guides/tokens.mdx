@@ -4,7 +4,6 @@ description: ID tokens(jwt) and access tokens.
 publishedAt: 2024-07-24
 updatedAt: 2024-10-06
 tags: []
-layout: post
 ---
 
 ## ID tokens
@@ -13,12 +12,11 @@ ID tokens are JSON web tokens (JWTs) meant for use by the application only.
 
 It have 3 parts that is divided by dot. When you decode that jwt you will see content of these parts. There are header, payload and verify signature.
 
-Verify signature is made by adding header, payload and secret key. If you want to check if jwt is valid you need to encrypt header, payload and secret 
+Verify signature is made by adding header, payload and secret key. If you want to check if jwt is valid you need to encrypt header, payload and secret
 key and to check if that key is equal to key that user provided.
 
-The disadvantage of JWT is that if a user is already logged in on another device with an expiring JWT, they must wait a month for it to expire. 
+The disadvantage of JWT is that if a user is already logged in on another device with an expiring JWT, they must wait a month for it to expire.
 Changing the signing secret would invalidate all tokens for all users, effectively logging them out of the website.
-
 
 ```json title="example of payload"
 {
@@ -45,28 +43,27 @@ id, username, email
 Table Sessions:
 userId, sessionId (temporary ID)
 
-When a website or app makes an API request, it sends the session ID, allowing you to identify the user. 
+When a website or app makes an API request, it sends the session ID, allowing you to identify the user.
 
-One advantage of this is the ability to cancel access at any time by removing the session in the database and requiring the user to login again. 
+One advantage of this is the ability to cancel access at any time by removing the session in the database and requiring the user to login again.
 
 The disadvantage of sessions is that each API call requires a database request to determine the user's identity.
 
-
 ## Access tokens
 
-Access tokens are used in token-based authentication to allow an application to access an API. The application receives an access token after a 
+Access tokens are used in token-based authentication to allow an application to access an API. The application receives an access token after a
 user successfully authenticates and authorizes access, then passes the access token as a credential when it calls the target API.
 
 ### Opaque access tokens
 
-Opaque access tokens are tokens in a proprietary format that you cannot access and typically contain some identifier to information in a server's 
+Opaque access tokens are tokens in a proprietary format that you cannot access and typically contain some identifier to information in a server's
 persistent storage. To validate an opaque token, the recipient of the token needs to call the server that issued the token.
 
 If you made 100 API calls in 15 minutes with a session id, your server would make 100 database queries merely to confirm the authentication.
 
 ### JWT access tokens
 
-JSON Web Token (JWT) access tokens conform to the JWT standard and contain information about an entity in the form of claims. They are 
+JSON Web Token (JWT) access tokens conform to the JWT standard and contain information about an entity in the form of claims. They are
 self-contained therefore it is not necessary for the recipient to call a server to validate the token.
 
 They last about 15 minutes.
@@ -75,32 +72,35 @@ They last about 15 minutes.
 
 A token used to obtain a renewed access token without having to re-authenticate the user and they last about 30 days.
 
-When an access token expires, the server validates the secret and refresh token, then checks the database to ensure the user 
-is still allowed to log in. If so, a new access token is created and returned to the user. 
+When an access token expires, the server validates the secret and refresh token, then checks the database to ensure the user
+is still allowed to log in. If so, a new access token is created and returned to the user.
 Additionally, a new refresh token is given to the user for a fresh 30 days of access.
 
-This is how the JWT setup for device logout would be implemented across all devices. One easy way to validate a refresh token is to 
-keep a version of the token in your user table. Then, each time you create a new token, insert the version into the token. When you 
+This is how the JWT setup for device logout would be implemented across all devices. One easy way to validate a refresh token is to
+keep a version of the token in your user table. Then, each time you create a new token, insert the version into the token. When you
 validate the token, you check to see if the version matches the one in the database; if not, the token is considered invalid.
 
 ```jsx
 export const usersTable = pgTable("users", {
-  id: uuid("id").primaryKey().default(sql`uuid_generate_v4()`).notNull(),
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`uuid_generate_v4()`)
+    .notNull(),
   discordId: text("discord_id").notNull(),
   refreshTokenVersion: integer("refresh_token_version").default(1).notNull(),
-}) 
+});
 ```
 
-When a user logs in on their phone and then again on their computer, the refresh token version is set to one. The user then continues 
-to use the website, and every 15 minutes when the access token expires, the server verifies that the refresh token version matches 
-the one in the database. If it does, it grants the user a new access token, and they continue. However, if the user clicks the log 
-out of all devices button, you increase the refresh token version field, which instantly invalidates all of the refresh tokens. 
+When a user logs in on their phone and then again on their computer, the refresh token version is set to one. The user then continues
+to use the website, and every 15 minutes when the access token expires, the server verifies that the refresh token version matches
+the one in the database. If it does, it grants the user a new access token, and they continue. However, if the user clicks the log
+out of all devices button, you increase the refresh token version field, which instantly invalidates all of the refresh tokens.
 It's important to note that this doesn't affect the user's access token; instead, it prevents them from getting new ones unless they log in again.
 
-
-
 ```ts
-const createAuthTokens = (user: DbUser): { refreshToken: string; accessToken: string } => {
+const createAuthTokens = (
+  user: DbUser
+): { refreshToken: string; accessToken: string } => {
   const refreshToken = jwt.sign(
     { userId: user.id, refreshTokenVersion: user.refreshTokenVersion },
     process.env.REFRESH_TOKEN_SECRET!,
@@ -150,9 +150,9 @@ export const sendAuthCookies = (res: Response, user: DbUser) => {
 A unique feature of cookies is that the browser will send all cookies automatically without requiring you to provide an header if you set credentials to true.
 In the event that you decide to use local storage, you will need to manually set the heading.
 
-When using cookies, it might be challenging to determine if a user is logged in or not on the front end. To solve this, you can make an API call to your 
-server each time a user visits your website, allowing the server to determine the user's identity. If a cookie is present, the server will read it, 
-confirm it, and retrieve the current user information for you. The server will respond that there isn't a user and often just send users back to the 
+When using cookies, it might be challenging to determine if a user is logged in or not on the front end. To solve this, you can make an API call to your
+server each time a user visits your website, allowing the server to determine the user's identity. If a cookie is present, the server will read it,
+confirm it, and retrieve the current user information for you. The server will respond that there isn't a user and often just send users back to the
 login screen if that is the case.
 
 ```jsx
@@ -171,13 +171,13 @@ function Home() {
 
 - **Keep it secret. Keep it safe**: The signing key should be treated like any other credential and revealed only to services that need it.
 
-- **Do not add sensitive data to the payload**: Tokens are signed to protect against manipulation and are easily decoded. Add the bare minimum number 
-of claims to the payload for best performance and security.
+- **Do not add sensitive data to the payload**: Tokens are signed to protect against manipulation and are easily decoded. Add the bare minimum number
+  of claims to the payload for best performance and security.
 
-- **Give tokens an expiration**: Technically, once a token is signed, it is valid forever—unless the signing key is changed or expiration explicitly set. 
-This could pose potential issues so have a strategy for expiring and/or revoking tokens.
+- **Give tokens an expiration**: Technically, once a token is signed, it is valid forever—unless the signing key is changed or expiration explicitly set.
+  This could pose potential issues so have a strategy for expiring and/or revoking tokens.
 
 - **Embrace HTTPS**: Do not send tokens over non-HTTPS connections as those requests can be intercepted and tokens compromised.
 
-- **Consider all of your authorization use cases**: Adding a secondary token verification system that ensures tokens were generated from your 
-server may be necessary to meet your requirements.
+- **Consider all of your authorization use cases**: Adding a secondary token verification system that ensures tokens were generated from your
+  server may be necessary to meet your requirements.
