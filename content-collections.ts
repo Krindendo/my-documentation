@@ -22,6 +22,7 @@ const docs = defineCollection({
     title: z.string().min(1),
     description: z.string().min(1),
     date: z.string().min(1),
+    tags: z.array(z.string()),
     published: z.boolean().default(true),
   }),
   transform: async (page, context) => {
