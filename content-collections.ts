@@ -37,7 +37,11 @@ const docs = defineCollection({
       ...page,
       body,
       date: new Date(page.date),
-      slug: page._meta.path,
+      slug: page._meta.path.split("\\"),
+      slugAsPath: page._meta.path
+        .split("\\")
+        .filter((s) => s !== "index")
+        .join("\\"),
     };
   },
 });

@@ -11,7 +11,7 @@ export type SiteConfig = {
 };
 
 export const siteConfig: SiteConfig = {
-  name: "My Wiki",
+  name: "My Documentation",
   description:
     "The site is made to serve as documentation that will facilitate programming. It contains examples and definitions of the various functions that are used.",
   url: getBaseUrl(),

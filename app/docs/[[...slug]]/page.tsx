@@ -8,16 +8,15 @@ import { notFound } from "next/navigation";
 
 type DocPostProperties = {
   readonly params: Promise<{
-    slug?: string[];
+    slug: string[];
   }>;
 };
 
 export const generateMetadata = async ({
   params,
 }: DocPostProperties): Promise<Metadata> => {
-  const { slug } = await params;
-  const path = slug?.join("/") || "";
-  const page = allDocs.find(({ _meta }) => _meta.path === path);
+  const path = (await params).slug?.join("\\") || "";
+  const page = allDocs.find(({ slugAsPath }) => slugAsPath === path);
 
   if (!page) {
     return {};
@@ -29,16 +28,14 @@ export const generateMetadata = async ({
   });
 };
 
-export const generateStaticParams = (): { slug: string }[] =>
+export const generateStaticParams = (): { slug?: string[] }[] =>
   allDocs.map((page) => ({
-    slug: page._meta.path,
+    slug: page.slug,
   }));
 
 const DocPost = async ({ params }: DocPostProperties) => {
-  const { slug } = await params;
-  console.log("allDocs", allDocs);
-  const path = slug?.join("/") || "";
-  const page = allDocs.find(({ _meta }) => _meta.path === path);
+  const path = (await params).slug?.join("\\") || "";
+  const page = allDocs.find(({ slugAsPath }) => slugAsPath === path);
 
   if (!page) {
     notFound();
