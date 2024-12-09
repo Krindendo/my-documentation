@@ -28,3 +28,21 @@ export function getAbsoluteUrl(path: string) {
   const baseUrl = getBaseUrl();
   return `${baseUrl}${path}`;
 }
+
+export function safeStringToInteger(input: any) {
+  const convertedInput = parseInt(input);
+  if (isNaN(convertedInput)) {
+    return 0;
+  } else {
+    return convertedInput;
+  }
+}
+
+export function formatDate(input: string | number | Date): string {
+  const date = new Date(input);
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
