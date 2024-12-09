@@ -1,13 +1,17 @@
 import { capitalize } from "@/lib/utils";
 import { getTableOfContents } from "fumadocs-core/server";
 
-type SidebarProperties = {
+type TableOfContentsProperties = {
   readonly date: Date;
   readonly tags?: string[];
   readonly content: string;
 };
 
-export const Sidebar = async ({ date, tags, content }: SidebarProperties) => {
+export const TableOfContents = async ({
+  date,
+  tags,
+  content,
+}: TableOfContentsProperties) => {
   const toc = await getTableOfContents(content);
 
   return (

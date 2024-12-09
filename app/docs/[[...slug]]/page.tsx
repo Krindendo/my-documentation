@@ -1,6 +1,6 @@
 import { Mdx } from "@/components/mdx";
 import { PageHeader } from "@/components/page-header";
-import { Sidebar } from "@/components/sidebar";
+import { TableOfContents } from "@/components/table-of-contents";
 import { createMetadata } from "@/lib/metadata";
 import { allDocs } from "content-collections";
 import type { Metadata } from "next";
@@ -49,7 +49,7 @@ const DocPost = async ({ params }: DocPostProperties) => {
           <Mdx code={page.body} />
         </div>
         <div className="sticky top-24 hidden shrink-0 md:block">
-          <Sidebar content={page.content} date={page.date} />
+          <TableOfContents content={page.content} date={page.date} />
         </div>
       </div>
     </div>
