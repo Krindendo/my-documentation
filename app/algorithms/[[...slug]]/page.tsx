@@ -2,11 +2,11 @@ import { Mdx } from "@/components/mdx";
 import { PageHeader } from "@/components/page-header";
 import { TableOfContents } from "@/components/table-of-contents";
 import { createMetadata } from "@/lib/metadata";
-import { allDocs } from "content-collections";
+import { allAlgorithms } from "content-collections";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-type DocPageProperties = {
+type AlgorithmsPageProperties = {
   readonly params: Promise<{
     slug: string[];
   }>;
@@ -14,9 +14,9 @@ type DocPageProperties = {
 
 export const generateMetadata = async ({
   params,
-}: DocPageProperties): Promise<Metadata> => {
+}: AlgorithmsPageProperties): Promise<Metadata> => {
   const path = (await params).slug?.join("\\") || "";
-  const page = allDocs.find(({ slugAsPath }) => slugAsPath === path);
+  const page = allAlgorithms.find(({ slugAsPath }) => slugAsPath === path);
 
   if (!page) {
     return {};
@@ -29,13 +29,13 @@ export const generateMetadata = async ({
 };
 
 export const generateStaticParams = (): { slug?: string[] }[] =>
-  allDocs.map((page) => ({
+  allAlgorithms.map((page) => ({
     slug: page.slug,
   }));
 
-const DocPage = async ({ params }: DocPageProperties) => {
+const AlgorithmsPage = async ({ params }: AlgorithmsPageProperties) => {
   const path = (await params).slug?.join("\\") || "";
-  const page = allDocs.find(({ slugAsPath }) => slugAsPath === path);
+  const page = allAlgorithms.find(({ slugAsPath }) => slugAsPath === path);
 
   if (!page) {
     notFound();
@@ -56,4 +56,4 @@ const DocPage = async ({ params }: DocPageProperties) => {
   );
 };
 
-export default DocPage;
+export default AlgorithmsPage;
