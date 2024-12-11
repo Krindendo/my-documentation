@@ -2,6 +2,9 @@ import { MDXContent } from "@content-collections/mdx/react";
 import Image from "next/image";
 import Link from "next/link";
 import type { ComponentProps, HTMLProps } from "react";
+import { MdxCard } from "./mdx-card";
+import { Icons } from "./icons";
+import { Callout } from "./callout";
 
 const a = ({ href, ...properties }: HTMLProps<HTMLAnchorElement>) => {
   if (typeof href !== "string") {
@@ -37,7 +40,27 @@ const img = (properties: HTMLProps<HTMLImageElement>) => {
   );
 };
 
-const CompanyName = () => "next-forge";
+const table = ({ ...properties }: HTMLProps<HTMLTableElement>) => (
+  <div className="my-6 w-full overflow-y-auto">
+    <table {...properties} />
+  </div>
+);
+
+const tr = ({ ...properties }: HTMLProps<HTMLTableRowElement>) => (
+  <tr className="m-0 border-t p-0 even:bg-muted" {...properties} />
+);
+
+const p = ({ children, ...properties }: HTMLProps<HTMLParagraphElement>) => (
+  <p className="[&:not(:first-child)]:mt-6" {...properties}>
+    {children}
+  </p>
+);
+
+const ul = ({ children, ...properties }: HTMLProps<HTMLUListElement>) => (
+  <ul className="my-6 ml-6 list-disc" {...properties}>
+    {children}
+  </ul>
+);
 
 export const Mdx = ({
   code,
@@ -48,8 +71,14 @@ export const Mdx = ({
       code={code}
       components={{
         a,
+        p,
+        ul,
         img,
-        CompanyName,
+        table,
+        tr,
+        Callout,
+        MdxCard,
+        Icons,
         ...components,
       }}
     />

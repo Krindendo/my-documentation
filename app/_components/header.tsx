@@ -16,8 +16,9 @@ export function SiteHeader() {
   const segment = useSelectedLayoutSegment();
 
   return (
-    <header className="sticky top-0 left-0 right-0 z-50 flex h-14 items-center justify-between gap-12 bg-white/[var(--bg-opacity-light)] px-4 backdrop-blur-sm transition dark:bg-zinc-900/[var(--bg-opacity-dark)] dark:backdrop-blur">
-      <div className="container relative mx-auto flex min-h-20 flex-row items-center gap-4">
+    <header className="sticky top-0 left-0 right-0 z-50 flex h-14 items-center justify-between gap-12 bg-white/50 px-4 backdrop-blur-sm transition dark:bg-zinc-900/20 dark:backdrop-blur">
+      <div className="absolute inset-x-0 top-full h-px transition bg-zinc-900/10 dark:bg-white/10" />
+      <div className="w-full relative mx-auto flex min-h-20 flex-row items-center gap-4">
         <div className="ml-auto flex items-center gap-5">
           <ul role="list" className="flex items-center gap-8">
             {navItems.map((item, index) => (
