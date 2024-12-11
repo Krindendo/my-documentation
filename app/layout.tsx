@@ -29,15 +29,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${calSans.variable} ${fontSans.variable} antialiased`}>
+        <Pattern />
         <ThemeProvider>
           <SidebarProvider>
             <SiteSidebar />
             <SidebarInset>
               <SiteHeader />
-              <Pattern />
-              {children}
+              <div className="flex flex-col py-16">{children}</div>
               <SiteFooter />
             </SidebarInset>
           </SidebarProvider>
