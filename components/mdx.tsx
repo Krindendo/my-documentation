@@ -5,6 +5,7 @@ import type { ComponentProps, HTMLProps } from "react";
 import { MdxCard } from "./mdx-card";
 import { Icons } from "./icons";
 import { Callout } from "./callout";
+import { CodeBox } from "./code-box";
 
 const a = ({ href, ...properties }: HTMLProps<HTMLAnchorElement>) => {
   if (typeof href !== "string") {
@@ -12,7 +13,7 @@ const a = ({ href, ...properties }: HTMLProps<HTMLAnchorElement>) => {
   }
 
   if (href.startsWith("/")) {
-    return <Link href={href} {...properties} />;
+    return <Link href={href} {...properties} prefetch={true} />;
   }
 
   return (
@@ -77,6 +78,7 @@ export const Mdx = ({
         table,
         tr,
         Callout,
+        pre: CodeBox,
         MdxCard,
         Icons,
         ...components,
