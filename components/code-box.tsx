@@ -5,6 +5,7 @@
 import { Files } from "lucide-react";
 import type { FC, PropsWithChildren, ReactNode } from "react";
 import { Fragment, isValidElement, useRef } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
@@ -74,22 +75,12 @@ const CodeBox: FC<PropsWithChildren<CodeBoxProps>> = ({
 
   const ref = useRef<HTMLPreElement>(null);
 
-  //const notify = useNotification();
   const [, copyToClipboard] = useCopyToClipboard();
 
   const onCopy = async () => {
     if (ref.current?.textContent) {
       copyToClipboard(ref.current.textContent);
-
-      // notify({
-      //   duration: 3000,
-      //   message: (
-      //     <div className={styles.notification}>
-      //       <CodeBracketIcon className={styles.icon} />
-      //       copied
-      //     </div>
-      //   ),
-      // });
+      toast.success("Copied to clipboard");
     }
   };
 

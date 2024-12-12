@@ -31,7 +31,7 @@ export function SiteHeader() {
           <PanelLeft />
         </Button>
         <div className="ml-auto flex items-center gap-5">
-          <ul role="list" className="flex items-center gap-8">
+          <ul role="list" className="hidden sm:flex items-center gap-8">
             {navItems.map((item, index) => (
               <li key={index}>
                 <Link

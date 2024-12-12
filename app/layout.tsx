@@ -8,6 +8,7 @@ import { SiteFooter } from "./_components/footer";
 import { SiteHeader } from "./_components/header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SiteSidebar } from "./_components/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 const calSans = localFont({
   src: "./fonts/CalSans-SemiBold.woff",
@@ -42,6 +43,7 @@ export default function RootLayout({
             </SidebarInset>
           </SidebarProvider>
         </ThemeProvider>
+        <Toaster richColors />
       </body>
     </html>
   );

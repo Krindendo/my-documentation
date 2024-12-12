@@ -25,9 +25,10 @@
     "lodash.merge": "^4.6.2",
     "lucide-react": "^0.465.0",
     "next": "^15.1.0",
-    "next-themes": "^0.4.3",
+    "next-themes": "^0.4.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "sonner": "^1.7.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7"
   },
