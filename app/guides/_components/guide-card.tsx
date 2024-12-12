@@ -26,7 +26,7 @@ export function GuideCard({ title, description, date, url }: GuidesCardProps) {
           <p className="text-sm text-muted-foreground">{formatDate(date)}</p>
         )}
       </div>
-      <Link href={url} className="absolute inset-0">
+      <Link href={"/guides/" + url} className="absolute inset-0">
         <span className="sr-only">View</span>
       </Link>
     </article>

@@ -4,6 +4,7 @@ const PER_PAGE = 20;
 
 export const getSearchResults = async (searchTerm: string, page: number) => {
   let guides;
+  if (page === 0) page = 1;
 
   guides = allGuides
     .filter((guide) => guide.published)

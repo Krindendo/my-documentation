@@ -116,59 +116,54 @@ const sideNavigationGuides: NavigationEntry[] = [
         label: "Introduction",
         link: "/guides",
       },
-    ],
-  },
-  {
-    label: "Uncategorized",
-    items: [
       {
         label: "Abort fetch",
-        link: "/guides/uncategorized/abort-fetch",
+        link: "/guides/abort-fetch",
       },
       {
         label: "Axios config",
-        link: "/guides/uncategorized/axios-config",
+        link: "/guides/axios-config",
       },
       {
         label: "Branching models",
-        link: "/guides/uncategorized/branching-models",
+        link: "/guides/branching-models",
       },
       {
         label: "Configure tsconfig",
-        link: "/guides/uncategorized/configure-tsconfig",
+        link: "/guides/configure-tsconfig",
       },
       {
         label: "Control history API",
-        link: "/guides/uncategorized/how-to-control-history-api",
+        link: "/guides/how-to-control-history-api",
       },
       {
         label: "HTML tags",
-        link: "/guides/uncategorized/html-tags",
+        link: "/guides/html-tags",
       },
       {
         label: "Intersection observer API",
-        link: "/guides/uncategorized/intersection-observer-API",
+        link: "/guides/intersection-observer-API",
       },
 
       {
         label: "Rendering patterns",
-        link: "/guides/uncategorized/rendering-patterns",
+        link: "/guides/rendering-patterns",
       },
       {
         label: "Serverless",
-        link: "/guides/uncategorized/serverless",
+        link: "/guides/serverless",
       },
       {
         label: "Styling with CSS",
-        link: "/guides/uncategorized/styling-with-css",
+        link: "/guides/styling-with-css",
       },
       {
         label: "Tokens",
-        link: "/guides/uncategorized/tokens",
+        link: "/guides/tokens",
       },
       {
         label: "Websockets vs polling",
-        link: "/guides/uncategorized/websockets-vs-polling",
+        link: "/guides/websockets-vs-polling",
       },
     ],
   },

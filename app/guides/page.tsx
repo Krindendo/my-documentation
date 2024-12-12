@@ -12,16 +12,16 @@ export const metadata: Metadata = {
   description: "This section includes how to do stuff properly.",
 };
 
-export default async function GuidesPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
+type SearchParams = Promise<{ search: string; page: string }>;
+
+export default async function GuidesPage(props: {
+  searchParams: SearchParams;
 }) {
-  const { search, page } = searchParams as { [key: string]: string };
+  const { search, page } = await props.searchParams;
   const guides = await getSearchResults(search, safeStringToInteger(page));
 
   return (
-    <div className="py-6 lg:py-10">
+    <div className="py-6 lg:py-10 container max-w-5xl">
       <PageHeader
         heading="Guides"
         text="This section includes how to do stuff properly"
