@@ -27,7 +27,7 @@ export const ModeToggle = () => {
           className="text-muted-foreground hover:text-foreground"
           onClick={() => setTheme("light")}
         >
-          <Icons.sun className="mr-2 h-4 w-4" />
+          <Icons.sun className="mr-2 h-4 w-4 " />
           <span>Light</span>
         </DropdownMenuItem>
         <DropdownMenuItem

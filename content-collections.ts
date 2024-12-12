@@ -9,8 +9,8 @@ import {
 
 const rehypeCodeOptions: RehypeCodeOptions = {
   themes: {
-    light: "catppuccin-mocha",
-    dark: "catppuccin-mocha",
+    light: "github-dark-default",
+    dark: "github-dark-default",
   },
 };
 

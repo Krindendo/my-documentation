@@ -12,8 +12,8 @@ export function PageHeader({
   ...props
 }: PageHeaderProps) {
   return (
-    <>
-      <div className={cn("space-y-4", className)} {...props}>
+    <div className={className} {...props}>
+      <div className="space-y-4">
         <h1
           className="inline-block font-heading text-4xl lg:text-5xl"
           id="_top"
@@ -23,6 +23,6 @@ export function PageHeader({
         {text && <p className="text-xl text-muted-foreground">{text}</p>}
       </div>
       <hr className="my-4" />
-    </>
+    </div>
   );
 }
