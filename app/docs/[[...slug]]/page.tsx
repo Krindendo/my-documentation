@@ -43,7 +43,11 @@ const DocPage = async ({ params }: DocPageProperties) => {
 
   return (
     <div className="container py-16">
-      <PageHeader heading={page.title} text={page.description} />
+      <PageHeader
+        heading={page.title}
+        text={page.description}
+        className="sm:w-9/12"
+      />
       <div className="mt-16 flex flex-col items-start gap-8 sm:flex-row">
         <div className="sm:flex-1">
           <Mdx code={page.body} />
