@@ -136,7 +136,7 @@ body {
     & > code {
       @apply grid
           overflow-x-auto
-          bg-transparent
+          !bg-transparent
           p-0
           font-mono
           text-sm
@@ -149,6 +149,10 @@ body {
         @apply relative
             min-w-0
             pl-8;
+
+        & > span {
+          @apply text-[var(--shiki-light)] dark:text-[var(--shiki-dark)];
+        }
 
         &:not(:empty:last-child)::before {
           @apply inline-block

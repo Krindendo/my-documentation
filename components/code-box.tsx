@@ -1,10 +1,8 @@
 "use client";
 
-// import { getLanguageDisplayName } from "@/lib/getLanguageDisplayName";
-
 import { Files } from "lucide-react";
 import type { FC, PropsWithChildren, ReactNode } from "react";
-import { Fragment, isValidElement, useRef } from "react";
+import { Fragment, isValidElement, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -12,7 +10,7 @@ import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 
 // Transforms a code element with plain text content into a more structured
 // format for rendering with line numbers
-const transformCode = (code: ReactNode, language: string): ReactNode => {
+const transformCode = (code: ReactNode): ReactNode => {
   if (!isValidElement(code)) {
     // Early return when the `CodeBox` child is not a valid element since the
     // type is a ReactNode, and can assume any value
@@ -31,10 +29,8 @@ const transformCode = (code: ReactNode, language: string): ReactNode => {
   // being an empty string, so we need to remove it
   const lines = content.split("\n");
 
-  const extraStyle = language.length === 0 ? { fontFamily: "monospace" } : {};
-
   return (
-    <code style={extraStyle}>
+    <code>
       {lines
         .flatMap((line, lineIndex) => {
           const columns = line.split(" ");
@@ -64,16 +60,9 @@ interface CodeBoxProps {
   className?: string;
 }
 
-const CodeBox: FC<PropsWithChildren<CodeBoxProps>> = ({
-  children,
-  className,
-}) => {
-  const matches = className?.match(/language-(?<language>.*)/);
-
-  console.log("matches", matches);
-  const language = matches?.groups?.language ?? "";
-
+const CodeBox: FC<PropsWithChildren<CodeBoxProps>> = ({ children }) => {
   const ref = useRef<HTMLPreElement>(null);
+  const [language, setLanguage] = useState("");
 
   const [, copyToClipboard] = useCopyToClipboard();
 
@@ -83,6 +72,14 @@ const CodeBox: FC<PropsWithChildren<CodeBoxProps>> = ({
       toast.success("Copied to clipboard");
     }
   };
+
+  useEffect(() => {
+    const className = ref.current?.children[0].className;
+
+    const matches = className?.match(/language-(?<language>.*)/);
+    const _language = matches?.groups?.language ?? "";
+    setLanguage(_language.toUpperCase());
+  }, [ref]);
 
   return (
     <div className="relative mb-4 mt-6 max-h-[650px] w-full overflow-x-auto rounded-lg border border-neutral-800 bg-zinc-900 py-4 dark:bg-zinc-900 scrollbar">
@@ -102,7 +99,7 @@ const CodeBox: FC<PropsWithChildren<CodeBoxProps>> = ({
       </div>
 
       <pre ref={ref} className="m-0 p-4 pt-2 code-content" tabIndex={0}>
-        {transformCode(children, language)}
+        {transformCode(children)}
       </pre>
     </div>
   );

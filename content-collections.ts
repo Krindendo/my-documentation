@@ -9,9 +9,26 @@ import {
 
 const rehypeCodeOptions: RehypeCodeOptions = {
   themes: {
-    light: "github-dark-default",
-    dark: "github-dark-default",
+    light: "dark-plus",
+    dark: "dark-plus",
   },
+  langs: [
+    "tsx",
+    "jsx",
+    "js",
+    "ts",
+    "tsx",
+    "json",
+    "css",
+    "shell",
+    "ps",
+    "bash",
+    "sql",
+    "docker",
+    "diff",
+    "vue",
+  ],
+  addLanguageClass: true,
 };
 
 const docs = defineCollection({
