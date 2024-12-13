@@ -20,7 +20,7 @@ export function SiteFooter() {
           target="_blank"
           className="inline-flex items-center gap-0.5 rounded-sm p-3 hover:bg-gray-100"
         >
-          <Icons.moon width={20} height={20} />
+          <Icons.linkedIn width={20} height={20} />
         </Link>
       </div>
     </footer>
