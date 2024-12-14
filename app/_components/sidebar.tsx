@@ -20,7 +20,7 @@ import { Logo } from "@/components/logo";
 import { Separator } from "@/components/ui/separator";
 import { SidebarSelectSitePath } from "./sidebar-select-site-path";
 import { usePathname } from "next/navigation";
-// import { useLocalStorage } from "@uidotdev/usehooks";
+import { useLocalStorage } from "usehooks-ts";
 
 export type NavigationKeys = "docs" | "guides" | "algorithms";
 
@@ -28,11 +28,10 @@ export function SiteSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
-  // const [sectionPath, setSectionPath] = useLocalStorage<NavigationKeys>(
-  //   "section-path",
-  //   "docs"
-  // );
-  const [sectionPath, setSectionPath] = React.useState<NavigationKeys>("docs");
+  const [sectionPath, setSectionPath] = useLocalStorage<NavigationKeys>(
+    "section-path",
+    "docs"
+  );
 
   const handleChangeSitePath = (item: NavigationKeys) => {
     setSectionPath(item);
