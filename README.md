@@ -1,90 +1,36 @@
-# My documentation
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-I made this app to help me with my work and to keep track of my progress.
+## Getting Started
 
-### other
+First, run the development server:
 
-````mdx showLineNumbers{23}
-```ts title="path/to/file.ts" showLineNumbers{23}
-// Code here
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
-````
 
-````mdx {1,3-6}
-```ts {1,3-6}
-// Highlight line 1 and line 3 to 6
-// Highlight line 1 and line 3 to 6
-// Highlight line 1 and line 3 to 6
-// Highlight line 1 and line 3 to 6
-// Highlight line 1 and line 3 to 6
-// Highlight line 1 and line 3 to 6
-```
-````
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### comitlint
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-#### build
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-Changes that affect the build system or external dependencies(example scopes: gulp, npm)
+## Learn More
 
-Example: `build: update dependencies to fix security vulnerabilities`
+To learn more about Next.js, take a look at the following resources:
 
-#### chore
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-Changes that do not affect the production code or the tests (example scopes: grunt, eslint, etc.)
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-Example: `chore: add prettier config file`
+## Deploy on Vercel
 
-#### ci 
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Changes to the continuous integration or deployment configuration files and scripts (example scopes: Github Actions, etc.)
-
-Example: `ci: add code coverage report to pipeline`
-
-#### docs
-
-Changes to the documentation only
-
-Example: `docs: update README with installation instructions`
-
-#### feat
-
-A new feature or enhancement
-
-Example: `feat: add search functionality to the app`
-
-#### fix 
-
-A bug fix or a patch
-
-Example: `fix: resolve issue with login form validation`
-
-#### perf
-
-A code change that improves performance
-
-Example: `perf: optimize image loading speed`
-
-#### refactor
-
-A code change that neither fixes a bug nor adds a feature, but improves the code quality or strucure
-
-Example: `refactor: extract common logic into a helper function`
-
-#### revert 
-
-A code change that reverts a previous commit 
-
-Example: `revert: undo breaking changes introduced in commit 123456`
-
-#### style 
-
-A code change that affects the style or formatting, but does not change the functionality  (example scopes: css, scss, html, etc.)
-
-Example: `style: apply consistent indentation and spacing`
-
-#### test
-
-A code change that adds or modifies tests, but does not affect the production code
-
-Example `test: add unit tests for the new search feature`
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

@@ -1,0 +1,303 @@
+---
+title: Basics
+description: Basic stuff
+tags: [typescript]
+
+date: 2024-12-06
+---
+
+### Access modifiers
+
+The main purpose of access modifiers is to control and restrict access to members of a class.
+
+- Public (default) - This means it can be accessed from anywhere in your code, including outside the class itself.
+
+- Private - are only accessible within the class itself. In Javascript, private properties are created with a hash '#' prefix, but in Typescript, they are created with the keyword private. Properties cannot be legally referenced outside of the class.
+
+- Protected - are accessible within the class and its subclasses. In TypeScript, they are created with the keyword protected, whereas in JavaScript, protected members are indicated by a '\_' prefix before the name.
+
+```ts
+class Calculation {
+  protected x: number;
+  protected y: number;
+
+  private counter: number = 0;
+  protected lastCalculation: number = 0;
+
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+
+  public sum() {
+    this.counter++;
+    this.lastCalculation = this.x + this.y;
+    return this.lastCalculation;
+  }
+
+  protected counts() {
+    return this.counter;
+  }
+}
+
+class Multiple extends Calculation {
+  constructor(x: number, y: number) {
+    super(x, y);
+  }
+
+  public multiple() {
+    this.counter++;
+
+    this.lastCalculation = this.x * this.y;
+
+    return this.lastCalculation;
+  }
+}
+
+const calcSum = new Calculation(1, 2);
+const calcMult = new Multiple(1, 2);
+
+console.log("sum of 1 and 2 is", calcSum.sum());
+console.log("multiple of 1 and 2 is", calcMult.sum());
+
+// These are not available
+calcSum.x;
+calcSum.lastCalculation;
+```
+
+### Abstract class
+
+- You cannot use an abstract class to directly create an object. if we think of a class as a blueprint for constructing a house for example, then an abstract class is a type of blueprint that we cannot use to directly build a house. Instead, an abstract class is a class that another class can inherit from.
+
+```ts
+abstract class Shape {
+  name: string;
+  constructor(name: string) {
+    this.name = name;
+  }
+}
+
+class Circle extends Shape {
+  radius: number;
+  constructor(name: string, radius: number) {
+    super(name);
+    this.radius = radius;
+  }
+}
+
+const myShape = new Shape("My shape"); // This will throw an Error
+const shortCircle = new Circle("Short Circle", 0.5); // This will work fine.
+```
+
+### Difference between class and interface
+
+`Class:`
+
+- **A blueprint for creating objects.** It defines the properties (data) and methods (functions) that objects of that class will have.
+
+- You can instantiate a class using the new keyword, which creates a new object with the properties and methods defined in the class.
+
+- Classes can have constructors to initialize properties during object creation.
+
+- A class can inherit from another class, acquiring its properties and methods.
+
+`Interface:`
+
+- Defines the structure or shape of an object and specify the properties and methods that an object has or should have.
+
+### Partial interface
+
+for c# this is
+
+- A key reason to use partial classes is to organize code related to different functionalities of the same class across multiple files.
+
+for Typescript:
+
+- Constructs a type with all properties of Type set to optional.
+
+### How to integrate typescript
+
+1. install TypeScript
+
+2. add a tsconfig.json - It differs for different project types.
+
+3. change a files to .ts or .tsx
+
+### Type guard
+
+- A type guard is a mechanism that allows you to refine the type of a variable within a specific code block. It essentially performs a check to determine the exact type of the variable at runtime.
+
+TypeScript uses built-in JavaScript operators like typeof, instanceof, and in to determine if an object contains a property.
+
+- instanceof is a built-in type guard that can be used to check if a value is an instance of a given constructor function or class.
+
+- TypeScript follows possible paths of execution that our programs can take to analyze the most specific possible type of a value at a given position. It looks at these special checks (called type guards) and assignments, and the process of refining types to more specific types than declared is called `narrowing`.
+
+```ts
+interface Accessory {
+  brand: string;
+}
+class Necklace implements Accessory {
+  kind: string;
+  brand: string;
+  constructor(brand: string, kind: string) {
+    this.brand = brand;
+    this.kind = kind;
+  }
+}
+class bracelet implements Accessory {
+  brand: string;
+  year: number;
+  constructor(brand: string, year: number) {
+    this.brand = brand;
+    this.year = year;
+  }
+}
+const getRandomAccessory = () => {
+  return Math.random() < 0.5
+    ? new bracelet("cartier", 2021)
+    : new Necklace("choker", "TASAKI");
+};
+let Accessory = getRandomAccessory();
+if (Accessory instanceof bracelet) {
+  console.log(Accessory.year);
+}
+if (Accessory instanceof Necklace) {
+  console.log(Accessory.brand);
+}
+```
+
+- The typeof type guard is used to determine the type of a variable.
+
+```ts
+typeof v === "boolean";
+```
+
+- The `in` type guard checks if an object has a particular property
+
+```ts
+"house" in { name: "test", house: { parts: "door" } }; // => true
+```
+
+- The `is` operator checks if a value or variable is of a specific type.
+
+```ts
+interface Cat {
+  meow(): void;
+}
+interface Dog {
+  bark(): void;
+}
+function isCat(pet: Dog | Cat): pet is Cat {
+  return (pet as Cat).meow !== undefined;
+}
+let pet: Dog | Cat;
+// Using the 'is' keyword
+if (isCat(pet)) {
+  pet.meow();
+} else {
+  pet.bark();
+}
+```
+
+### Static keyword
+
+Static properties cannot be directly accessed on instances of the class. Instead, they're accessed on the class itself.
+
+```ts
+class Circle {
+  static pi: number = 3.14;
+
+  static calculateArea(radius: number) {
+    return this.pi * radius * radius;
+  }
+}
+Circle.pi; // returns 3.14
+Circle.calculateArea(5); // returns 78.5
+```
+
+### Dependency injection
+
+is software design pattern used to reduce tight coupling between code components, making applications easier to test, maintain, and extend.
+
+The key idea of DI is that a class should not create its own dependencies but instead receive them (inject them) externally, typically via a constructor, method, or property.
+
+Key Concepts:
+
+1. Dependency: Any class, object, or resource that another class requires to perform its function.
+
+2. Injector: A component or mechanism responsible for creating and delivering dependencies to a class.
+
+Benefits of DI:
+
+- Loose Coupling: Components are not directly tied to their dependencies.
+
+- Easier Testing: Dependencies can easily be replaced with mocks or stubs for testing.
+
+- Reusability: Components are more flexible and can be reused in other parts of the code.
+
+- Maintainability: Makes it easier to change dependencies without modifying the class itself.
+
+Example:
+
+Without Dependency Injection:
+
+```js
+class EmailService {
+  send(message, recipient) {
+    console.log(`Sending email to ${recipient}: ${message}`);
+  }
+}
+
+class NotificationService {
+  constructor() {
+    this.emailService = new EmailService(); // Hardcoded dependency
+  }
+
+  notify(message, recipient) {
+    this.emailService.send(message, recipient);
+  }
+}
+
+// Usage
+const notificationService = new NotificationService();
+notificationService.notify("Hello!", "user@example.com");
+```
+
+With Dependency Injection:
+
+```js
+class EmailService {
+  send(message, recipient) {
+    console.log(`Sending email to ${recipient}: ${message}`);
+  }
+}
+
+class SmsService {
+  send(message, recipient) {
+    console.log(`Sending SMS to ${recipient}: ${message}`);
+  }
+}
+
+class NotificationService {
+  constructor(notificationProvider) {
+    this.notificationProvider = notificationProvider; // Dependency is injected
+  }
+
+  notify(message, recipient) {
+    this.notificationProvider.send(message, recipient);
+  }
+}
+
+// Usage
+const emailService = new EmailService();
+const smsService = new SmsService();
+
+// Injecting EmailService
+const emailNotificationService = new NotificationService(emailService);
+emailNotificationService.notify("Hello via Email!", "user@example.com");
+
+// Injecting SmsService
+const smsNotificationService = new NotificationService(smsService);
+smsNotificationService.notify("Hello via SMS!", "+123456789");
+```

@@ -1,0 +1,18 @@
+---
+title: TCP 3 Way Handshake Process
+description: TCP 3 Way Handshake Process
+publishedAt: 2024-10-03
+tags: [TCP, connection, handshake]
+---
+
+The TCP 3-Way Handshake is a fundamental process that establishes a reliable connection between two devices over a TCP/IP network. It involves three steps:
+
+1. **SYN (Synchronize)** - The initiating computer (or active client) sends a synchronize sequence number (SYN) packet to the receiving computer (usually a server) with the value set to an arbitrary number (e.g. 100) to “ask” if any open connections are available.
+
+2. **SYN-ACK (Synchronize-Acknowledge)** - If the receiving computer (also known as a passive client) has open ports that can accept the connection, it sends back a synchronize-acknowledge (SYN-ACK) packet to the initiating computer. The packet includes two numbers: the receiving computer’s own SYN, which can be any arbitrary number as well (e.g. 200), and the ACK number, which is the initiating computer’s SYN plus one (e.g. 101).
+
+3. **ACK (Acknowledge)** - The initiating computer (active client) then sends an acknowledge sequence number (ACK) packet back to the receiving computer, acknowledging receipt of the SYN-ACK packet. The packet value is set to the receiving computer’s SYN (sent in step two) plus one again (e.g. 201). With this final step, the connection establishes, and data transmission can begin.
+
+During the handshake, the client and server exchange initial sequence numbers and confirm the connection establishment.
+
+https://www.geeksforgeeks.org/tcp-3-way-handshake-process/

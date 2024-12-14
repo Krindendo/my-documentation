@@ -1,0 +1,79 @@
+---
+title: Stack
+description: test
+tags: []
+
+date: 2024-12-06
+---
+
+Stack is list in witch looks like a queue or acts like a queue.
+It's a singly linked list in which you only add and remove from the head.
+
+<h3 className="text-lg font-semibold">- How it works</h3>
+
+Let asume that we have list with node A,B,C,D. To make stack work we also need node head.
+
+You can imagne stack like stack of plates where you put node on top of another node and when you want to remove node, you can do it only from the top.
+
+<img
+  src="/static/images/algorithms/stack-base.png"
+  alt="Stack example"
+  className="my-6"
+/>
+
+If we want to add node E to stack, we will take node E to point to node D then we will update head to point to node E.
+
+If we want to remove node E from stack, first we will save node E, then we will update head to point to node D, and update node E to point to undefined.
+
+<h3 className="text-lg font-semibold mt-7">- Big(O)</h3>
+
+It's **O(1)**
+
+- push - add an element to the back of the list
+- pop - delete an element from the bottom of the list
+- peek - having the ability to view what the last element in the list is.
+
+```ts
+type SNode<T> = {
+  value: T;
+  prev?: SNode<T>;
+};
+export default class Stack<T> {
+  public length: number;
+  private head?: SNode<T>;
+
+  constructor() {
+    this.head = undefined;
+    this.length = 0;
+  }
+
+  push(item: T): void {
+    const node = { value: item } as SNode<T>;
+
+    this.length++;
+    if (!this.head) {
+      this.head = node;
+      return;
+    }
+
+    node.prev = this.head;
+    this.head = node;
+  }
+  pop(): T | undefined {
+    this.length = Math.max(0, this.length - 1);
+    if (this.length === 0) {
+      const head = this.head;
+      this.head = undefined;
+      return head?.value;
+    }
+
+    const head = this.head.prev as SNode<T>;
+    this.head = head.prev;
+    return head.value;
+  }
+
+  peek(): T | undefined {
+    return this.head?.value;
+  }
+}
+```

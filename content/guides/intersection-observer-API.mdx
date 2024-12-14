@@ -1,0 +1,109 @@
+---
+title: Intersection Observer API
+description: Make the dialog behave like a page
+publishedAt: 2023-09-12
+tags: []
+---
+
+The Intersection Observer API provides a way to asynchronously observe changes in the intersection of a target element with an ancestor element or with a top-level document's viewport.
+
+The Intersection Observer API lets code register a callback function that is executed whenever a particular element enters or exits an intersection with another element (or the viewport),
+or when the intersection between two elements changes by a specified amount. This way, sites no longer need to do anything on the main thread to watch for this kind of element intersection,
+and the browser is free to optimize the management of intersections as it sees fit.
+
+### When to use Intersection Observer API?
+
+- Lazy-loading of images or other content as a page is scrolled.
+- Implementing "infinite scrolling" websites, where more and more content is loaded and rendered as you scroll, so that the user doesn't have to flip through pages.
+- Reporting of visibility of advertisements in order to calculate ad revenues.
+- Deciding whether or not to perform tasks or animation processes based on whether or not the user will see the result.
+
+### Intersection observer options
+
+`root` The element that is used as the viewport for checking visibility of the target. Must be the ancestor of the target. Defaults to the browser viewport if not specified or if null.
+
+`rootMargin` Margin around the root. Can have values similar to the CSS margin property, e.g. "10px 20px 30px 40px" (top, right, bottom, left). The values can be percentages. This set of values serves to grow or shrink each side of the root element's bounding box before computing intersections. Defaults to all zeros.
+
+`threshold` Either a single number or an array of numbers which indicate at what percentage of the target's visibility the observer's callback should be executed. If you only want to detect when visibility passes the 50% mark, you can use a value of 0.5. If you want the callback to run every time visibility passes another 25%, you would specify the array [0, 0.25, 0.5, 0.75, 1]. The default is 0 (meaning as soon as even one pixel is visible, the callback will be run). A value of 1.0 means that the threshold isn't considered passed until every pixel is visible.
+
+## Examples
+
+```tsx showLineNumbers /appDir: true/
+import * as React from "react";
+
+const itemIds: string[] = ["div_1", "div_2", "div_3", "div_4"];
+
+export default function App() {
+  const [activeIds, setActiveIds] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    console.log("activeIds", activeIds);
+  }, [activeIds]);
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            console.log("add: ", entry.target.id);
+            setActiveIds((ids) => [...ids, entry.target.id]);
+          } else {
+            console.log("delete: ", entry.target.id);
+            setActiveIds((ids) => ids.filter((id) => id !== entry.target.id));
+          }
+        });
+      },
+      { root: null, rootMargin: "0px 0px -30px 0px", threshold: 0.2 }
+    );
+
+    itemIds?.forEach((id) => {
+      if (id === undefined) {
+        return null;
+      }
+      const element = document.getElementById(id);
+      if (element) {
+        observer.observe(element);
+      }
+    });
+
+    return () => {
+      itemIds.forEach((id) => {
+        if (id === undefined) {
+          return null;
+        }
+        const element = document.getElementById(id);
+        if (element) {
+          observer.unobserve(element);
+        }
+      });
+    };
+  }, []);
+
+  return (
+    <main>
+      <div
+        id="div_1"
+        style={{ height: "80vh", backgroundColor: "#ffa2a2" }}
+      ></div>
+      <div
+        id="div_2"
+        style={{ height: "80vh", backgroundColor: "#b6b6ff" }}
+      ></div>
+      <div
+        id="div_3"
+        style={{
+          height: "50vh",
+          backgroundColor: "#aeffae",
+        }}
+      ></div>
+      <div
+        id="div_4"
+        style={{
+          height: "100vh",
+          backgroundColor: "#aed2ff",
+        }}
+      ></div>
+    </main>
+  );
+}
+```

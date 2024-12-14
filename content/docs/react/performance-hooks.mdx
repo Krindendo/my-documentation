@@ -1,0 +1,242 @@
+---
+title: Performance Hooks
+description: test
+tags: [react]
+
+date: 2024-12-06
+---
+
+This hooks can tell React to reuse a cached calculation or to skip a re-render if the data has not changed since the previous render.
+
+- `useMemo` lets you cache the result of an expensive calculation.
+- `useCallback` lets you cache a function definition before passing it down to an optimized component.
+- `useTransition` lets you mark a state transition as non-blocking and allow other updates to interrupt it.
+- `useDeferredValue` lets you defer updating a non-critical part of the UI and let other parts update first.
+
+## useMemo
+
+[useMemo](https://react.dev/reference/react/useMemo) is used to cache a calculation between re-renders. It have two parameters:
+
+- calculateValue: The function calculating the value that you want to cache.
+- dependencies: The list of all reactive values referenced inside of the calculateValue code.
+
+During renders, useMemo will return a stored value if the dependencies haven't changed, but if they have, then
+callback function, calculateValue, will be calculated again and store a new value from calculateValue.
+
+```tsx
+import { useMemo } from "react";
+
+function TodoList({ todos, tab }) {
+  const visibleTodos = useMemo(() => filterTodos(todos, tab), [todos, tab]);
+  // ...
+}
+```
+
+## useCallback
+
+[useCallback](https://react.dev/reference/react/useCallback) is used to cache a function between re-renders. It have two parameters:
+
+- fn: The function value that you want to cache. It can take any arguments and return any values. React will return (not call!) your function
+  back to you during the inital render.On next renders, React will give you the same function again if the dependencies have not changed
+  since the last render. Otherwise, it will give you the function that you have passed during the current render, and store it in case
+  it can be reused later. React will not call your function. The function is returned to you so you can decide when and whether to call it.
+- dependencies: The list of all reactive values referenced inside of the fn code.
+
+During subsequent renders, it will either return an already stored fn function from the last render (if the dependencies haven’t changed), or return the fn function you have passed during this render.
+
+Why you need to use useCallback?
+
+If you pass a function to children as a prop, and if parent re-renders, then children will also re-render. To prevent that behavior, you need to use React.memo on the component, but it will not work because when parent is re-render, the function that is passed as a prop will be created again. To prevent that, you need to cache the function with useCallback.
+
+```tsx
+import { useCallback } from 'react';
+
+export default function ProductPage({ productId, referrer, theme }) {
+  const handleSubmit = useCallback((orderDetails) => {
+    post('/product/' + productId + '/buy', {
+      referrer,
+      orderDetails,
+    });
+  }, [productId, referrer]);
+```
+
+## useTransition
+
+[useTransition](https://react.dev/reference/react/useTransition) is used to update the state without blocking the UI.
+
+useTransition returns an array with exactly two values:
+
+1. The state that tells you whether there is a pending transition.
+2. The startTransition function that lets you mark a state update as a transition.
+
+Transitions let you keep the user interface updates responsive even on slow devices.
+
+With a transition, your UI stays responsive in the middle of a re-render. For example, if the user clicks a tab but then change their mind and click another tab, they can do that without waiting for the first re-render to finish.
+
+```tsx
+function TabContainer() {
+  const [isPending, startTransition] = useTransition();
+  const [tab, setTab] = useState("about");
+
+  function selectTab(nextTab) {
+    startTransition(() => {
+      setTab(nextTab);
+    });
+  }
+  // ...
+}
+```
+
+### startTransition function
+
+startTransition function have one parametar
+
+scope: A function that updates some state by calling one or more set functions. React immediately calls scope with no parameters and marks all state updates scheduled synchronously during the scope function call as transitions. They will be non-blocking and will not display unwanted loading indicators.
+
+- useTransition is a Hook, so it can only be called inside components or custom Hooks. If you need to start a transition somewhere else (for example, from a data library), call the standalone startTransition instead.
+
+- You can wrap an update into a transition only if you have access to the set function of that state. If you want to start a transition in response to some prop or a custom Hook value, try useDeferredValue instead.
+
+- The function you pass to startTransition must be synchronous. React immediately executes this function, marking all state updates that happen while it executes as transitions. If you try to perform more state updates later (for example, in a timeout), they won’t be marked as transitions.
+
+- A state update marked as a transition will be interrupted by other state updates. For example, if you update a chart component inside a transition, but then start typing into an input while the chart is in the middle of a re-render, React will restart the rendering work on the chart component after handling the input update.
+
+- Transition updates can’t be used to control text inputs.
+
+- If there are multiple ongoing transitions, React currently batches them together. This is a limitation that will likely be removed in a future release.
+
+## useDeferredValue
+
+[useDeferredValue](https://react.dev/reference/react/useDeferredValue) is used when a parameter value will result in a complex calculation.
+
+useDeferredValue returns a single value that will be the same as the value you provided during the initial render.
+
+- During updates, React will first attempt a re-render with the old value (so it will return the old value), and then try another re-render in background with the new value (so it will return the updated value).
+
+- During updates, the deferred value will “lag behind” the latest value. In particular, React will first re-render without updating the deferred value, and then try to re-render with the newly received value in background.
+
+```tsx
+function App() {
+  const [name, setName] = useState<string>("");
+  const deferredName = useDeferredValue(name);
+
+  const LIST_SIZE: number = 10000;
+
+  const list = useMemo(() => {
+    const dataList: string[] = [];
+    for (let i: number = 0; i < LIST_SIZE; i++) {
+      dataList.push(deferredName);
+    }
+    return dataList;
+  }, [deferredName]);
+  //....
+}
+```
+
+### Caveats
+
+- The values you pass to `useDeferredValue` should either be [primitive values](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) or
+  objects created outside of rendering. If you create a new object during rendering and immediately pass it to useDeferredValue, it will be different on every render,
+  causing unnecessary background re-renders.
+
+- When `useDeferredValue` receives a different value, it schedules a re-render in the background with the new value.
+
+- The background re-render is interruptible if there’s another update to the value, React will restart the background re-render from scratch.
+
+Example: If the user is typing into an input faster than a chart receiving its deferred value can re-render, the chart will only re-render after the user stops typing.
+
+- `useDeferredValue` is integrated with `<Suspense>`. If the background update caused by a new value suspends the UI, the user will not see the fallback. They will see the old deferred value until the data loads.
+
+- `useDeferredValue` does not by itself prevent extra network requests.
+
+- There is no fixed delay caused by `useDeferredValue` itself. As soon as React finishes the original re-render, React will immediately start working on the background re-render with the new deferred value. Any updates caused by events (like typing) will interrupt the background re-render and get prioritized over it.
+
+- The background re-render caused by `useDeferredValue` does not fire Effects until it’s committed to the screen. If the background re-render suspends, its Effects will run after the data loads and the UI updates.
+
+- Note that there is still a network request per each keystroke. What’s being deferred here is displaying results (until they’re ready), not the network requests themselves. Even if the user continues typing, responses for each keystroke get cached, so pressing Backspace is instant and doesn’t fetch again.
+
+### Example: search
+
+```tsx
+import { Suspense, useState } from "react";
+import SearchResults from "./SearchResults.js";
+
+export default function App() {
+  const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
+  const isStale = query !== deferredQuery;
+  return (
+    <>
+      <label>
+        Search albums:
+        <input value={query} onChange={(e) => setQuery(e.target.value)} />
+      </label>
+      <Suspense fallback={<h2>Loading...</h2>}>
+        <div
+          style="{{
+          opacity: isStale ? 0.5 : 1,
+          transition: isStale ? 'opacity 0.2s 0.2s linear' : 'opacity 0s 0s linear'
+        }}"
+        >
+          <SearchResults query={deferredQuery} />
+        </div>
+      </Suspense>
+    </>
+  );
+}
+```
+
+### How does deferring a value work under the hood?
+
+You can think of it as happening in two steps:
+
+1. React re-renders with the new query ("ab") but with the old deferredQuery (still "a"). The deferredQuery value, which you pass to the result list, is deferred: it “lags behind” the query value.
+
+2. In background, React tries to re-render with both query and deferredQuery updated to "ab". If this re-render completes, React will show it on the screen. However, if it suspends (the results for "ab" have not loaded yet), React will abandon this rendering attempt, and retry this re-render again after the data has loaded. The user will keep seeing the stale deferred value until the data is ready.
+
+The deferred “background” rendering is interruptible. For example, if you type into the input again, React will abandon it and restart with the new value. React will always use the latest provided value.
+
+### Example: performance optimization
+
+`useDeferredValue` is useful when a part of your UI is slow to re-render, there’s no easy way to optimize it, and you want to prevent it from blocking the rest of the UI.
+
+This optimization requires SlowList to be wrapped in memo. This is because whenever the text changes, React needs to be able to re-render the parent component quickly. During that re-render, deferredText still has its previous value, so SlowList is able to skip re-rendering (its props have not changed). Without memo, it would have to re-render anyway, defeating the point of the optimization.
+
+```tsx
+export default function App() {
+  const [text, setText] = useState("");
+  const deferredText = useDeferredValue(text);
+  return (
+    <>
+      <input value={text} onChange={(e) => setText(e.target.value)} />
+      <SlowList text={deferredText} />
+    </>
+  );
+}
+
+const SlowList = memo(function SlowList({ text }) {
+  // Log once. The actual slowdown is inside SlowItem.
+
+  let items = [];
+  for (let i = 0; i < 250; i++) {
+    items.push(<SlowItem key={i} text={text} />);
+  }
+  return <ul className="items">{items}</ul>;
+});
+```
+
+### How is deferring a value different from debouncing and throttling?
+
+There are two common optimization techniques you might have used before in this scenario:
+
+- Debouncing means you’d wait for the user to stop typing (e.g. for a second) before updating the list.
+
+- Throttling means you’d update the list every once in a while (e.g. at most once a second).
+
+While these techniques are helpful in some cases, useDeferredValue is better suited to optimizing rendering because it is deeply integrated with React itself and adapts to the user’s device.
+
+Unlike debouncing or throttling, it doesn’t require choosing any fixed delay. If the user’s device is fast (e.g. powerful laptop), the deferred re-render would happen almost immediately and wouldn’t be noticeable. If the user’s device is slow, the list would “lag behind” the input proportionally to how slow the device is.
+
+Also, unlike with debouncing or throttling, deferred re-renders done by useDeferredValue are interruptible by default. This means that if React is in the middle of re-rendering a large list, but the user makes another keystroke, React will abandon that re-render, handle the keystroke, and then start rendering in background again. By contrast, debouncing and throttling still produce a janky experience because they’re blocking: they merely postpone the moment when rendering blocks the keystroke.
+
+the work you’re optimizing doesn’t happen during rendering, debouncing and throttling are still useful. For example, they can let you fire fewer network requests. You can also use these techniques together.

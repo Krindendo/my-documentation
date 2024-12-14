@@ -1,0 +1,205 @@
+---
+title: Directives
+description: asd
+tags: [vue]
+
+date: 2024-12-06
+---
+
+## v-text
+
+```vue
+<span v-text="msg"></span>
+<!-- same as -->
+<span>{{msg}}</span>
+```
+
+## v-html
+
+It can easily lead to XSS attacks.
+
+Scoped styles will not apply to content inside v-html, because that HTML is not processed by Vue's template compiler.
+
+```vue
+<div v-html="html"></div>
+```
+
+## v-show
+
+## v-if
+
+## v-else
+
+## v-else-if
+
+## v-for
+
+```vue
+<div v-for="item in items" :key="item.id">
+  {{ item.text }}
+</div>
+```
+
+## v-on
+
+## v-bind
+
+## v-model
+
+`v-model` can be used on a component to implement a two-way binding.
+
+Limited to: input, select, textarea and components
+
+Modifiers:
+
+- `.lazy` - listen to `change` events instead of `input`
+- `.number` - cast valid input string to numbers
+- `.trim` - trim input
+
+```vue
+<input v-model="searchText" />
+// same as
+<input :value="searchText" @input="searchText = $event.target.value" />
+```
+
+When used on a component, v-model instead expands to this:
+
+```vue
+<CustomInput
+  :model-value="searchText"
+  @update:model-value="(newValue) => (searchText = newValue)"
+/>
+```
+
+```vue title="CustomInput.vue"
+<script setup>
+import { computed } from "vue";
+
+const props = defineProps(["modelValue"]);
+const emit = defineEmits(["update:modelValue"]);
+
+const value = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(value) {
+    emit("update:modelValue", value);
+  },
+});
+</script>
+
+<template>
+  <input v-model="value" />
+</template>
+```
+
+Now v-model should work perfectly with this component:
+
+```vue
+<CustomInput v-model="searchText" />
+```
+
+### arguments
+
+By default, v-model on a component uses modelValue as the prop and update:modelValue as the event.
+
+```vue
+<MyComponent v-model:title="bookTitle" />
+```
+
+```vue title="MyComponent.vue"
+<script setup>
+defineProps(["title"]);
+defineEmits(["update:title"]);
+</script>
+
+<template>
+  <input
+    type="text"
+    :value="title"
+    @input="$emit('update:title', $event.target.value)"
+  />
+</template>
+```
+
+### modifiers
+
+Make custom modifiers
+
+```vue
+<MyComponent v-model.capitalize="myText" />
+```
+
+```vue title="MyComponent.vue"
+<script setup>
+const props = defineProps({
+  modelValue: String,
+  modelModifiers: { default: () => ({}) },
+});
+
+const emit = defineEmits(["update:modelValue"]);
+
+console.log(props.modelModifiers); // { capitalize: true }
+
+function emitValue(e) {
+  let value = e.target.value;
+  if (props.modelModifiers.capitalize) {
+    value = value.charAt(0).toUpperCase() + value.slice(1);
+  }
+  emit("update:modelValue", value);
+}
+</script>
+
+<template>
+  <input
+    type="text"
+    :value="modelValue"
+    @input="$emit('update:modelValue', $event.target.value)"
+  />
+</template>
+```
+
+### Modifiers for v-model with arguments
+
+For `v-model` bindings with both argument and modifiers, the generated prop name will be `arg + "Modifiers"`
+
+```vue
+<MyComponent v-model:title.capitalize="myText">
+```
+
+```javascript
+const props = defineProps(["title", "titleModifiers"]);
+defineEmits(["update:title"]);
+
+console.log(props.titleModifiers); // { capitalize: true }
+```
+
+## v-slot
+
+## v-pre
+
+Inside the element with v-pre, all Vue template syntax will be preserved and rendered as-is. The most common use case of this is displaying raw mustache tags.
+
+## v-once
+
+On subsequent re-renders, the element/component and all its children will be treated as static content and skipped. This can be used to optimize update performance.
+
+```vue
+<!-- single element -->
+<span v-once>This will never change: {{msg}}</span>
+<!-- the element have children -->
+<div v-once>
+  <h1>comment</h1>
+  <p>{{msg}}</p>
+</div>
+<!-- component -->
+<MyComponent v-once :comment="msg"></MyComponent>
+<!-- `v-for` directive -->
+<ul>
+  <li v-for="i in list" v-once>{{i}}</li>
+</ul>
+```
+
+## v-memo
+
+## v-cloak

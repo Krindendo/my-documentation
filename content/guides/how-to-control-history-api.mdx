@@ -1,0 +1,69 @@
+---
+title: How to control history API
+description: Make the dialog behave like a page
+publishedAt: 2023-08-29
+tags: []
+---
+
+### history
+
+history.back(), history.forward()
+
+The state object is a JavaScript object which is associated with the new history entry created by pushState(). Whenever the user navigates to the new state, a popstate event is fired, and the state property of the event contains a copy of the history entry's state object.
+
+url parametar is used when user attempt to load the URL later, for instance, after the user restarts the browser. The new URL does not need to be absolute; if it's relative, it's resolved relative to the current URL. The new URL must be of the same origin as the current URL; otherwise, pushState() will throw an exception.
+
+```ts
+const state = { name: "Example" };
+const unused = "pushState example"; // it doesn't matter
+const url = "page3.html"; // this is optional
+
+history.pushState(state, unused, url);
+```
+
+### popstate
+
+A popstate event is dispatched to the window every time the active history entry changes between two history entries for the same document. If the history entry being activated was created by a call to history.pushState() or was affected by a call to history.replaceState(), the popstate event's state property contains a copy of the history entry's state object.
+
+https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event
+
+## Examples
+
+### Close dialog with back button
+
+```tsx showLineNumbers
+export default function Dialog() {
+  const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const closeDialog = (event: PopStateEvent) => {
+      if (open) {
+        setOpen(false);
+        event.preventDefault();
+      }
+    };
+
+    if (window.history) {
+      if (open) {
+        window.history.pushState(null, "");
+      }
+      window.addEventListener("popstate", closeDialog);
+    }
+
+    return () => {
+      window.removeEventListener("popstate", closeDialog);
+    };
+  }, [open]);
+
+  function handleOpen() {
+    if (window.history && open) {
+      window.history.back();
+      console.log("open", open);
+    }
+    setOpen(!open);
+  }
+  return (
+    // ...
+  )
+}
+```
