@@ -1,5 +1,3 @@
-import { cn } from "@/lib/utils";
-
 interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   heading: string;
   text?: string;

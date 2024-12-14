@@ -29,7 +29,13 @@ export function getAbsoluteUrl(path: string) {
   return `${baseUrl}${path}`;
 }
 
-export function safeStringToInteger(input: any) {
+export function safeStringToInteger(input: unknown): number {
+  if (typeof input === "number") {
+    return input;
+  }
+  if (typeof input !== "string") {
+    return 0;
+  }
   const convertedInput = parseInt(input);
   if (isNaN(convertedInput)) {
     return 0;

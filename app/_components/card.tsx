@@ -21,16 +21,14 @@ function Card({ children, href, pattern }: CardProps) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  function onMouseMove({ currentTarget, clientX, clientY }) {
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
-  }
-
   return (
     <Link href={href} className="overflow-hidden" prefetch={true}>
       <div
-        onMouseMove={onMouseMove}
+        onMouseMove={({ currentTarget, clientX, clientY }) => {
+          const { left, top } = currentTarget.getBoundingClientRect();
+          mouseX.set(clientX - left);
+          mouseY.set(clientY - top);
+        }}
         className="group relative flex h-full rounded-2xl bg-zinc-50 pt-5 transition-shadow hover:shadow-md hover:shadow-zinc-900/5 dark:bg-white/5 dark:hover:shadow-black/5"
       >
         <CardPattern mouseX={mouseX} mouseY={mouseY} {...pattern} />
