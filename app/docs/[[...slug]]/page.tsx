@@ -30,7 +30,7 @@ export const generateMetadata = async ({
 
 export const generateStaticParams = (): { slug?: string[] }[] =>
   allDocs.map((page) => ({
-    slug: page.slug,
+    slug: decodeURIComponent(page.slugAsPath).split("/"),
   }));
 
 const DocPage = async ({ params }: DocPageProperties) => {
