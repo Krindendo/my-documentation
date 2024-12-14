@@ -38,7 +38,7 @@ export default function RootLayout({
             <SiteSidebar />
             <SidebarInset>
               <SiteHeader />
-              <div className="flex flex-col py-16">{children}</div>
+              <div className="flex flex-col py-16 h-full">{children}</div>
               <SiteFooter />
             </SidebarInset>
           </SidebarProvider>
