@@ -9,6 +9,7 @@ import { SiteHeader } from "./_components/header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SiteSidebar } from "./_components/sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import { SelectPathProvider } from "./_components/select-path-provider";
 
 const calSans = localFont({
   src: "./fonts/CalSans-SemiBold.woff",
@@ -34,14 +35,16 @@ export default function RootLayout({
       <body className={`${calSans.variable} ${fontSans.variable} antialiased`}>
         <Pattern />
         <ThemeProvider>
-          <SidebarProvider>
-            <SiteSidebar />
-            <SidebarInset>
-              <SiteHeader />
-              <div className="flex flex-col py-16 h-full">{children}</div>
-              <SiteFooter />
-            </SidebarInset>
-          </SidebarProvider>
+          <SelectPathProvider>
+            <SidebarProvider>
+              <SiteSidebar />
+              <SidebarInset>
+                <SiteHeader />
+                <div className="flex flex-col py-16 h-full">{children}</div>
+                <SiteFooter />
+              </SidebarInset>
+            </SidebarProvider>
+          </SelectPathProvider>
         </ThemeProvider>
         <Toaster richColors />
       </body>

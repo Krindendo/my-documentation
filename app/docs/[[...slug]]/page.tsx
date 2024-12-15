@@ -15,7 +15,7 @@ type DocPageProperties = {
 export const generateMetadata = async ({
   params,
 }: DocPageProperties): Promise<Metadata> => {
-  const path = (await params).slug?.join("\\") || "";
+  const path = (await params).slug?.join("/") || "";
   const page = allDocs.find(({ slugAsPath }) => slugAsPath === path);
 
   if (!page) {
@@ -34,7 +34,7 @@ export const generateStaticParams = (): { slug?: string[] }[] =>
   }));
 
 const DocPage = async ({ params }: DocPageProperties) => {
-  const path = (await params).slug?.join("\\") || "";
+  const path = (await params).slug?.join("/") || "";
   const page = allDocs.find(({ slugAsPath }) => slugAsPath === path);
 
   if (!page) {

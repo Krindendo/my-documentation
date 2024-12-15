@@ -20,7 +20,7 @@ import { Logo } from "@/components/logo";
 import { Separator } from "@/components/ui/separator";
 import { SidebarSelectSitePath } from "./sidebar-select-site-path";
 import { usePathname } from "next/navigation";
-import { useLocalStorage } from "usehooks-ts";
+import { useSelectPath } from "./select-path-provider";
 
 export type NavigationKeys = "docs" | "guides" | "algorithms";
 
@@ -28,16 +28,10 @@ export function SiteSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
-  const [sectionPath, setSectionPath] = useLocalStorage<NavigationKeys>(
-    "section-path",
-    "docs"
-  );
 
-  const handleChangeSitePath = (item: NavigationKeys) => {
-    setSectionPath(item);
-  };
+  const { selectedNavigation } = useSelectPath();
 
-  const sideNavigationSection = sideNavigation[sectionPath];
+  const sideNavigationSection = sideNavigation[selectedNavigation];
 
   return (
     <Sidebar {...props}>
@@ -47,10 +41,7 @@ export function SiteSidebar({
             <Logo className="text-black" />
           </SidebarMenuItem>
           <SidebarMenuItem className="px-3 py-2">
-            <SidebarSelectSitePath
-              sectionPath={sectionPath}
-              handleChangeSitePath={handleChangeSitePath}
-            />
+            <SidebarSelectSitePath />
           </SidebarMenuItem>
           <Separator />
         </SidebarMenu>

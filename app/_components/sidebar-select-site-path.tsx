@@ -2,23 +2,16 @@
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { NavigationKeys } from "./sidebar";
+import { useSelectPath } from "./select-path-provider";
 
-interface SidebarSelectSitePathProps {
-  sectionPath: NavigationKeys;
-  handleChangeSitePath: (item: NavigationKeys) => void;
-}
+const SidebarSelectSitePath = () => {
+  const { selectedNavigation, setSelectedNavigation } = useSelectPath();
 
-const SidebarSelectSitePath = ({
-  sectionPath,
-  handleChangeSitePath,
-}: SidebarSelectSitePathProps) => {
   return (
     <RadioGroup
       className="gap-2"
-      defaultValue="docs"
-      onValueChange={handleChangeSitePath}
-      value={sectionPath}
+      onValueChange={setSelectedNavigation}
+      value={selectedNavigation}
     >
       <div className="flex items-center space-x-2 py-1">
         <RadioGroupItem value="docs" id="r1" />
