@@ -1,10 +1,10 @@
-import { Mdx } from "@/components/mdx";
-import { PageHeader } from "@/components/page-header";
-import { TableOfContents } from "@/components/table-of-contents";
+// import { Mdx } from "@/components/mdx";
+// import { PageHeader } from "@/components/page-header";
+// import { TableOfContents } from "@/components/table-of-contents";
 import { createMetadata } from "@/lib/metadata";
 import { allAlgorithms } from "content-collections";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+// import { notFound } from "next/navigation";
 
 type AlgorithmsPageProperties = {
   readonly params: Promise<{
