@@ -46,8 +46,8 @@ const AlgorithmsPage = async ({ params }: AlgorithmsPageProperties) => {
     <div>
       <p>slug: {slug}</p>
       <p>path: {path}</p>
-      <p>slugAsPath: {allAlgorithms[2].slugAsPath}</p>
-      <p>slug2 :{allAlgorithms[2].slug}</p>
+      <p>slugAsPath: {JSON.stringify(allAlgorithms[2].slugAsPath)}</p>
+      <p>slug2 :{JSON.stringify(allAlgorithms[2].slug)}</p>
     </div>
     // <div className="container py-16">
     //   <PageHeader heading={page.title} text={page.description} />
