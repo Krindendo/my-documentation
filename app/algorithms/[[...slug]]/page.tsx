@@ -30,7 +30,7 @@ export const generateMetadata = async ({
 
 export const generateStaticParams = (): { slug?: string[] }[] =>
   allAlgorithms.map((page) => ({
-    slug: page.slug,
+    slug: decodeURIComponent(page.slugAsPath).split("/"),
   }));
 
 const AlgorithmsPage = async ({ params }: AlgorithmsPageProperties) => {
