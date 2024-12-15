@@ -62,7 +62,9 @@ export function SiteSidebar({
                           asChild
                           isActive={item.link === pathname}
                         >
-                          <Link href={item.link ?? "#"}>{item.label}</Link>
+                          <Link href={item.link ?? "#"} prefetch={true}>
+                            {item.label}
+                          </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     ))}
