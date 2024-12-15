@@ -33,10 +33,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${calSans.variable} ${fontSans.variable} antialiased`}>
-        <Pattern />
         <ThemeProvider>
           <SelectPathProvider>
             <SidebarProvider>
+              <Pattern />
               <SiteSidebar />
               <SidebarInset>
                 <SiteHeader />
@@ -45,8 +45,8 @@ export default function RootLayout({
               </SidebarInset>
             </SidebarProvider>
           </SelectPathProvider>
+          <Toaster richColors />
         </ThemeProvider>
-        <Toaster richColors />
       </body>
     </html>
   );

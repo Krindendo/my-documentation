@@ -21,6 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarSelectSitePath } from "./sidebar-select-site-path";
 import { usePathname } from "next/navigation";
 import { useSelectPath } from "./select-path-provider";
+import Link from "next/link";
 
 export type NavigationKeys = "docs" | "guides" | "algorithms";
 
@@ -52,7 +53,7 @@ export function SiteSidebar({
           <SidebarGroup key={item.label}>
             <SidebarGroupLabel>{item.label}</SidebarGroupLabel>
             <SidebarMenu>
-              <SidebarMenuItem key={item.label}>
+              <SidebarMenuItem>
                 {item.items?.length ? (
                   <SidebarMenuSub>
                     {item.items.map((item) => (
@@ -61,7 +62,7 @@ export function SiteSidebar({
                           asChild
                           isActive={item.link === pathname}
                         >
-                          <a href={item.link}>{item.label}</a>
+                          <Link href={item.link ?? "#"}>{item.label}</Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     ))}

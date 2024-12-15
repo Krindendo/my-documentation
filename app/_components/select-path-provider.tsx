@@ -1,7 +1,6 @@
 "use client";
 
-import { createContext, useContext } from "react";
-import { useLocalStorage } from "usehooks-ts";
+import { createContext, useContext, useState } from "react";
 
 export type NavigationKeys = "docs" | "guides" | "algorithms";
 
@@ -18,7 +17,7 @@ export function SelectPathProvider({
   children: React.ReactNode;
 }) {
   const [selectedNavigation, setSelectedNavigation] =
-    useLocalStorage<NavigationKeys>("section-path", "docs");
+    useState<NavigationKeys>("docs");
 
   return (
     <SelectPathContext.Provider
