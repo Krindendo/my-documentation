@@ -58,7 +58,7 @@ const docs = defineCollection({
       slugAsPath: page._meta.path
         .split("\\")
         .filter((s) => s !== "index")
-        .join("\\"),
+        .join("/"),
     };
   },
 });
@@ -90,7 +90,7 @@ const algorithms = defineCollection({
       slugAsPath: page._meta.path
         .split("\\")
         .filter((s) => s !== "index")
-        .join("\\"),
+        .join("/"),
     };
   },
 });
@@ -122,7 +122,7 @@ const guides = defineCollection({
       slugAsPath: page._meta.path
         .split("\\")
         .filter((s) => s !== "index")
-        .join("\\"),
+        .join("/"),
     };
   },
 });
