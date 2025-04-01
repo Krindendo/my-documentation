@@ -538,3 +538,15 @@ var logUserName = userName.bind(user); // creates new object and binds user. 'th
 
 logUserName(); // 'Lorem Ipsum'
 ```
+
+### Immutable vs mutable
+
+An immutable value is one whose content cannot be changed without creating an entirely new value.
+
+- Primitive values are immutable - once a primitive value is created, it cannot be changed, although the variable that holds it may be reassigned another value.
+
+- Immutability of redux state is necessary since it allows detecting redux state changes in an efficient manner.
+
+A mutable value is one that can be changed without creating an entirely new value.
+
+- Objects and arrays are mutable by default - their properties and elements can be changed without creating a new object or array.
