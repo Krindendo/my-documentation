@@ -109,7 +109,41 @@ https://youtu.be/fZPgBnL2x-Q?si=3lgPRdaJEHemPnCH&t=802
 
 ## MobX
 
+The main responsibility of stores is to move logic and state out of your components into a standalone testable unit that can be used in both frontend and backend JavaScript.
+
+
 State in MobX is muttable
+
+A single domain store should be responsible for a single concept in your application. A single store is often organized as a tree structure with multiple domain objects inside.
+
+For example: one domain store for your products, and one for your orders and orderlines
+
+Ui store
+
+- Information that affects the UI globally
+  - Window dimensions
+  - Accessibility information
+  - Current language
+  - Currently active theme
+- User interface state as soon as it affects multiple, further unrelated components:
+  - Current selection
+  - Visibility of toolbars, etc.
+  - State of a wizard
+  - State of a global overlay
+
+
+
+
+- observable
+- computed
+- reaction
+- action
+
+### observer
+
+Observer is HOC that you can wrap around a React component. It will automatically subscribe to any observables that are used during rendering. 
+As a result, components will automatically re-render when relevant observables change. It also makes sure that components don't re-render when there are no relevant changes
+For observer to work, it doesn't matter how the observables arrive in the component, only that they are read.
 
 ## jotai
 

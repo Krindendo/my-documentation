@@ -145,7 +145,7 @@ class Necklace implements Accessory {
     this.kind = kind;
   }
 }
-class bracelet implements Accessory {
+class Bracelet implements Accessory {
   brand: string;
   year: number;
   constructor(brand: string, year: number) {
@@ -155,11 +155,11 @@ class bracelet implements Accessory {
 }
 const getRandomAccessory = () => {
   return Math.random() < 0.5
-    ? new bracelet("cartier", 2021)
+    ? new Bracelet("cartier", 2021)
     : new Necklace("choker", "TASAKI");
 };
 let Accessory = getRandomAccessory();
-if (Accessory instanceof bracelet) {
+if (Accessory instanceof Bracelet) {
   console.log(Accessory.year);
 }
 if (Accessory instanceof Necklace) {

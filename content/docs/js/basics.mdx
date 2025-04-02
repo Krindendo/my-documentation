@@ -419,6 +419,8 @@ Primitive types in JavaScript include Undefined, Null, Boolean, Number, String, 
 
 Reference types, on the other hand, include Object, Array, and Function. When you assign a variable with a reference data type to another variable, JavaScript stores not the value itself, but a reference to that value. Any changes made through this reference will affect the original value because they both refer to the same place in memory.
 
+The term "shallow copy" refers to a method of copying objects where a new reference to the object is created, but not all of its internal contents are fully copied. This means that simple property values of the original object are copied to the new object, while properties that are objects or arrays are not fully copied; instead, the new reference points to the same objects or arrays.
+
 To create a shallow copy, we can use the following methods:
 
 - Spread syntax `[…] {…}`
@@ -482,7 +484,11 @@ console.log(student.firstName); // Sarah
 
 The RegExp `regular expressions` object is used for matching text with a pattern.
 
-These patterns are used with the `exec()` and `test()` methods of RegExp, and with the `match()`, `matchAll()`, `replace()`, `replaceAll()`, `search()`, and `split()` methods of String. This chapter describes JavaScript regular expressions.
+These patterns are used with the `exec()` and `test()` methods of RegExp, and with the `match()`, `matchAll()`, `replace()`, `replaceAll()`, `search()`, and `split()` methods of String.
+
+`exec` executes a search with this regular expression for a match in a specified string and returns a result array, or null.
+
+`test` executes a search with this regular expression for a match between a regular expression and a specified string. Returns true if there is a match.
 
 ```javascript
 const re = /ab+c/i;
@@ -531,7 +537,7 @@ var user = {
 };
 
 var userName = function () {
-  console.log(this.getPokeName());
+  console.log(this.getUserName());
 };
 
 var logUserName = userName.bind(user); // creates new object and binds user. 'this' of user === user now
