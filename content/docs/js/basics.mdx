@@ -6,6 +6,15 @@ tags: [JavaScript]
 date: 2023-10-18
 ---
 
+### Difference between var, let and const
+
+Scope: var is function-scoped, while let and const are block-scoped.
+
+Hoisting: var is hoisted and initialized with undefined, while let and const are hoisted but not initialized (so accessing them before declaration results in an error).
+[more about this](https://github.com/getify/You-Dont-Know-JS/blob/2nd-ed/scope-closures/ch5.md#uninitialized-variables-aka-tdz)
+
+Reassignment: var and let allow reassignment, but const does not.
+
 ### Difference between null and undefined
 
 Both null and undefined represent the absence of a value.
