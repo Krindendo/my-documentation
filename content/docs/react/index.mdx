@@ -24,35 +24,32 @@ React is JavaScript library that lets you build user interface out of individual
 
 JSX stands for JavaScript XML, it allow to write HTML in JS code. Basically it just provides the syntactic sugar for the React.createElement function.
 
----
+**Virtual DOM**
 
-**virtual DOM**
+Performance Improvement: By minimizing direct manipulation of the DOM, which is slow, React improves application performance. The virtual DOM is fast because it’s a lightweight JavaScript object.
 
----
+Efficient Updates: The diffing algorithm identifies changes in the virtual DOM and updates only those elements in the real DOM, rather than re-rendering the entire DOM tree. This selective update process significantly reduces the time and computational resources needed.
 
-**pure components**
+Batching: React batches multiple DOM updates into a single update cycle to optimize performance further. This process minimizes the number of reflows and repaints, leading to smoother animations and interactions.
+
+**Pure components**
 
 Pure components are the components which render the same output for the same state and props. In function components,
 you can achieve pure components through memoized `React.memo()` API wrapping around the component. This API prevents unnecessary re-renders by comparing the previous
 props and new props using shallow comparison. So it will be helpful for performance optimizations.
 
----
-
-**props**
+**Props**
 
 Props are single values or objects containing a set of values that are passed to components.
 The primary purpose of props in React is to pass custom data to your component and to trigger state changes.
 
----
+**Difference between state and props**
 
-**difference between state and props**
+- `state` is managed by the component itself and can be updated using useState() function. State can be modified by the component and is used to manage the internal state of the component.
 
-- **state** is managed by the component itself and can be updated using setState() function. State can be modified by the component and is used to manage the internal state of the component.
-- **props** are passed to a component by its parent component and are read-only, meaning that they cannot be modified by the component itself.
+- `props` are passed to a component by its parent component and are read-only, meaning that they cannot be modified by the component itself.
 
----
-
-**synthetic events**
+**Synthetic events**
 
 **SyntheticEvent** is cross-browser wrapper around the browser's native event.
 Its API is same as the browser's native event, including `stopPropagation()` and `preventDefault()`,
@@ -74,9 +71,7 @@ function BookStore{
 
 ```
 
----
-
-**inline conditional expressions**
+**Inline conditional expressions**
 
 ```tsx
 <>
@@ -88,7 +83,77 @@ function BookStore{
 </>
 ```
 
-**key prop**
+**Key prop**
+
+**Error Handling**
+
+**State manager**
+
+State management is crucial for controlling the behavior and rendering of React components.
+
+- useState Hook: For simple state management in functional components, useState provides a way to declare state variables. It returns an array containing the current state value and a function to update it.
+
+- useReducer Hook: For more complex state logic that involves multiple sub-values or when the next state depends on the previous one, useReducer is more suited. It also makes transitioning to Redux easier if needed for global state management.
+
+- Context API: When you need to pass data through the component tree without having to pass props down manually at every level, the Context API is useful. It’s great for storing state that needs to be accessible by many components at different nesting levels.
+
+- External Libraries: For large-scale applications, external libraries like Redux or MobX can offer more powerful solutions for state management, providing capabilities such as centralized state, middleware, and more predictable state updates with actions and reducers.
+
+**The lifecycle of a React component**
+
+- Mounting: The process begins with instantiation and includes methods like constructor(), getDerivedStateFromProps(), render(), and componentDidMount(). The component is created and inserted into the DOM.
+
+- Updating: This phase occurs when a component’s props or state change, triggering re-rendering. Methods involved include getDerivedStateFromProps(), shouldComponentUpdate(), render(), getSnapshotBeforeUpdate(), and componentDidUpdate().
+
+- Unmounting: The final phase of the lifecycle, where the component is removed from the DOM. The method componentWillUnmount() is called, allowing cleanup of resources, invalidating timers, or canceling network requests.
+
+**Differences between controlled and uncontrolled components**
+
+- Controlled Components: In a controlled component, form data is handled by the React component’s state. The input form element’s value is controlled by React, meaning that every state mutation has an associated handler function. This approach makes it easy to validate or manipulate user input. For example, using the useState hook to manage the input’s state and attaching an onChange event handler to update this state.
+
+```tsx
+const [value, setValue] = useState("");
+
+const handleChange = (event) => {
+  setValue(event.target.value);
+};
+
+<input type="text" value={value} onChange={handleChange} />;
+```
+
+- Uncontrolled Components: Uncontrolled components, on the other hand, store their own state internally and query the DOM using a ref to find the current value when it’s needed. This is more akin to traditional HTML.
+
+```tsx
+const inputRef = useRef();
+
+const handleSubmit = (event) => {
+  alert("A name was submitted: " + inputRef.current.value);
+  event.preventDefault();
+};
+
+<form onSubmit={handleSubmit}>
+  <label>
+    Name:
+    <input type="text" ref={inputRef} />
+  </label>
+  <button type="submit">Submit</button>
+</form>;
+```
+
+**Optimize performance**
+
+- Using React.memo for Functional Components: Wraps a component and prevents it from re-rendering if its props haven’t changed, similar to PureComponent for class components.
+  shouldComponentUpdate in Class Components: Allows you to prevent unnecessary re-renders by comparing current and next props and state, returning false if an update isn’t needed.
+
+- Code Splitting with React.lazy and Suspense: Allows components to be loaded only when needed, reducing the initial load time of the app.
+
+- Optimizing Context: By splitting contexts into multiple providers based on their update frequency to avoid unnecessary re-renders of consumers that do not care about certain updates.
+
+- Using Keys in Lists: Helps React identify which items have changed, are added, or are removed, improving performance in list rendering.
+
+- Avoiding Inline Functions and Objects in JSX: Inline functions and objects are recreated on every render, potentially leading to unnecessary re-renders.
+
+- Memoizing Expensive Computations: Using useMemo to store the results of expensive function calls so that you don’t need to recompute them on every render.
 
 ---
 
@@ -156,7 +221,7 @@ type Role = (typeof roles)[number];
 // "user" | "admin" | "superadmin"
 ```
 
-###
+### Types
 
 ```tsx
 const Component = () => {

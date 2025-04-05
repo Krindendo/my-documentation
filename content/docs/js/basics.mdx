@@ -177,13 +177,13 @@ console.log(animals.slice(2, 4));
 - changes the contents of an array by removing or replacing existing elements and/or adding new elements.
 
 ```javascript
-const months = ["Jan", "March", "April", "June"];
+const months = ["Jan", "March", "April", "July"];
 months.splice(1, 0, "Feb");
 // Inserts at index 1
 console.log(months);
-// Expected output: Array ["Jan", "Feb", "March", "April", "June"]
+// Expected output: Array ["Jan", "Feb", "March", "April", "July"]
 
-months.splice(4, 1, "May");
+months.splice(4, 1, "May", "June");
 // Replaces 1 element at index 4
 console.log(months);
 // Expected output: Array ["Jan", "Feb", "March", "April", "May"]
