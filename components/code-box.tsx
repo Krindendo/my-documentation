@@ -1,7 +1,7 @@
 "use client";
 
 import { Files } from "lucide-react";
-import type { FC, PropsWithChildren, ReactNode } from "react";
+import type { FC, PropsWithChildren, ReactElement, ReactNode } from "react";
 import { Fragment, isValidElement, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -17,7 +17,9 @@ const transformCode = (code: ReactNode): ReactNode => {
     return code;
   }
 
-  const content = code.props?.children;
+  //TODO: Need to fix this type
+  const content = (code as ReactElement<{ children?: ReactNode }>).props
+    ?.children;
 
   if (code.type !== "code" || typeof content !== "string") {
     // There is no need to transform an element that is not a code element or
