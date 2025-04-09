@@ -80,7 +80,7 @@ export const Mdx = ({
         Callout,
         pre: CodeBox,
         MdxCard,
-        ...Icons,
+        //Icons,
         ...components,
       }}
     />
