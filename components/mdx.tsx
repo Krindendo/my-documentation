@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ComponentProps, HTMLProps } from "react";
 import { MdxCard } from "./mdx-card";
-import { Icons } from "./icons";
+//import { Icons } from "./icons";
 import { Callout } from "./callout";
 import { CodeBox } from "./code-box";
 
@@ -80,7 +80,7 @@ export const Mdx = ({
         Callout,
         pre: CodeBox,
         MdxCard,
-        //Icons,
+        //...Icons,
         ...components,
       }}
     />
