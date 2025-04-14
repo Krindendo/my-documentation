@@ -227,11 +227,15 @@ body {
     code {
       @apply relative
           rounded
-          px-3 py-2 font-mono text-sm text-neutral-900 dark:bg-neutral-900 dark:text-white;
+          px-2 py-1 font-mono text-sm bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-white;
     }
 
     p {
       @apply leading-7 text-neutral-900 dark:text-white;
+    }
+
+    p a {
+      @apply rounded-sm px-1 py-0.5 bg-slate-100 dark:bg-slate-800;
     }
 
     ul {
