@@ -16,6 +16,20 @@ When to use Global state manager?
 
 ## Redux
 
+Key Concepts:
+
+- Centralized store
+- Immutable state
+- Pure reducer functions
+- Actions and dispatching
+- Middleware (like thunk/saga) for async logic
+
+#### Example use cases:
+
+- Enterprise applications
+- Complex data flows (e.g., financial dashboards, apps with tons of forms and user roles)
+- Apps with optimistic updates or time-travel debugging
+
 <img
   src="/static/images/guides/redux-concepts-and-data-flow.png"
   alt="redux concepts and data flow"
@@ -69,7 +83,19 @@ with the copy that has the changes applied.
 
 <Callout>Redux will not work if you mutate the state.</Callout>
 
-Example:
+### Redux toolkit
+
+### Example: Vite + React
+
+```tsx
+//TODO:
+```
+
+### Example: Nextjs
+
+```tsx
+//TODO:
+```
 
 https://youtu.be/5yEG6GhoJBs?si=GKSk00qNxGhfUB7_&t=1155
 
@@ -77,19 +103,15 @@ https://youtu.be/5yEG6GhoJBs?si=GKSk00qNxGhfUB7_&t=1155
 
 ## Zustand
 
-### Why Zustand?
+Key Concepts:
 
-- little boilerplate
-
-- doesnt rely provider
-
-- faster then context - it allows you to specificly select what state you want to subscribe to
-
-- state merging by default
-
-- extendable by default - you can add custom middleware to give more functionality
-
-- little opinionated
+- Uses hooks to access state
+- No context/provider needed
+- Faster then context - it allows you to specificly select what state you want to subscribe to
+- State merging by default
+- Extendable by default - you can add custom middleware to give more functionality
+- Works well with React’s modern features
+- Directly integrates into components
 
 ### Diferent between context and zustand
 
@@ -105,45 +127,164 @@ No, if you have complex react logic, witch shoud be in useMemo or useEffect. If 
 Renders dont change the DOM - all computation are on shadow DOM and only if there are diference between shadow DOM and actually DOM, there will be commands to change the DOM.
 With is very expensive part
 
+<Callout>Zustand are based on an immutable state model.</Callout>
+
+### When to use Zustand
+
+1. You’re building a small to medium app, or starting a new project and want something quick and modern.
+2. You like React hooks and don’t want to deal with context or reducers.
+3. You want state logic co-located with components, not in global files.
+4. You care about performance and simplicity (Zustand updates are fine-grained and efficient).
+5. You want a “set it and forget it” store with zero boilerplate.
+
+#### Example use cases:
+
+- SPAs and mobile apps (React Native)
+- Games or animation-heavy apps
+- MVPs, prototypes, or internal dashboards
+- Component libraries or micro-frontends
+
+### Example: Vite + React
+
+```tsx
+//TODO:
+```
+
+### Example: Nextjs
+
+```tsx
+//TODO:
+```
+
 https://youtu.be/fZPgBnL2x-Q?si=3lgPRdaJEHemPnCH&t=802
 
 ## MobX
 
 The main responsibility of stores is to move logic and state out of your components into a standalone testable unit that can be used in both frontend and backend JavaScript.
 
+Key Concepts:
 
-State in MobX is muttable
+- Observable state
+- Reactions and computed values
+- state is muttable
+- OOP-friendly (classes)
 
 A single domain store should be responsible for a single concept in your application. A single store is often organized as a tree structure with multiple domain objects inside.
 
 For example: one domain store for your products, and one for your orders and orderlines
 
-Ui store
-
-- Information that affects the UI globally
-  - Window dimensions
-  - Accessibility information
-  - Current language
-  - Currently active theme
-- User interface state as soon as it affects multiple, further unrelated components:
-  - Current selection
-  - Visibility of toolbars, etc.
-  - State of a wizard
-  - State of a global overlay
-
-
-
-
-- observable
-- computed
-- reaction
-- action
+- observable - Defines a trackable field that stores the state.
+- computed - Computed values can be used to derive information from other observables
+- reaction - Automatically running side effects whenever something relevant changes
+- action - An action is any piece of code that modifies the state
 
 ### observer
 
-Observer is HOC that you can wrap around a React component. It will automatically subscribe to any observables that are used during rendering. 
+Observer is HOC that you can wrap around a React component. It will automatically subscribe to any observables that are used during rendering.
 As a result, components will automatically re-render when relevant observables change. It also makes sure that components don't re-render when there are no relevant changes
 For observer to work, it doesn't matter how the observables arrive in the component, only that they are read.
+
+`observer` automatically applies memo, so `observer` components never need to be wrapped in memo.
+
+Always read observables inside observer components
+
+If `observer` is used in server side rendering context; make sure to call enableStaticRendering(true), so that observer won't subscribe to any observables used, and no GC problems are introduced
+
+### When to use MobX
+
+1. You prefer an OOP/reactive programming style and want to think less about immutability.
+2. You want a lightweight, magic-like reactivity system that just "works" with minimal boilerplate.
+3. Your app's state is deeply nested or complex, and you don't want to write reducers.
+4. You’re building a medium to large app, but want less ceremony than Redux.
+5. You or your team are comfortable with the idea of observable state and automatic reactions.
+
+#### Example use cases:
+
+- Apps with heavy UI interactions (like forms, editors)
+- Real-time collaboration tools
+- Internal tools where speed of development matters more than formal structure
+
+### Example: Vite + React
+
+```tsx
+// Page.tsx
+"use client";
+
+import React from "react";
+import { TimerButton } from "@/components/TimerButton";
+import { initialState, StoreProvider } from "@/components/TimerProvider";
+import { TimerView } from "@/components/TimerView";
+
+export default function Home() {
+  const [store] = React.useState(() => initialState);
+  return (
+    <StoreProvider>
+      <TimerView timer={store} />
+      <TimerButton />
+    </StoreProvider>
+  );
+}
+
+//TimerProvider.tsx
+export const initialState = observable({
+  secondsPassed: 0,
+  increase() {
+    this.secondsPassed += 1;
+  },
+  reset() {
+    this.secondsPassed = 0;
+  },
+});
+
+export type CreateTimer = typeof initialState;
+
+const StoreContext = React.createContext<CreateTimer | undefined>(undefined);
+
+export function StoreProvider({ children }: { children: ReactNode }) {
+  const [store] = React.useState(() => initialState);
+
+  return (
+    <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
+  );
+}
+
+export function useSecoundsPassed() {
+  const context = React.useContext(StoreContext);
+  if (context === undefined) {
+    throw new Error("useSecoundsPassed must be used within StoreProvider");
+  }
+
+  return context;
+}
+
+//TimerView.tsx
+export const TimerView = observer(({ timer }: { timer: CreateTimer }) => (
+  <p>Seconds passed: {timer.secondsPassed}</p>
+));
+
+//TimerButton.tsx
+export const TimerButton = observer(() => {
+  const timer = useSecoundsPassed();
+  return (
+    <div style={{ display: "flex", gap: "1rem" }}>
+      <button onClick={() => timer.reset()}>Reset</button>
+      <button onClick={() => timer.increase()}>Increase</button>
+    </div>
+  );
+});
+```
+
+<Callout type="warning">
+  the TimerView component would not react to future changes if it was defined as
+  follows, because the .secondsPassed is not read inside the observer component,
+  but outside, and is hence not tracked.
+</Callout>
+
+### Example: Nextjs
+
+```tsx
+//TODO:
+```
 
 ## jotai
 
