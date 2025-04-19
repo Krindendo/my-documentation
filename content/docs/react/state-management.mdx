@@ -6,17 +6,39 @@ tags: [React, useState, useReducer, Redux, Zustand]
 date: 2024-12-06
 ---
 
-When to use Global state manager?
+#### When to use Global state manager?
 
-- Best for complex state managemenet when the state is spread across multiple components and these components need to communicate or share state in a more organized way.
+1. Multiple Components Need the Same State
 
-- Redux allows you to manage global state in a centralized store, and components can easily connect to the store to read or update state.
+- For example, user authentication info (userId, token, etc.), theme settings, or language preferences.
+- You don’t want to keep drilling props down through multiple layers.
 
-- It provides better control over state updates, preventing unnecessary re-renders and improving performance.
+2. State Needs to Persist Across Routes
+
+- For example, a shopping cart that’s accessible from multiple pages, or filters on a dashboard.
+
+#### Avoid Global State When:
+
+1. The state is local to a component or small part of the tree
+
+- Local `useState` or `useReducer` is usually enough and better for encapsulation and simplicity.
+
+2. You only need props drilling one or two levels
+
+- Avoid overengineering. Sometimes passing props is totally fine.
+
+3. You’re just doing UI state (e.g., modals, tabs)
+
+- Local state or something like a UI store (if really needed) is better.
+
+---
 
 ## Redux
 
-Key Concepts:
+Redux is a state management library that allows accessing global state.
+This means that state can be accessed by any component, regardless of where it is in the tree.
+
+#### Key Concepts:
 
 - Centralized store
 - Immutable state
@@ -30,12 +52,6 @@ Key Concepts:
 - Complex data flows (e.g., financial dashboards, apps with tons of forms and user roles)
 - Apps with optimistic updates or time-travel debugging
 
-<img
-  src="/static/images/guides/redux-concepts-and-data-flow.png"
-  alt="redux concepts and data flow"
-  className="my-6"
-/>
-
 <Callout>
 Redux toolkit will allow you to easily set redux up and connect it to your react application.
 
@@ -43,34 +59,24 @@ Because we are using createSlice from Redux toolkit this will do things behind t
 
 </Callout>
 
+<img
+  src="/static/images/guides/redux-concepts-and-data-flow.png"
+  alt="redux concepts and data flow"
+  className="my-6"
+/>
+
 3 main concepts of Redux: **Store**, **Actions** and **Reducers**
-
-Redux is a state management library that allows accessing global state.
-This means that state can be accessed by any component, regardless of where it is in the tree.
-
-Redux terms:
-
-- Actions: An action is a plain JavaScript object that has a type field. **You can think of an action as an event that describes something that happened in the application.**
-
-- Reducers: A reducer is a function that receives the current state and an action object, decides how to update the state if necessary, and returns the new state: (state, action) => newState. **You can think of a reducer as an event listener which handles events based on the received action (event) type.**
-
-- Store: The current Redux application state lives in an object called the store.
-
-- Dispatch: The Redux store has a method called dispatch. The only way to update the state is to call store.dispatch() and pass in an action object.
-
-- Selectors: Selectors are functions that know how to extract specific pieces of information from a store state value. As an application grows bigger, this can help avoid repeating logic as different parts of the app need to read the same data
 
 #### Store:
 
 A store is just a state that may be defined in any way and contain any content.
-
 Stores are typically made up of many slices, each with different responsibilities for a specific domain in the application.
 
 #### Action:
 
 Actions represent what you want Redux to perform with the state.
-
 The payload is optional and can be whatever data that you wish to deliver to Redux in your action so that it can do its function.
+**You can think of an action as an event that describes something that happened in the application.**
 
 #### Reducer:
 
@@ -80,15 +86,123 @@ Use the type of the action to know what updates to do and optionally they will u
 Reducer will never directly make an update to the Redux store. It will immutable data. It means that it will never allowe to directly mutate the state
 Reducer will take the state and it will make a copy of the state, then it will make changes to that copy of the state and after that will completely replace the state as a whole
 with the copy that has the changes applied.
+**You can think of a reducer as an event listener which handles events based on the received action (event) type.**
 
-<Callout>Redux will not work if you mutate the state.</Callout>
+#### Dispatch:
+
+The Redux store has a method called dispatch. The only way to update the state is to call store.dispatch() and pass in an action object.
+
+#### Selectors:
+
+Selectors are functions that know how to extract specific pieces of information from a store state value. As an application grows bigger, this can help avoid repeating logic as different parts of the app need to read the same data
 
 ### Redux toolkit
 
 ### Example: Vite + React
 
 ```tsx
-//TODO:
+//Page.tsx
+"use client";
+
+import { TimerButton } from "@/components/TimerButton";
+import { TimerView } from "@/components/TimerView";
+import { store } from "../lib/store";
+import { Provider } from "react-redux";
+
+export default function Home() {
+  return (
+    <Provider store={store}>
+      <TimerView />
+      <TimerButton />
+    </Provider>
+  );
+}
+
+//lib/store.tsx
+import { configureStore } from "@reduxjs/toolkit";
+import timerReducer from "./features/timer/timerSlice";
+
+export const store = configureStore({
+  reducer: { timer: timerReducer },
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
+//lib/hooks.ts
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState, AppDispatch } from "./store";
+
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
+export const useAppSelector = useSelector.withTypes<RootState>();
+
+//lib/features/timer/timerSlice.ts
+interface TimerState {
+  secondsPassed: number;
+}
+
+const initialState: TimerState = {
+  secondsPassed: 0,
+};
+
+const timerSlice = createSlice({
+  name: "timer",
+  initialState,
+  reducers: {
+    increment: (state) => {
+      state.secondsPassed++;
+    },
+    incrementByAmount: (state, action: PayloadAction<number>) => {
+      state.secondsPassed += action.payload;
+    },
+    reset: (state) => {
+      state.secondsPassed = 0;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(
+      decrementByAmountAsync.fulfilled,
+      (state, action: PayloadAction<number>) => {
+        state.secondsPassed -= action.payload;
+      }
+    );
+  },
+});
+
+export const decrementByAmountAsync = createAsyncThunk(
+  "timer/decrementByAmountAsync",
+  async (seconds: number) => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return seconds;
+  }
+);
+
+export default timerSlice.reducer;
+
+export const { increment, incrementByAmount, reset } = timerSlice.actions;
+
+//TimerButton.tsx
+export const TimerButton = () => {
+  const dispatch = useAppDispatch();
+  return (
+    <div style={{ display: "flex", gap: "1rem" }}>
+      <button onClick={() => dispatch(reset())}>Reset</button>
+      <button onClick={() => dispatch(increment())}>Increase</button>
+      <button onClick={() => dispatch(incrementByAmount(5))}>
+        Increase by 5
+      </button>
+      <button onClick={() => dispatch(decrementByAmountAsync(10))}>
+        Decrement by 10
+      </button>
+    </div>
+  );
+};
+
+//TimerView.tsx
+export const TimerView = () => {
+  const secondsPassed = useAppSelector((state) => state.timer.secondsPassed);
+  return <p>Seconds passed: {secondsPassed}</p>;
+};
 ```
 
 ### Example: Nextjs
@@ -313,6 +427,14 @@ export const initialState = observable({
   reset() {
     this.secondsPassed = 0;
   },
+  async decrementByAmountAsync(secounds: number) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    runInAction(() => {
+      //https://mobx.js.org/actions.html#asynchronous-actions
+      //every step (tick) that updates observables in an asynchronous process should be marked as action
+      this.secondsPassed -= secounds;
+    });
+  },
 });
 
 export type CreateTimer = typeof initialState;
@@ -348,6 +470,9 @@ export const TimerButton = observer(() => {
     <div style={{ display: "flex", gap: "1rem" }}>
       <button onClick={() => timer.reset()}>Reset</button>
       <button onClick={() => timer.increase()}>Increase</button>
+      <button onClick={() => timer.decrementByAmountAsync(5)}>
+        Decrement by 5
+      </button>
     </div>
   );
 });
