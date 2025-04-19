@@ -147,7 +147,84 @@ With is very expensive part
 ### Example: Vite + React
 
 ```tsx
-//TODO:
+// Page.tsx
+"use client";
+
+import { TimerButton } from "@/components/TimerButton";
+import { TimerView } from "@/components/TimerView";
+import { useSecoundsPassed } from "@/store/TimerStore";
+import { logTimer, setTimerToOne } from "@/utils/timer";
+import { useEffect } from "react";
+
+export default function Home() {
+  // it will re-render this component only when secondsPassed changes
+  const secondsPassed = useSecoundsPassed((state) => state.secondsPassed);
+
+  useEffect(() => {
+    setTimerToOne();
+    logTimer();
+  }, []);
+
+  return (
+    <>
+      <TimerView secondsPassed={secondsPassed} />
+      <TimerButton />
+    </>
+  );
+}
+
+//TimerStore.tsx
+import { create } from "zustand";
+
+export type TimerState = {
+  secondsPassed: number;
+  increase: () => void;
+  reset: () => void;
+  decrementAsync: () => Promise<void>;
+};
+
+export const useSecoundsPassed = create<TimerState>((set) => ({
+  secondsPassed: 0,
+  increase: () => set((state) => ({ secondsPassed: state.secondsPassed + 1 })),
+  reset: () => set({ secondsPassed: 0 }),
+  decrementAsync: async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    set((state) => ({ secondsPassed: state.secondsPassed - 1 }));
+  },
+}));
+
+// timer.ts
+import { useSecoundsPassed } from "@/store/TimerStore";
+
+export const logTimer = () => {
+  const timer = useSecoundsPassed.getState().secondsPassed;
+  console.log("Timer: ", timer);
+};
+
+export const setTimerToOne = () => {
+  useSecoundsPassed.setState({ secondsPassed: 1 });
+};
+
+//TimerButton.tsx
+export const TimerButton = () => {
+  const reset = useSecoundsPassed((state) => state.reset);
+  const increment = useSecoundsPassed((state) => state.increase);
+  const decrementAsync = useSecoundsPassed((state) => state.decrementAsync);
+  return (
+    <div style={{ display: "flex", gap: "1rem" }}>
+      <button onClick={reset}>Reset</button>
+      <button onClick={increment}>Increase</button>
+      <button onClick={decrementAsync}>Decrement</button>
+    </div>
+  );
+};
+
+//TimerView.tsx
+export const TimerView = ({
+  secondsPassed,
+}: {
+  secondsPassed: TimerState["secondsPassed"];
+}) => <p>Seconds passed: {secondsPassed}</p>;
 ```
 
 ### Example: Nextjs
@@ -155,6 +232,8 @@ With is very expensive part
 ```tsx
 //TODO:
 ```
+
+More:
 
 https://youtu.be/fZPgBnL2x-Q?si=3lgPRdaJEHemPnCH&t=802
 
