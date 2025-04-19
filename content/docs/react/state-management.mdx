@@ -395,13 +395,13 @@ If `observer` is used in server side rendering context; make sure to call enable
 - Real-time collaboration tools
 - Internal tools where speed of development matters more than formal structure
 
-<Callout>
+<Callout type="warning">
   Using observables inside React components adds value as soon as they are
   either 1) deep, 2) have computed values or 3) are shared with other observer
   components.
 </Callout>
 
-<Callout>
+<Callout type="warning">
 It doesn't matter how we got the reference to an observable, we can consume observables from outer scopes directly (including from imports, etc.)
 
 Using observables directly works very well, but since this typically introduces module state, this pattern might complicate unit testing. Instead, we recommend using React Context instead.
