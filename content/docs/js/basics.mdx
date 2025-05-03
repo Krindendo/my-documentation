@@ -244,6 +244,7 @@ console.log(array1.map((x) => x * 2));
 #### Map vs Weak Map
 
 There are no ways to enumerate a `Weak Map` or to get all it's values. In `Weak Map`, you can store the data based on a key and when the key gets garbage collected so do the values.
+This is especially handy when you’re dealing with private data or caching related to DOM elements.
 
 - Keys must be objects or functions.
 
@@ -263,6 +264,41 @@ k1 = k2 = null;
 
 console.log(map.get(k1)); // {a: 1}
 console.log(weakMap.get(k2)); // undefined
+```
+
+Example:
+
+```ts
+// Define the shape of the metadata
+interface ElementMetadata {
+  clicked: boolean;
+}
+
+// Create the WeakMap with proper typing
+const elementData = new WeakMap<Element, ElementMetadata>();
+
+function setMetadata(element: Element, metadata: ElementMetadata): void {
+  elementData.set(element, metadata);
+}
+
+function getMetadata(element: Element): ElementMetadata | undefined {
+  return elementData.get(element);
+}
+
+// Usage
+const button = document.querySelector("button");
+
+if (button) {
+  setMetadata(button, { clicked: false });
+
+  button.addEventListener("click", () => {
+    const data = getMetadata(button);
+    if (data) {
+      data.clicked = true;
+      console.log("Button clicked:", data);
+    }
+  });
+}
 ```
 
 #### Map vs objects
@@ -294,6 +330,7 @@ Example:
 #### Set vs Weak Set
 
 The **Weak Set** can only store objects and does not prevent those objects from being garbage collected when they are no longer in use.
+Suppose you're dynamically scanning the DOM for <div> elements and want to ensure you process each element only once, even if the scan runs multiple times.
 
 Examples:
 
@@ -302,6 +339,32 @@ Examples:
 - You need to associate metadata or additional information with objects.
 
 - You want to create relationships between objects without preventing them from being released when they are no longer needed.
+
+```ts
+// TypeScript version
+
+const processedElements = new WeakSet<Element>();
+
+function processElement(el: Element): void {
+  if (processedElements.has(el)) return;
+
+  // Do something with the element
+  console.log("Processing:", el);
+
+  // Mark as processed
+  processedElements.add(el);
+}
+
+// Example usage
+function scanDOM(): void {
+  const divs = document.querySelectorAll("div");
+  divs.forEach((div) => processElement(div));
+}
+
+// Repeated scanning won't re-process already seen elements
+scanDOM();
+scanDOM();
+```
 
 ### How to iterate through object
 
@@ -351,7 +414,7 @@ function functionName(...parameter) {
 
 A **Promise** is an object returned by an asynchronous function, which represents the current state of the operation. It has two properties: `state` and `result`.
 
-**Promise** is can be one of these `states`:
+**Promise** can be one of these `states`:
 
 - **Prending** -> initial state, neither fulfilled nor rejected.
 
@@ -389,7 +452,7 @@ There's a special syntax to work with promises in a more comfortable fashion.
 
 ### Callback hell
 
-Callback Hell is essentially nested callbacks stacked below one another forming a pyramid structure. Every callback depends/waits for the previous callback, thereby making a pyramid structure that affects the readability and maintainability of the code.
+Callback Hell is essentially nested callbacks stacked below one another forming a pyramid structure. Every callback depends/waits for the previous callback, there by making a pyramid structure that affects the readability and maintainability of the code.
 
 ```javascript
 setTimeout(() => {
@@ -469,7 +532,7 @@ const student = {
 console.log(student.getName); // Monica
 ```
 
-Setter methods are used to change the values of an object
+Setter methods are used to change the values of an object.
 
 ```javascript
 const student = {
