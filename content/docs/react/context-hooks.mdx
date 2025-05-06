@@ -28,6 +28,11 @@ useContext returns the context value for the calling component. It is determined
 
 - `memo` will not prevent the component from re-rendering if you only have it `useContext()` inside the component and the value is changed.
 
+<Callout type="danger">
+  All components that hold same context will re-renders if only one property is
+  changed.
+</Callout>
+
 ### Example: basic
 
 ```tsx title="component/product-context.tsx"
