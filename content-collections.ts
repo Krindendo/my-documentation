@@ -6,6 +6,7 @@ import {
   remarkGfm,
   remarkHeading,
 } from "fumadocs-core/mdx-plugins";
+import { z } from "zod";
 
 const rehypeCodeOptions: RehypeCodeOptions = {
   themes: {
@@ -35,7 +36,7 @@ const docs = defineCollection({
   name: "docs",
   directory: "content/docs",
   include: "**/*.mdx",
-  schema: (z) => ({
+  schema: z.object({
     title: z.string().min(1),
     description: z.string().min(1),
     date: z.string().min(1),
@@ -67,7 +68,7 @@ const algorithms = defineCollection({
   name: "algorithms",
   directory: "content/algorithms",
   include: "**/*.mdx",
-  schema: (z) => ({
+  schema: z.object({
     title: z.string().min(1),
     description: z.string().min(1),
     date: z.string().min(1),
@@ -99,7 +100,7 @@ const guides = defineCollection({
   name: "guides",
   directory: "content/guides",
   include: "**/*.mdx",
-  schema: (z) => ({
+  schema: z.object({
     title: z.string().min(1),
     description: z.string().min(1),
     publishedAt: z.string().min(1),
