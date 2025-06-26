@@ -86,7 +86,8 @@ function CardPattern({ mouseX, mouseY, ...gridProps }: CardPatternProps) {
         />
       </div>
       <motion.div
-        className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-100 to-cyan-100 opacity-0 transition duration-300 group-hover:opacity-100 dark:from-blue-900 dark:to-cyan-900"
+        className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-100 to-yellow-100 opacity-0 transition duration-300 group-hover:opacity-100 dark:from-orange-800 dark:to-yellow-600"
+        // className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-100 to-yellow-100 opacity-0 transition duration-300 group-hover:opacity-100 dark:from-orange-800 dark:to-yellow-600"
         style={style}
       />
       <motion.div

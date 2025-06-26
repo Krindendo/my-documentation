@@ -48,7 +48,7 @@ export function SiteSidebar({
         </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="scrollbar">
         {sideNavigationSection.items?.map((item) => (
           <SidebarGroup key={item.label}>
             <SidebarGroupLabel>{item.label}</SidebarGroupLabel>

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import localFont from "next/font/local";
+
 import "./globals.css";
-import { ThemeProvider } from "next-themes";
 import { Pattern } from "./_components/pattern";
 import { SiteFooter } from "./_components/footer";
 import { SiteHeader } from "./_components/header";
@@ -10,6 +10,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SiteSidebar } from "./_components/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { SelectPathProvider } from "./_components/select-path-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const calSans = localFont({
   src: "./fonts/CalSans-SemiBold.woff",
