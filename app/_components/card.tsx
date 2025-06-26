@@ -58,7 +58,9 @@ export interface CardDescriptionProps {
 
 function CardDescription({ children }: CardDescriptionProps) {
   return (
-    <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{children}</p>
+    <p className="mt-1 text-sm leading-5 text-zinc-600 dark:text-zinc-400">
+      {children}
+    </p>
   );
 }
 

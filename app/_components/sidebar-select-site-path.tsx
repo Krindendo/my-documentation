@@ -13,20 +13,24 @@ const SidebarSelectSitePath = () => {
       onValueChange={setSelectedNavigation}
       value={selectedNavigation}
     >
-      <div className="flex items-center space-x-2 py-1">
-        <RadioGroupItem value="docs" id="r1" />
+      <div className="flex items-center gap-2 py-1">
+        <RadioGroupItem value="docs" id="r1" className="border-gray-400" />
         <Label className="cursor-pointer" htmlFor="r1">
           Docs
         </Label>
       </div>
-      <div className="flex items-center space-x-2 py-1">
-        <RadioGroupItem value="guides" id="r2" />
+      <div className="flex items-center gap-2 py-1">
+        <RadioGroupItem value="guides" id="r2" className="border-gray-400" />
         <Label className="cursor-pointer" htmlFor="r2">
           Guides
         </Label>
       </div>
-      <div className="flex items-center space-x-2 py-1">
-        <RadioGroupItem value="algorithms" id="r3" />
+      <div className="flex items-center gap-2 py-1">
+        <RadioGroupItem
+          value="algorithms"
+          id="r3"
+          className="border-gray-400"
+        />
         <Label className="cursor-pointer" htmlFor="r3">
           Algorithms
         </Label>
