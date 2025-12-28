@@ -213,7 +213,6 @@ export const Icons = {
           fontFamily="none"
           fontWeight="none"
           fontSize="none"
-          textAnchor="none"
           className="dark:fill-current"
         >
           <g transform="scale(5.33333,5.33333)">
