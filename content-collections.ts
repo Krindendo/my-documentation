@@ -42,13 +42,14 @@ const docs = defineCollection({
     date: z.string().min(1),
     tags: z.array(z.string()),
     published: z.boolean().default(true),
+    content: z.string(),
   }),
   transform: async (page, context) => {
     const body = await context.cache(page.content, async () =>
       compileMDX(context, page, {
         remarkPlugins: [remarkGfm, remarkHeading],
         rehypePlugins: [[rehypeCode, rehypeCodeOptions]],
-      })
+      }),
     );
 
     return {
@@ -74,13 +75,14 @@ const algorithms = defineCollection({
     date: z.string().min(1),
     tags: z.array(z.string()),
     published: z.boolean().default(true),
+    content: z.string(),
   }),
   transform: async (page, context) => {
     const body = await context.cache(page.content, async () =>
       compileMDX(context, page, {
         remarkPlugins: [remarkGfm, remarkHeading],
         rehypePlugins: [[rehypeCode, rehypeCodeOptions]],
-      })
+      }),
     );
 
     return {
@@ -106,13 +108,14 @@ const guides = defineCollection({
     publishedAt: z.string().min(1),
     tags: z.array(z.string()),
     published: z.boolean().default(true),
+    content: z.string(),
   }),
   transform: async (page, context) => {
     const body = await context.cache(page.content, async () =>
       compileMDX(context, page, {
         remarkPlugins: [remarkGfm, remarkHeading],
         rehypePlugins: [[rehypeCode, rehypeCodeOptions]],
-      })
+      }),
     );
 
     return {
@@ -129,5 +132,5 @@ const guides = defineCollection({
 });
 
 export default defineConfig({
-  collections: [docs, algorithms, guides],
+  content: [docs, algorithms, guides],
 });

@@ -1,5 +1,5 @@
 import { capitalize } from "@/lib/utils";
-import { getTableOfContents } from "fumadocs-core/server";
+import { getTableOfContents } from "fumadocs-core/content/toc";
 
 type TableOfContentsProperties = {
   readonly date: Date;
