@@ -1,0 +1,97 @@
+---
+title: Running MSSQL with Docker Compose
+description: This guide will walk you through setting up and running a Microsoft SQL Server instance using Docker Compose.
+publishedAt: 2026-03-28
+tags: [Docker, MSSQL]
+---
+
+### 📦 Prerequisites
+
+Before you begin, make sure you have:
+
+Docker Desktop installed and running
+
+Your project already containing a docker-compose.yaml file
+
+```dockerfile title="docker-compose.yaml"
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "YOUR_PASSWORD"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+
+volumes:
+  sqlserverdata:
+
+```
+
+---
+
+### 🚀 Step 1: Open Your Project
+
+Open your project in your preferred code editor (e.g. Visual Studio Code).
+
+Locate the docker-compose.yml file in the root directory.
+
+---
+
+### ▶️ Step 2: Start the Containers
+
+Open a terminal inside your project folder
+
+Run:
+
+```dockerfile
+docker-compose up -d
+```
+
+Wait until Docker finishes pulling the image and starts the container
+
+---
+
+### 🔍 Step 3: Verify Container is Running
+
+To confirm everything is working:
+
+```dockerfile
+docker ps
+```
+
+You should see your MSSQL container listed with status Up.
+
+---
+
+### 🧪 Step 4: Connect to the Database
+
+You can connect using:
+
+- Azure Data Studio
+- SQL Server Management Studio
+- Or any SQL client
+
+Use these connection details:
+
+- Server: localhost
+- Port: 1433
+- User: sa
+- Password: (the one defined in your compose file)
+
+For SQL Server Management Studio Connection String is:
+
+```txt
+Data Source=localhost,1433;Persist Security Info=True;User ID=sa;Password=YOUR_PASSWORD;Pooling=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Application Name="SQL Server Management Studio";Command Timeout=0
+```
+
+---
+
+### ✅ You're Done
+
+You now have a running MSSQL instance inside Docker, ready for development and testing.

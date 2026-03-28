@@ -129,6 +129,14 @@ const sideNavigationGuides: NavigationEntry[] = [
         link: "/guides/branching-models",
       },
       {
+        label: "Docker examples",
+        link: "/guides/docker-examples",
+      },
+      {
+        label: "MSSQL with Docker",
+        link: "/guides/running-mssql-with-docker-compose",
+      },
+      {
         label: "Configure tsconfig",
         link: "/guides/configure-tsconfig",
       },
