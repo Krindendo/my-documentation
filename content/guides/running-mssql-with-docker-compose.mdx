@@ -49,7 +49,7 @@ Open a terminal inside your project folder
 
 Run:
 
-```dockerfile
+```bash
 docker-compose up -d
 ```
 
@@ -61,15 +61,35 @@ Wait until Docker finishes pulling the image and starts the container
 
 To confirm everything is working:
 
-```dockerfile
+```bash
 docker ps
 ```
 
 You should see your MSSQL container listed with status Up.
 
+Also copy CONTAINER_ID.
+
 ---
 
-### 🧪 Step 4: Connect to the Database
+### 📦 Step 4: Transfer .bak File into the Container
+
+First, create a backup directory inside the running container:
+
+```bash
+docker exec -it <CONTAINER_ID> mkdir -p /var/opt/mssql/backup
+```
+
+Then copy your .bak file from the host machine into the container:
+
+```bash
+docker cp <database_name>.bak <CONTAINER_ID>:/var/opt/mssql/backup/<database_name>.bak
+```
+
+> 💡 Tip: You can get the container ID using `docker ps`
+
+---
+
+### 🧪 Step 5: Connect to the Database
 
 You can connect using:
 
@@ -79,16 +99,35 @@ You can connect using:
 
 Use these connection details:
 
-- Server: localhost
-- Port: 1433
-- User: sa
+- Server: `localhost`
+- Port: `1433`
+- User: `sa`
 - Password: (the one defined in your compose file)
 
-For SQL Server Management Studio Connection String is:
+SQL Server Management Studio Connection String:
 
 ```txt
 Data Source=localhost,1433;Persist Security Info=True;User ID=sa;Password=YOUR_PASSWORD;Pooling=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Application Name="SQL Server Management Studio";Command Timeout=0
 ```
+
+---
+
+### 🛠️ Step 6: Restore the Database
+
+1. Open **SQL Server Management Studio (SSMS)**
+2. Right-click on **Databases**
+3. Select **Restore Database...**
+4. Choose:
+   - **Source** → _Device_
+   - Click `...` and add your `.bak` file from:
+
+     ```
+     /var/opt/mssql/backup/<database_name>.bak
+     ```
+
+5. Confirm and start the restore process
+
+> ⚠️ If the backup does not appear, ensure the path is correctly set and the container has access to the file.
 
 ---
 
