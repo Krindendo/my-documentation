@@ -1,0 +1,118 @@
+---
+title: Error Handling
+description: try/catch/finally, throwing and creating custom errors, and handling errors in async code.
+tags: [javaScript]
+
+date: 2026-08-28
+---
+
+### try / catch / finally
+
+```javascript
+try {
+  const result = riskyOperation();
+  console.log(result);
+} catch (error) {
+  console.error("Something went wrong:", error.message);
+} finally {
+  console.log("This always runs, whether or not an error was thrown.");
+}
+```
+
+- `try`  code that might throw.
+- `catch`  runs only if something inside `try` threw. Receives the thrown value (usually an `Error`).
+- `finally`  always runs, whether or not an error occurred, and even if `try`/`catch` return early. Useful for cleanup (closing a connection, hiding a loading spinner).
+
+### The Error object
+
+`throw` can technically throw any value, but throwing an `Error` (or subclass) is standard practice, since it captures a stack trace:
+
+```javascript
+throw new Error("Something went wrong");
+
+try {
+  throw new Error("Custom failure");
+} catch (error) {
+  console.log(error.message); // "Custom failure"
+  console.log(error.stack); // stack trace string
+  console.log(error instanceof Error); // true
+}
+```
+
+Built-in error subtypes include `TypeError`, `RangeError`, `ReferenceError`, and `SyntaxError`  each thrown automatically by the engine in specific situations (e.g. calling a non-function throws `TypeError`).
+
+### Custom error classes
+
+Extending `Error` lets you create domain-specific errors that carry extra information and can be distinguished with `instanceof`:
+
+```javascript
+class ValidationError extends Error {
+  constructor(message, field) {
+    super(message);
+    this.name = "ValidationError";
+    this.field = field;
+  }
+}
+
+function validateAge(age) {
+  if (age < 0) {
+    throw new ValidationError("Age cannot be negative", "age");
+  }
+}
+
+try {
+  validateAge(-5);
+} catch (error) {
+  if (error instanceof ValidationError) {
+    console.log(`Invalid field: ${error.field}`); // "Invalid field: age"
+  } else {
+    throw error; // rethrow anything we don't know how to handle
+  }
+}
+```
+
+### Rethrowing
+
+Sometimes you only want to handle a specific error and let everything else propagate up to a caller who knows what to do with it:
+
+```javascript
+function process(data) {
+  try {
+    return JSON.parse(data);
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      console.error("Invalid JSON provided");
+    }
+    throw error; // rethrow  this function isn't the right place to fully handle it
+  }
+}
+```
+
+### Errors in async code
+
+`try`/`catch` works around `await` just like synchronous code:
+
+```javascript
+async function fetchUser(id) {
+  try {
+    const response = await fetch(`/api/users/${id}`);
+    if (!response.ok) {
+      throw new Error(`Request failed: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to fetch user:", error.message);
+    return null;
+  }
+}
+```
+
+For plain Promises (without `async`/`await`), use `.catch()`:
+
+```javascript
+fetch("/api/users/1")
+  .then((res) => res.json())
+  .catch((error) => console.error(error));
+```
+
+An unhandled rejection (no `.catch()` and not inside a `try`/`await`) won't crash Node by default but will log a warning  always handle rejections explicitly.

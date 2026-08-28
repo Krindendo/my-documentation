@@ -3,7 +3,7 @@ title: React
 description: open-source front-end JavaScript library for building user interface
 tags: [react]
 
-date: 2024-12-06
+date: 2026-08-28
 ---
 
 React is JavaScript library that lets you build user interface out of individual pieces.
@@ -56,13 +56,13 @@ Its API is same as the browser's native event, including `stopPropagation()` and
 except the events work identically across all browsers. The native events can be accessed directly from synthetic events using `nativeEvent` atribute.
 
 ```tsx
-function BookStore{
+function BookStore() {
   handleTitleChange(e) {
     console.log('The new title is:', e.target.value);
     // 'e' represents synthetic event
     const nativeEvent = e.nativeEvent;
     console.log(nativeEvent);
-    e.stopPropogation();
+    e.stopPropagation();
     e.preventDefault();
   }
 
@@ -85,11 +85,42 @@ function BookStore{
 
 **Key prop**
 
+`key` is a special prop React uses to identify which items in a list have changed, been added, or been removed  it isn't passed down to your component as a real prop. Keys should be stable and unique among siblings (usually an ID from your data), **not** the array index  using the index breaks when items get reordered, inserted, or removed, since React can end up matching the wrong DOM node or state to the wrong item.
+
+```tsx
+{todos.map((todo) => (
+  <TodoItem key={todo.id} todo={todo} />
+))}
+```
+
 **Error Handling**
 
-- Uncontrolled errors
+- **Uncontrolled errors**: Errors that aren't caught anywhere and crash (or partially crash) the app  for example, a runtime error thrown during render that isn't wrapped in an error boundary. The user is left with a broken UI or a blank screen.
 
-- Controlled errors
+- **Controlled errors**: Errors that are explicitly caught and handled, so the app can recover gracefully. In React, this is done with an **Error Boundary**  a class component that implements `static getDerivedStateFromError()` and/or `componentDidCatch()` to catch errors thrown by its child tree during render, and show a fallback UI instead of crashing.
+
+```tsx
+class ErrorBoundary extends React.Component {
+  state = { hasError: false };
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    console.error("Caught by boundary:", error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <h2>Something went wrong.</h2>;
+    }
+    return this.props.children;
+  }
+}
+```
+
+Error boundaries only catch errors during **rendering**, in lifecycle methods, and in constructors of the tree below them  they do **not** catch errors in event handlers, async code, or errors thrown in the boundary itself. For those, use a regular `try`/`catch` (see [Error Handling](/docs/js/error-handling)).
 
 **State manager**
 
@@ -104,6 +135,8 @@ State management is crucial for controlling the behavior and rendering of React 
 - External Libraries: For large-scale applications, external libraries like Redux or MobX can offer more powerful solutions for state management, providing capabilities such as centralized state, middleware, and more predictable state updates with actions and reducers.
 
 **The lifecycle of a React component**
+
+The stages below are the traditional **class component** lifecycle. Function components (the modern default) don't have these named methods  `useEffect` covers mounting, updating, and unmounting in a single Hook, matching a dependency array instead of separate method names. See [Effect Hooks](/docs/react/effect-hooks) for the Hook-based equivalent.
 
 - Mounting: The process begins with instantiation and includes methods like constructor(), getDerivedStateFromProps(), render(), and componentDidMount(). The component is created and inserted into the DOM.
 

@@ -3,7 +3,7 @@ title: Context Hooks
 description: Context allows a component to receive information from distant parents without prop driling.
 tags: [react]
 
-date: 2024-12-06
+date: 2026-08-28
 ---
 
 - `useContext` reads and subscribes to a context.
@@ -65,10 +65,12 @@ function Navbar() {
 ### Example: complext component
 
 ```tsx title="component/product-context.tsx"
-const ProductContext = React.createContext<{ product: Product } | null>(null);
+const ProductCardContext = React.createContext<{ product: Product } | null>(
+  null
+);
 
-export function useProducContext() {
-  const context = React.useContext(ProductContext);
+export function useProductCardContext() {
+  const context = React.useContext(ProductCardContext);
   if (!context) {
     throw new Error(
       "Product.* component must be rendered as child of Product component"
@@ -77,11 +79,11 @@ export function useProducContext() {
   return context;
 }
 
-export default ProductContext;
+export default ProductCardContext;
 ```
 
 ```tsx title="component/product-card.tsx"
-interface ProductCardProps = {
+interface ProductCardProps {
   product: Product;
   children: React.ReactNode;
 }

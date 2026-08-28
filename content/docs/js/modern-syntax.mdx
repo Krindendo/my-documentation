@@ -1,0 +1,183 @@
+---
+title: Modern Syntax
+description: Destructuring, spread/rest, optional chaining, nullish coalescing, and template literals  syntax you'll see in nearly every modern JS/React codebase.
+tags: [javaScript]
+
+date: 2026-08-28
+---
+
+### Array destructuring
+
+Pulls values out of an array into individual variables, by position:
+
+```javascript
+const [first, second] = [1, 2, 3];
+console.log(first, second); // 1 2
+
+// skipping items
+const [, , third] = [1, 2, 3];
+console.log(third); // 3
+
+// default values
+const [a = 10, b = 20] = [undefined, 5];
+console.log(a, b); // 10 5
+
+// swapping variables
+let x = 1,
+  y = 2;
+[x, y] = [y, x];
+console.log(x, y); // 2 1
+```
+
+### Object destructuring
+
+Pulls values out of an object into variables, by key:
+
+```javascript
+const user = { name: "Ana", age: 28, city: "Belgrade" };
+
+const { name, age } = user;
+console.log(name, age); // "Ana" 28
+
+// renaming while destructuring
+const { name: userName } = user;
+console.log(userName); // "Ana"
+
+// default values
+const { country = "Serbia" } = user;
+console.log(country); // "Serbia"  user.country doesn't exist
+
+// nested destructuring
+const response = { data: { id: 1, meta: { page: 1 } } };
+const {
+  data: {
+    meta: { page },
+  },
+} = response;
+console.log(page); // 1
+```
+
+Destructuring shows up constantly in function parameters, especially in React:
+
+```javascript
+function Greeting({ name, age = 18 }) {
+  return `${name} is ${age}`;
+}
+```
+
+### Spread operator (`...`)
+
+Expands an iterable (array, string, object) into individual elements. Common uses:
+
+```javascript
+// copying an array (shallow copy)
+const original = [1, 2, 3];
+const copy = [...original];
+
+// merging arrays
+const merged = [...[1, 2], ...[3, 4]]; // [1, 2, 3, 4]
+
+// copying/merging objects
+const base = { a: 1, b: 2 };
+const extended = { ...base, c: 3 }; // { a: 1, b: 2, c: 3 }
+const overridden = { ...base, a: 99 }; // { a: 99, b: 2 }  later keys win
+
+// spreading into function calls
+function sum(a, b, c) {
+  return a + b + c;
+}
+const nums = [1, 2, 3];
+sum(...nums); // 6
+```
+
+Note: spread only performs a **shallow copy**  nested objects/arrays are still shared by reference.
+
+### Rest parameters
+
+The mirror image of spread: collects the remaining elements into a single array or object.
+
+```javascript
+// function arguments
+function sum(...numbers) {
+  return numbers.reduce((total, n) => total + n, 0);
+}
+sum(1, 2, 3, 4); // 10
+
+// destructuring with rest
+const [first, ...rest] = [1, 2, 3, 4];
+console.log(first, rest); // 1 [2, 3, 4]
+
+const { id, ...otherFields } = { id: 1, name: "Ana", age: 28 };
+console.log(otherFields); // { name: "Ana", age: 28 }
+```
+
+### Optional chaining (`?.`)
+
+Safely accesses deeply nested properties without throwing if something along the way is `null`/`undefined`. If any link in the chain is nullish, the whole expression short-circuits to `undefined` instead of throwing.
+
+```javascript
+const user = { profile: { name: "Ana" } };
+
+console.log(user.profile?.name); // "Ana"
+console.log(user.address?.city); // undefined  no error, even though `address` doesn't exist
+
+// works with function calls too
+user.greet?.(); // does nothing if `greet` doesn't exist, instead of throwing
+
+// and with array/bracket access
+user.tags?.[0];
+```
+
+Without `?.`, the above would need something like `user && user.address && user.address.city`.
+
+### Nullish coalescing (`??`)
+
+Returns the right-hand value only when the left-hand value is `null` or `undefined`  unlike `||`, it does **not** trigger on other falsy values like `0`, `""`, or `false`.
+
+```javascript
+const count = 0;
+
+console.log(count || 10); // 10  wrong! 0 is falsy, so || overrides it
+console.log(count ?? 10); // 0  correct, 0 is not nullish
+
+let username;
+console.log(username ?? "Guest"); // "Guest"
+```
+
+`?.` and `??` are frequently combined:
+
+```javascript
+const city = user.address?.city ?? "Unknown";
+```
+
+### Template literals
+
+Backtick-delimited strings that support embedded expressions and multi-line text:
+
+```javascript
+const name = "Ana";
+const age = 28;
+
+console.log(`${name} is ${age} years old.`);
+console.log(`Next year: ${age + 1}`);
+
+const multiline = `Line one
+Line two`;
+```
+
+### Tagged templates
+
+A function can process a template literal before it's turned into a string  used by libraries like `styled-components`, and for things like automatic escaping:
+
+```javascript
+function highlight(strings, ...values) {
+  return strings.reduce(
+    (result, str, i) =>
+      `${result}${str}${values[i] ? `**${values[i]}**` : ""}`,
+    "",
+  );
+}
+
+const name = "Ana";
+highlight`Hello, ${name}!`; // "Hello, **Ana**!"
+```

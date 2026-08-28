@@ -1,0 +1,93 @@
+---
+title: Collections & Object Utilities
+description: Set, WeakSet, and the built-in static methods on Object for working with keys, values, and immutability.
+tags: [javaScript]
+
+date: 2026-08-28
+---
+
+### Set
+
+A `Set` stores **unique** values of any type  no duplicates, and (like `Map`) it remembers insertion order.
+
+```javascript
+const ids = new Set([1, 2, 2, 3, 3, 3]);
+console.log(ids); // Set(3) {1, 2, 3}  duplicates are dropped automatically
+
+ids.add(4);
+ids.has(2); // true
+ids.delete(1);
+console.log(ids.size); // 3
+
+// converting to/from arrays
+const arr = [...ids]; // [2, 3, 4]
+const unique = [...new Set([1, 1, 2, 2, 3])]; // [1, 2, 3]  a common dedupe trick
+```
+
+### WeakSet
+
+Like `Set`, but can only hold objects (not primitives), and those objects are held **weakly**  if nothing else references an object, it can be garbage collected even while still "in" the WeakSet. Not iterable, and has no `.size`. Useful for tracking membership (e.g. "has this object already been processed?") without preventing garbage collection.
+
+```javascript
+const processed = new WeakSet();
+
+function process(obj) {
+  if (processed.has(obj)) return;
+  processed.add(obj);
+  // ... do work
+}
+```
+
+### Object static methods
+
+**`Object.keys()` / `Object.values()` / `Object.entries()`**
+
+```javascript
+const user = { name: "Ana", age: 28 };
+
+Object.keys(user); // ["name", "age"]
+Object.values(user); // ["Ana", 28]
+Object.entries(user); // [["name", "Ana"], ["age", 28]]
+
+// entries pairs well with for...of destructuring
+for (const [key, value] of Object.entries(user)) {
+  console.log(`${key}: ${value}`);
+}
+```
+
+**`Object.assign()`**
+
+Copies properties from one or more source objects into a target object (mutates the target, returns it):
+
+```javascript
+const defaults = { theme: "light", fontSize: 14 };
+const overrides = { fontSize: 16 };
+
+const settings = Object.assign({}, defaults, overrides);
+// { theme: "light", fontSize: 16 }  later sources win
+// (the spread operator, {...defaults, ...overrides}, does the same thing for object literals)
+```
+
+**`Object.freeze()` / `Object.isFrozen()`**
+
+Prevents adding, removing, or reassigning properties (shallow  nested objects are still mutable):
+
+```javascript
+const config = Object.freeze({ apiUrl: "https://api.example.com" });
+
+config.apiUrl = "changed"; // silently ignored (throws in strict mode)
+console.log(config.apiUrl); // "https://api.example.com"  unchanged
+console.log(Object.isFrozen(config)); // true
+```
+
+**`Object.seal()` / `Object.isSealed()`**
+
+Prevents adding or removing properties, but existing properties can still be reassigned (unlike `freeze`):
+
+```javascript
+const user = Object.seal({ name: "Ana" });
+
+user.name = "Ivan"; // OK  existing properties can change
+user.age = 28; // silently ignored  can't add new properties
+delete user.name; // silently ignored  can't remove properties either
+```

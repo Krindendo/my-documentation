@@ -1,0 +1,104 @@
+---
+title: Modules
+description: How JavaScript code is split across files with import/export, and the difference between the ES Module and CommonJS systems.
+tags: [javaScript]
+
+date: 2026-08-28
+---
+
+### Why modules
+
+Modules let you split code across files, expose only what's needed (`export`), and pull in what you need from elsewhere (`import`)  instead of relying on global variables shared across every script on the page.
+
+### Named exports
+
+Export multiple named values from a file:
+
+```javascript
+// math.js
+export function add(a, b) {
+  return a + b;
+}
+
+export const PI = 3.14159;
+```
+
+```javascript
+// main.js
+import { add, PI } from "./math.js";
+
+console.log(add(2, 3)); // 5
+console.log(PI); // 3.14159
+
+// renaming on import
+import { add as sum } from "./math.js";
+
+// importing everything as a namespace object
+import * as math from "./math.js";
+math.add(2, 3);
+```
+
+### Default exports
+
+Each file can additionally have one default export  typically the "main thing" that file provides:
+
+```javascript
+// user.js
+export default class User {
+  constructor(name) {
+    this.name = name;
+  }
+}
+```
+
+```javascript
+// main.js
+import User from "./user.js"; // no curly braces, and you can name it anything
+```
+
+A file can mix a default export with named exports:
+
+```javascript
+export default function App() {}
+export const version = "1.0.0";
+```
+
+### Re-exporting
+
+Useful for creating a single "barrel" file that re-exports things from several modules:
+
+```javascript
+// index.js
+export { add, subtract } from "./math.js";
+export { default as User } from "./user.js";
+```
+
+### ESM vs CommonJS
+
+There are two competing module systems in the JS ecosystem:
+
+**ES Modules (ESM)**  the standard, `import`/`export` syntax shown above. Used natively in browsers and modern Node.js. Statically analyzable (imports are resolved before code runs), which enables **tree-shaking** (bundlers can drop unused exports).
+
+**CommonJS (CJS)**  Node's original module system, still common in older packages and tooling:
+
+```javascript
+// exporting
+module.exports = { add, subtract };
+// or
+exports.add = add;
+
+// importing
+const { add } = require("./math.js");
+```
+
+Key differences:
+
+- ESM imports are resolved statically at build time; CommonJS `require()` runs at runtime and can be called conditionally (e.g. inside an `if`).
+- ESM is asynchronous-friendly (top-level `await` is allowed); CommonJS `require()` is always synchronous.
+- Node.js determines which system a file uses based on the `type` field in `package.json` (`"type": "module"` for ESM) or the file extension (`.mjs` vs `.cjs`).
+
+```json title="package.json"
+{
+  "type": "module"
+}
+```

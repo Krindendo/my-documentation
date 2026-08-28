@@ -1,9 +1,129 @@
 ---
 title: Class
-description: Description test
-tags: [JavaScript]
+description: Classes are syntactic sugar over JavaScript's prototype-based inheritance, used to create objects with shared structure and behavior.
+tags: [javaScript]
 
-date: 2024-12-06
+date: 2026-08-28
 ---
 
-This is only test
+A class is a blueprint for creating objects that share properties and methods. Under the hood, JS classes are just a nicer syntax over the existing prototype-based inheritance system.
+
+```javascript
+class Animal {
+  static kingdom = "Animalia"; // static field, shared on the class itself
+
+  #age; // private field, only accessible inside this class
+
+  constructor(name, age) {
+    this.name = name; // public instance field
+    this.#age = age;
+  }
+
+  speak() {
+    return `${this.name} makes a sound.`;
+  }
+
+  get age() {
+    return this.#age;
+  }
+
+  set age(value) {
+    if (value < 0) throw new Error("Age cannot be negative");
+    this.#age = value;
+  }
+
+  static describe() {
+    return `Classified under ${Animal.kingdom}`;
+  }
+}
+
+const cat = new Animal("Cat", 2);
+console.log(cat.speak()); // "Cat makes a sound."
+console.log(cat.age); // 2 (via getter)
+console.log(Animal.describe()); // "Classified under Animalia"
+```
+
+### Inheritance (extends / super)
+
+```javascript
+class Dog extends Animal {
+  constructor(name, age, breed) {
+    super(name, age); // must call super() before using `this`
+    this.breed = breed;
+  }
+
+  speak() {
+    return `${super.speak()} Specifically, ${this.name} barks.`;
+  }
+}
+
+const rex = new Dog("Rex", 3, "Labrador");
+console.log(rex.speak());
+// "Rex makes a sound. Specifically, Rex barks."
+```
+
+### Class expressions
+
+Classes can also be defined as expressions, named or anonymous, just like functions:
+
+```javascript
+const Person = class {
+  constructor(name) {
+    this.name = name;
+  }
+};
+```
+
+### Static blocks
+
+Static initialization blocks let you run setup logic once, when the class itself is defined (not when an instance is created):
+
+```javascript
+class Config {
+  static settings;
+
+  static {
+    Config.settings = loadSettingsSomehow();
+  }
+}
+```
+
+### Private fields and methods
+
+Fields/methods prefixed with `#` are only accessible from inside the class body  not from outside, and not even from subclasses:
+
+```javascript
+class Counter {
+  #count = 0;
+
+  #increment() {
+    this.#count++;
+  }
+
+  next() {
+    this.#increment();
+    return this.#count;
+  }
+}
+
+const counter = new Counter();
+counter.next(); // 1
+counter.#count; // SyntaxError  private field not accessible from outside
+```
+
+### Classes are just prototypes
+
+Class methods actually live on `ClassName.prototype`. The `class` keyword is mostly sugar over this older, more verbose pattern  it just makes it more readable and adds features (private fields, static blocks) that were awkward to express before:
+
+```javascript
+function Animal(name) {
+  this.name = name;
+}
+
+Animal.prototype.speak = function () {
+  return `${this.name} makes a sound.`;
+};
+
+const cat = new Animal("Cat");
+console.log(cat.speak()); // "Cat makes a sound."
+```

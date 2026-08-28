@@ -31,6 +31,11 @@ const sideNavigationDocs: NavigationEntry[] = [
       { label: "basics", link: "/docs/js/basics" },
       { label: "this", link: "/docs/js/this" },
       { label: "Class", link: "/docs/js/class" },
+      { label: "Async", link: "/docs/js/async" },
+      { label: "Error handling", link: "/docs/js/error-handling" },
+      { label: "Collections", link: "/docs/js/collections" },
+      { label: "Modern Syntax", link: "/docs/js/modern-syntax" },
+      { label: "Modules", link: "/docs/js/modules" },
     ],
   },
   {
@@ -40,7 +45,12 @@ const sideNavigationDocs: NavigationEntry[] = [
       { label: "basics", link: "/docs/ts/basics" },
       { label: "Interface", link: "/docs/ts/interface" },
       { label: "Type", link: "/docs/ts/type" },
+      { label: "Advanced Types", link: "/docs/ts/advanced-types" },
+      { label: "Type Assertions", link: "/docs/ts/type-assertions" },
       { label: "Class", link: "/docs/ts/class" },
+      { label: "Generics", link: "/docs/ts/generics" },
+      { label: "Enums", link: "/docs/ts/enums" },
+      { label: "Declaration Files", link: "/docs/ts/declaration-files" },
     ],
   },
   {
@@ -172,6 +182,10 @@ const sideNavigationGuides: NavigationEntry[] = [
       {
         label: "Websockets vs polling",
         link: "/guides/websockets-vs-polling",
+      },
+      {
+        label: "Git vs Github flow",
+        link: "/guides/git-github-flow",
       },
     ],
   },

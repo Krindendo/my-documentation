@@ -1,0 +1,127 @@
+---
+title: Advanced Types
+description: Discriminated unions, keyof/typeof at the type level, and utility types beyond Partial/Pick/Omit.
+tags: [typescript]
+
+date: 2026-08-28
+---
+
+### Discriminated unions
+
+A very common pattern: a union of object types that share a common literal property (the "discriminant"), which TypeScript uses to narrow the type inside an `if`/`switch`:
+
+```ts
+type LoadingState = { status: "loading" };
+type SuccessState = { status: "success"; data: string };
+type ErrorState = { status: "error"; message: string };
+
+type RequestState = LoadingState | SuccessState | ErrorState;
+
+function render(state: RequestState) {
+  switch (state.status) {
+    case "loading":
+      return "Loading...";
+    case "success":
+      return state.data; // TS knows `data` exists here, only on this branch
+    case "error":
+      return state.message; // and `message` only exists here
+  }
+}
+```
+
+Without the shared `status` field to narrow on, you'd need repeated `"data" in state` checks or type assertions  discriminated unions let the compiler do that work for you.
+
+### `keyof`
+
+Produces a union of a type's property names as string literal types:
+
+```ts
+interface User {
+  name: string;
+  age: number;
+}
+
+type UserKey = keyof User; // "name" | "age"
+
+function getValue(user: User, key: UserKey) {
+  return user[key];
+}
+```
+
+### `typeof` (type-level)
+
+Unlike the runtime `typeof` operator (which returns a string like `"string"`), TypeScript's type-level `typeof` extracts the *type* of a variable or object, so you don't have to redeclare a type that already matches something in your code:
+
+```ts
+const defaultSettings = {
+  theme: "light",
+  fontSize: 14,
+};
+
+type Settings = typeof defaultSettings;
+// { theme: string; fontSize: number }
+
+function applySettings(settings: Settings) {
+  /* ... */
+}
+```
+
+Combined, `keyof typeof` is a common idiom for turning an existing object (like a lookup table) into a union of its keys:
+
+```ts
+const roles = {
+  admin: "Admin",
+  editor: "Editor",
+  viewer: "Viewer",
+};
+
+type Role = keyof typeof roles; // "admin" | "editor" | "viewer"
+```
+
+### More utility types
+
+Beyond `Partial`/`Required`/`Pick`/`Omit`/`Record` (see [Type](/docs/ts/type)):
+
+**`ReturnType<T>`**  extracts a function's return type:
+
+```ts
+function createUser() {
+  return { id: 1, name: "Ana" };
+}
+
+type User = ReturnType<typeof createUser>; // { id: number; name: string }
+```
+
+**`Parameters<T>`**  extracts a function's parameter types as a tuple:
+
+```ts
+function greet(name: string, age: number) {}
+
+type GreetParams = Parameters<typeof greet>; // [string, number]
+```
+
+**`Awaited<T>`**  unwraps the type a Promise resolves to (handles nested Promises too):
+
+```ts
+async function fetchUser() {
+  return { id: 1, name: "Ana" };
+}
+
+type User = Awaited<ReturnType<typeof fetchUser>>; // { id: number; name: string }
+```
+
+**`Exclude<T, U>` / `Extract<T, U>`**  filter members out of, or in from, a union:
+
+```ts
+type Status = "loading" | "success" | "error";
+
+type NotLoading = Exclude<Status, "loading">; // "success" | "error"
+type OnlyError = Extract<Status, "error">; // "error"
+```
+
+**`NonNullable<T>`**  removes `null` and `undefined` from a type:
+
+```ts
+type MaybeString = string | null | undefined;
+type DefiniteString = NonNullable<MaybeString>; // string
+```

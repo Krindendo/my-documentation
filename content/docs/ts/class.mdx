@@ -1,9 +1,152 @@
 ---
 title: Class
-description: test
+description: How TypeScript extends JavaScript classes with types, access modifiers, and compile-time checks.
 tags: [typescript]
 
-date: 2024-12-06
+date: 2026-08-27
 ---
 
-This is only test
+TypeScript classes behave the same as JavaScript classes at runtime  the extra syntax (types, modifiers, interface implementation) only exists at compile time and is stripped away when compiled down to JS.
+
+> For `public` / `private` / `protected` and `abstract` classes, see [Basics](/docs/ts/basics).
+
+### Typed properties and methods
+
+```ts
+class User {
+  name: string;
+  age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+
+  greet(): string {
+    return `Hi, I'm ${this.name}`;
+  }
+}
+```
+
+### Parameter properties
+
+TypeScript lets you declare and initialize a property directly from the constructor's parameter list, skipping the separate declaration + assignment:
+
+```ts
+class User {
+  constructor(
+    public name: string,
+    private age: number,
+    readonly id: string,
+  ) {}
+}
+
+// equivalent to writing:
+class UserVerbose {
+  public name: string;
+  private age: number;
+  readonly id: string;
+
+  constructor(name: string, age: number, id: string) {
+    this.name = name;
+    this.age = age;
+    this.id = id;
+  }
+}
+```
+
+### readonly properties
+
+`readonly` properties can be set once (in the declaration or the constructor) and never reassigned after that:
+
+```ts
+class Point {
+  readonly x: number;
+  readonly y: number;
+
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
+const p = new Point(1, 2);
+p.x = 5; // Error: Cannot assign to 'x' because it is a read-only property.
+```
+
+### implements
+
+A class can implement one or more interfaces, which forces it to satisfy that shape. Unlike `extends`, `implements` shares no implementation  only the contract:
+
+```ts
+interface Serializable {
+  serialize(): string;
+}
+
+class Product implements Serializable {
+  constructor(
+    public name: string,
+    public price: number,
+  ) {}
+
+  serialize() {
+    return JSON.stringify({ name: this.name, price: this.price });
+  }
+}
+```
+
+### override
+
+The `override` keyword documents  and lets the compiler verify  that a method is intentionally overriding a base class method. It catches typos where a method was meant to override but doesn't actually match the base signature:
+
+```ts
+class Animal {
+  speak() {
+    return "...";
+  }
+}
+
+class Dog extends Animal {
+  override speak() {
+    return "Woof!";
+  }
+}
+```
+
+### Generic classes
+
+Classes can be generic, so the same class can operate over different types safely:
+
+```ts
+class Box<T> {
+  private contents: T;
+
+  constructor(value: T) {
+    this.contents = value;
+  }
+
+  get(): T {
+    return this.contents;
+  }
+}
+
+const numberBox = new Box<number>(5);
+const stringBox = new Box("hello"); // T inferred as string
+```
+
+### Classes are also types
+
+Declaring a class also declares a type of the same name, usable anywhere a type is expected:
+
+```ts
+class Point {
+  constructor(
+    public x: number,
+    public y: number,
+  ) {}
+}
+
+function distanceFromOrigin(p: Point): number {
+  return Math.sqrt(p.x ** 2 + p.y ** 2);
+}
+```

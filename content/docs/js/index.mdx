@@ -1,26 +1,38 @@
 ---
 title: Javascript
 description: Hige level, single threaded, Garbage collection, interpreted or JIT compiled, prototype based, multi-paradigm, dynamic language, non-blocking event loop
-tags: [JavaScript]
+tags: [javaScript]
 
-date: 2024-12-06
+date: 2026-08-27
 ---
 
 JS is an implementation of the ECMAScript standard, which is guided by the TC39 committee and hosted by ECMA. It runs in browsers and other JS environments such as Node.js.
 
 **Hige level:**
 
+Abstracts away low-level details like memory allocation and CPU registers. You work with variables, objects, and functions instead of memory addresses.
+
 **Single threaded:**
+
+JS runs on a single call stack, meaning it can only do one thing at a time. Concurrency isn't achieved through OS threads, but through the **event loop**, which hands off async work (timers, network requests, I/O) to the environment (browser or Node) and queues the callbacks to run once the call stack is empty.
 
 **Garbage collection:**
 
+Memory is managed automatically. The engine periodically frees memory held by objects that are no longer **reachable** from the root (global object + active call stack), most commonly using a **mark-and-sweep** algorithm: it marks everything reachable, then sweeps away anything left unmarked.
+
 **Interpreted:**
+
+Historically, JS source was read and run line-by-line by an interpreter with no separate compilation step, unlike languages like C or Go that compile ahead of time into machine code.
 
 **JIT compiled:**
 
 JS is a compiled language, meaning the tools (including the JS engine) process and verify a program (reporting any errors!) before it executes.
 
+Modern engines (like V8) blend both approaches: code is parsed and initially interpreted, then "hot" (frequently run) code paths get compiled to optimized machine code on the fly  this is **Just-In-Time (JIT)** compilation.
+
 **Prototype based:**
+
+Objects can inherit properties and methods directly from other objects through a chain called the **prototype chain**, rather than strictly through classes. The `class` keyword in JS is syntactic sugar built on top of this same prototypal system.
 
 **Multi-paradigm:**
 
@@ -28,6 +40,53 @@ JS is a multi-paradigm language, meaning the syntax and capabilities allow a dev
 
 **Dynamic language:**
 
+Types are checked at runtime, not compile time. A variable isn't locked to a type  it can hold a `string` and later be reassigned a `number` with no error.
+
+```javascript
+let value = "hello";
+value = 42; // totally valid in JS
+```
+
 **Non-blocking event loop:**
 
+The event loop keeps the single thread from getting stuck waiting on slow operations. Long-running or async tasks are delegated (to Web APIs in the browser, or `libuv` in Node), and their callbacks/promises are placed on a queue that only runs once the call stack is empty  letting the rest of your code keep executing in the meantime.
+
 ### Data Types
+
+JavaScript has 8 data types  7 **primitives**, plus `object`:
+
+- `string`
+- `number`
+- `bigint`
+- `boolean`
+- `undefined`
+- `null`
+- `symbol`
+- `object` (includes arrays, functions, dates, etc.)
+
+Primitives are **immutable** and compared **by value**. Objects are compared **by reference**.
+
+```javascript
+typeof "hello"; // "string"
+typeof 42; // "number"
+typeof 42n; // "bigint"
+typeof true; // "boolean"
+typeof undefined; // "undefined"
+typeof null; // "object"  a long-standing bug in JS, null is NOT actually an object
+typeof Symbol(); // "symbol"
+typeof {}; // "object"
+typeof []; // "object"
+typeof function () {}; // "function"
+```
+
+```javascript
+// primitives compare by value
+let a = 5;
+let b = 5;
+console.log(a === b); // true
+
+// objects compare by reference
+let obj1 = { x: 1 };
+let obj2 = { x: 1 };
+console.log(obj1 === obj2); // false  different references in memory
+```

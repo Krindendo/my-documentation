@@ -1,0 +1,260 @@
+---
+
+title: Git Flow vs GitHub Flow
+description: A practical comparison of Git Flow and GitHub Flow, including their branching strategies, advantages, disadvantages, and when to use each approach.
+publishedAt: 2026-08-28
+tags: [git, github, version-control, workflow]
+published: true
+----------------
+
+# Git Flow vs GitHub Flow
+
+Git workflows define how developers organize branches, develop features, fix bugs, and release software. Two commonly used approaches are **Git Flow** and **GitHub Flow**.
+
+Although both workflows are based on Git, they have different philosophies and are better suited to different types of projects.
+
+## What is Git Flow?
+
+**Git Flow** is a branching model introduced by Vincent Driessen. It uses several dedicated branches with clearly defined purposes.
+
+The main branches are:
+
+* `main` — contains production-ready code.
+* `develop` — contains the latest development changes.
+* `feature/*` — used to develop new features.
+* `release/*` — used to prepare a new production release.
+* `hotfix/*` — used to quickly fix production issues.
+
+A typical Git Flow might look like this:
+
+```text
+main
+  │
+  └── develop
+        ├── feature/login
+        ├── feature/user-profile
+        └── feature/email-notifications
+```
+
+When a feature is finished, it is merged back into `develop`.
+
+When the project is ready for a release, a release branch can be created:
+
+```text
+develop
+   │
+   └── release/1.2.0
+          │
+          ├── main
+          └── develop
+```
+
+If a critical production bug appears, a `hotfix` branch can be created from `main`.
+
+## What is GitHub Flow?
+
+**GitHub Flow** is a much simpler workflow designed around short-lived feature branches and pull requests.
+
+The basic idea is:
+
+1. Start from `main`.
+2. Create a new branch.
+3. Make your changes.
+4. Push the branch to GitHub.
+5. Open a Pull Request.
+6. Review and test the changes.
+7. Merge the Pull Request into `main`.
+8. Deploy the changes.
+
+For example:
+
+```text
+main
+  │
+  ├── feature/login
+  │
+  └── feature/email-notifications
+```
+
+Once the feature is finished, the Pull Request is merged into `main`.
+
+There is no separate `develop`, `release`, or `hotfix` branch required.
+
+## Main Differences
+
+| Git Flow                                          | GitHub Flow                         |
+| ------------------------------------------------- | ----------------------------------- |
+| More complex                                      | Simpler                             |
+| Uses multiple long-lived branches                 | Mainly uses `main`                  |
+| Has feature, develop, release and hotfix branches | Uses short-lived feature branches   |
+| Releases are explicitly managed                   | Changes can be deployed directly    |
+| Good for scheduled releases                       | Good for continuous delivery        |
+| More overhead                                     | Less overhead                       |
+| Common in traditional release cycles              | Common in web applications and SaaS |
+
+## Git Flow Example
+
+Imagine a team working on an e-commerce application.
+
+The team has a `develop` branch and wants to add a shopping cart.
+
+First, a developer creates:
+
+```bash
+git checkout develop
+git checkout -b feature/shopping-cart
+```
+
+After implementing the feature, they merge it into `develop`.
+
+Later, when several features are ready for version `2.0`, the team creates:
+
+```bash
+git checkout develop
+git checkout -b release/2.0.0
+```
+
+After testing and preparing the release, the release branch is merged into `main`.
+
+This approach gives the team explicit control over what goes into each release.
+
+## GitHub Flow Example
+
+With GitHub Flow, the same feature would be developed directly from `main`:
+
+```bash
+git checkout main
+git pull
+git checkout -b feature/shopping-cart
+```
+
+After implementing the feature:
+
+```bash
+git add .
+git commit -m "Add shopping cart"
+git push -u origin feature/shopping-cart
+```
+
+The developer then opens a Pull Request.
+
+After code review and successful tests, the Pull Request is merged into `main`.
+
+If the project uses continuous deployment, the application can automatically be deployed after the merge.
+
+## Advantages of Git Flow
+
+Git Flow can be useful when a project has:
+
+* Scheduled releases
+* Multiple versions that need to be maintained
+* Formal QA or testing phases
+* Large development teams
+* A clear distinction between development and production code
+
+Its biggest advantage is **control over releases**.
+
+The team can continue developing new features on `develop` while a separate `release` branch is being prepared.
+
+## Disadvantages of Git Flow
+
+The main disadvantage is complexity.
+
+There are more branches to manage, and developers need to understand when to use each type of branch.
+
+For a small web application, Git Flow can sometimes introduce unnecessary overhead.
+
+For example, having:
+
+```text
+main
+develop
+release
+feature
+hotfix
+```
+
+may be excessive if the team simply wants to develop a feature, review it, and deploy it.
+
+## Advantages of GitHub Flow
+
+GitHub Flow is easy to understand.
+
+A typical workflow is simply:
+
+```text
+main
+  │
+  └── feature branch
+          │
+          └── Pull Request
+                  │
+                  └── main
+```
+
+This makes it particularly useful for:
+
+* Web applications
+* SaaS applications
+* Small and medium-sized teams
+* Continuous integration
+* Continuous deployment
+* Projects that release frequently
+
+Developers can keep branches short-lived and get changes into `main` quickly.
+
+## Disadvantages of GitHub Flow
+
+The simplicity of GitHub Flow can become a disadvantage for projects with complicated release requirements.
+
+For example, if a company needs to maintain several production versions simultaneously, having only `main` and short-lived feature branches may not provide enough structure.
+
+GitHub Flow also assumes that the `main` branch is always kept in a deployable state.
+
+## Which One Should You Use?
+
+There is no universally correct choice.
+
+**GitHub Flow is usually a good choice when:**
+
+* You deploy frequently.
+* Your application can be released continuously.
+* You want a simple branching strategy.
+* Pull Requests are part of your development process.
+* You don't need separate release branches.
+
+**Git Flow can be a better choice when:**
+
+* You have scheduled releases.
+* You need dedicated QA or release periods.
+* You maintain multiple production versions.
+* Your release process is more formal.
+* You need explicit separation between development and production.
+
+## GitHub Flow Is Often Enough
+
+For many modern web projects, GitHub Flow is sufficient.
+
+A simple setup can be:
+
+```text
+main
+ │
+ ├── feature/login
+ ├── feature/dashboard
+ └── fix/email-validation
+```
+
+Each branch is reviewed through a Pull Request and merged back into `main`.
+
+Combined with automated tests and CI/CD, this provides a straightforward development process without the additional complexity of Git Flow.
+
+## Conclusion
+
+Git Flow and GitHub Flow solve similar problems but are designed for different development environments.
+
+**Git Flow** provides more structure and is useful when releases are planned and carefully managed.
+
+**GitHub Flow** focuses on simplicity, short-lived branches, Pull Requests, and frequent deployment.
+
+For a modern web application with continuous delivery, GitHub Flow is often the simpler choice. For projects with formal release cycles or multiple supported versions, Git Flow can provide the additional structure needed.

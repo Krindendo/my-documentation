@@ -3,10 +3,10 @@ title: State Management for React
 description: Redux, Zustand
 tags: [React, useState, useReducer, Redux, Zustand]
 
-date: 2024-12-06
+date: 2026-08-28
 ---
 
-#### When to use Global state manager?
+## When to use Global state manager?
 
 1. Multiple Components Need the Same State
 
@@ -414,16 +414,14 @@ Using observables directly works very well, but since this typically introduces 
 // Page.tsx
 "use client";
 
-import React from "react";
 import { TimerButton } from "@/components/TimerButton";
-import { initialState, StoreProvider } from "@/components/TimerProvider";
+import { StoreProvider } from "@/components/TimerProvider";
 import { TimerView } from "@/components/TimerView";
 
 export default function Home() {
-  const [store] = React.useState(() => initialState);
   return (
     <StoreProvider>
-      <TimerView timer={store} />
+      <TimerView />
       <TimerButton />
     </StoreProvider>
   );
@@ -470,9 +468,10 @@ export function useSecoundsPassed() {
 }
 
 //TimerView.tsx
-export const TimerView = observer(({ timer }: { timer: CreateTimer }) => (
-  <p>Seconds passed: {timer.secondsPassed}</p>
-));
+export const TimerView = observer(() => {
+  const timer = useSecoundsPassed();
+  return <p>Seconds passed: {timer.secondsPassed}</p>;
+});
 
 //TimerButton.tsx
 export const TimerButton = observer(() => {
@@ -488,6 +487,14 @@ export const TimerButton = observer(() => {
   );
 });
 ```
+
+<Callout type="warning">
+  Both `TimerView` and `TimerButton` read the *same* store instance through
+  `useSecoundsPassed()` from context  that's what keeps them in sync.
+  Creating a second, separate `observable(...)` elsewhere (e.g. with its own
+  `useState`) and passing it down as a prop would give you two independent
+  stores that don't share updates.
+</Callout>
 
 <Callout type="warning">
   the TimerView component would not react to future changes if it was defined as

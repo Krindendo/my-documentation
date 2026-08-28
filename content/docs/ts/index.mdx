@@ -3,7 +3,7 @@ title: Typescript
 description: TypeScript extends JavaScript and enhances the developer experience.
 tags: [typescript]
 
-date: 2024-12-06
+date: 2026-08-27
 ---
 
 ### Primitive Types
@@ -23,4 +23,39 @@ The void indicates a variable's lack of a type. It acts as the opposite type to 
 
 The unknown type is the type-safe counterpart of any type. You can assign anything to the unknown, but the unknown isn’t assignable to anything but itself and any, without performing a type assertion of a control-flow-based narrowing. You cannot perform any operations on a variable of an unknown type without first asserting or narrowing it to a more specific type.
 
-**Difference between null and undifined:**
+**Difference between null and undefined:**
+
+In TypeScript, `null` and `undefined` are actual types, not just values  and how strictly they're enforced depends on one compiler setting.
+
+- With `strictNullChecks` enabled (part of `strict: true`, and recommended), `null` and `undefined` are only assignable to themselves and to `any`. A variable typed `string` cannot receive `null` unless the type explicitly allows it via a union.
+- Without `strictNullChecks`, `null` and `undefined` are treated as assignable to every type, which quietly defeats a lot of the safety TypeScript is meant to provide.
+
+```ts
+// with strictNullChecks enabled
+let username: string;
+username = null; // Error: Type 'null' is not assignable to type 'string'.
+
+let nickname: string | null;
+nickname = null; // OK  explicitly part of the type
+```
+
+### Type inference
+
+TypeScript can often figure out a variable's type from its initial value, without you writing an annotation:
+
+```ts
+let count = 5; // inferred as number
+count = "five"; // Error: Type 'string' is not assignable to type 'number'.
+```
+
+Annotations are still useful for function parameters (which can't be inferred from a value) and for widening a type on purpose.
+
+### Literal types
+
+Beyond the general `string`/`number`/`boolean` types, TypeScript can narrow a type down to one exact value:
+
+```ts
+let direction: "left" | "right";
+direction = "left"; // OK
+direction = "up"; // Error: Type '"up"' is not assignable to type '"left" | "right"'.
+```

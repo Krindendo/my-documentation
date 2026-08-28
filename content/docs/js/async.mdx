@@ -1,0 +1,113 @@
+---
+title: Async & The Event Loop
+description: How JavaScript's single thread handles asynchronous work the call stack, task queues, and generators.
+tags: [javaScript]
+
+date: 2026-08-28
+---
+
+### The call stack
+
+JS runs on a single call stack: when a function is called, a frame is pushed on; when it returns, the frame is popped off. Only one frame executes at a time this is what "single threaded" means in practice.
+
+```javascript
+function a() {
+  b();
+}
+function b() {
+  console.log("in b");
+}
+a();
+// stack: a() pushed -> b() pushed -> "in b" logged -> b() popped -> a() popped
+```
+
+### Web APIs / Node APIs
+
+Things like `setTimeout`, DOM events, and `fetch` aren't part of the JS language itself they're provided by the environment (browser Web APIs, or `libuv` in Node). When called, they run outside the call stack and, once finished, hand a callback (or resolved Promise) off to a queue.
+
+### Macrotask queue (callback queue)
+
+Holds callbacks from things like `setTimeout`, `setInterval`, and I/O. The event loop only pulls one macrotask off this queue **after** the call stack is empty **and** the entire microtask queue has been drained.
+
+```javascript
+console.log("1");
+setTimeout(() => console.log("2"), 0);
+console.log("3");
+
+// logs: 1, 3, 2
+// even with a 0ms delay, the callback still waits for the current
+// synchronous code (and any microtasks) to finish first
+```
+
+### Microtask queue
+
+Holds callbacks from resolved/rejected Promises (`.then`, `.catch`, `.finally`, `await` continuations) and `queueMicrotask()`. **Microtasks always run before the next macrotask** the queue is fully drained between each macrotask.
+
+```javascript
+console.log("1");
+
+setTimeout(() => console.log("2 (macrotask)"), 0);
+
+Promise.resolve().then(() => console.log("3 (microtask)"));
+
+console.log("4");
+
+// logs: 1, 4, 3 (microtask), 2 (macrotask)
+```
+
+This ordering  synchronous code, then all pending microtasks, then one macrotask, repeat is the core of the event loop, and a very common interview/debugging question.
+
+### Iterators
+
+An iterator is any object with a `next()` method that returns `{ value, done }`. Arrays, strings, Maps, and Sets are all **iterable** they implement `Symbol.iterator`, which is what powers `for...of`:
+
+```javascript
+const arr = [1, 2, 3];
+const iterator = arr[Symbol.iterator]();
+
+console.log(iterator.next()); // { value: 1, done: false }
+console.log(iterator.next()); // { value: 2, done: false }
+console.log(iterator.next()); // { value: 3, done: false }
+console.log(iterator.next()); // { value: undefined, done: true }
+```
+
+### Generators
+
+A generator function (`function*`) can pause and resume its execution using `yield`, producing an iterator automatically:
+
+```javascript
+function* countTo(max) {
+  for (let i = 1; i <= max; i++) {
+    yield i;
+  }
+}
+
+const counter = countTo(3);
+console.log(counter.next()); // { value: 1, done: false }
+console.log(counter.next()); // { value: 2, done: false }
+console.log(counter.next()); // { value: 3, done: false }
+console.log(counter.next()); // { value: undefined, done: true }
+
+// generators are iterable, so they work directly with for...of
+for (const num of countTo(3)) {
+  console.log(num); // 1, 2, 3
+}
+```
+
+Generators are useful for lazily producing values (infinite sequences, custom iteration logic) without computing everything up front:
+
+```javascript
+function* infiniteIds() {
+  let id = 1;
+  while (true) {
+    yield id++;
+  }
+}
+
+const ids = infiniteIds();
+ids.next().value; // 1
+ids.next().value; // 2
+// never actually runs out  values are only computed as they're requested
+```
+
+`async function*` combines generators with async/await, producing an **async iterator**  used to lazily stream values that each require an async step (e.g. paginated API results).

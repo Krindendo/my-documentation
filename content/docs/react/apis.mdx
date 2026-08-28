@@ -3,7 +3,7 @@ title: Build-in React APIs
 description: APIs that are useful for defining components.
 tags: [react]
 
-date: 2024-12-06
+date: 2026-08-28
 ---
 
 - [`createContext`](#createcontext) lets you define and provide context to the child components. Used with [useContext](/docs/react/context-hooks#usecontext).
@@ -18,16 +18,140 @@ date: 2024-12-06
 
 ## createContext
 
+`createContext` lets you create a context that components can provide or read, without passing props down manually through every level of the tree.
+
+```tsx
+const ThemeContext = createContext("light");
+```
+
+### Parameters
+
+- **defaultValue**: The value you want the context to have when there is no matching `<SomeContext.Provider>` above the component reading context in the tree. If you don't have a meaningful default, pass `null`. The default value is a "last resort" fallback  it's static and never changes over time.
+
+### Returns
+
+`createContext` returns a context object. **The context object itself does not hold any information**  it represents *which* context other components can provide or read. Typically you'll render `SomeContext.Provider` in components above to specify the value, and call `useContext(SomeContext)` in components below to read it  see [useContext](/docs/react/context-hooks#usecontext) for how it's consumed.
+
+```tsx
+const ThemeContext = createContext("light");
+
+function App() {
+  return (
+    <ThemeContext.Provider value="dark">
+      <Toolbar />
+    </ThemeContext.Provider>
+  );
+}
+```
+
 ## forwardRef
 
+<Callout type="danger">
+  As of React 19, `forwardRef` is deprecated  function components can receive `ref` as a regular prop instead. `forwardRef` still works for backward compatibility, but will be removed in a future release.
+</Callout>
+
+**The old way (React < 19):**
+
+```tsx
+const MyInput = forwardRef(function MyInput(props, ref) {
+  return <input {...props} ref={ref} />;
+});
+```
+
+**The React 19 way  `ref` as a regular prop:**
+
+```tsx
+function MyInput({
+  ref,
+  ...props
+}: React.ComponentProps<"input"> & { ref?: React.Ref<HTMLInputElement> }) {
+  return <input {...props} ref={ref} />;
+}
+```
+
+Usage is identical either way  the parent still passes a ref the same way:
+
+```tsx
+function Form() {
+  const inputRef = useRef<HTMLInputElement>(null);
+  return <MyInput ref={inputRef} />;
+}
+```
+
+If you need to expose something other than the raw DOM node (e.g. only specific methods), pair this with [useImperativeHandle](/docs/react/ref-hooks#useimperativehandle)  that part hasn't changed.
+
 ## lazy
+
+`lazy` lets you defer loading a component's code until it's rendered for the first time  useful for code-splitting, so the initial bundle stays small.
+
+```tsx
+import { lazy } from "react";
+
+const MarkdownPreview = lazy(() => import("./MarkdownPreview.js"));
+```
+
+### Parameters
+
+- **load**: A function that returns a Promise or another thenable (a Promise-like object with a `.then` method). React won't call `load` until the first time you attempt to render the returned component. After React first calls `load`, it waits for it to resolve, then renders the resolved value's `.default` as a React component. Both the returned Promise and its resolved value are cached, so `load` is never called more than once.
+
+### Usage
+
+`lazy` components must be rendered inside a `<Suspense>` boundary, which lets you show a fallback (like a loading spinner) while the component's code is still loading:
+
+```tsx
+import { Suspense, lazy } from "react";
+
+const MarkdownPreview = lazy(() => import("./MarkdownPreview.js"));
+
+function App() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <MarkdownPreview />
+    </Suspense>
+  );
+}
+```
 
 ## memo
 
 [memo](https://react.dev/reference/react/memo) is a wrapper that will memoize the version of that component. This memoized version of your component will usually not be re-rendered when its parent component is re-rendered as long as its props have not changed. But React may still re-render it: memoization is a performance optimization, not a guarantee.
 
-- Component: The component that you want to memoize. The memo does not modify this component, but returns a new, memoized component instead.
+### Parameters
 
-TODO: Nije gotovo.
+- **Component**: The component that you want to memoize. `memo` does not modify this component, but returns a new, memoized component instead.
+- **optional arePropsEqual**: A function that accepts the same arguments as your component's props, and returns whether the props are equal. If omitted, React defaults to a shallow comparison with `Object.is` on each prop.
+
+### Usage
+
+```tsx
+const Greeting = memo(function Greeting({ name }: { name: string }) {
+  console.log("Greeting re-rendered");
+  return <h1>Hello, {name}!</h1>;
+});
+```
+
+`memo` only prevents re-renders caused by the **parent** re-rendering with the same props  it won't stop the component from re-rendering when its own state or context changes.
+
+<Callout type="warning">
+  `memo` is a performance optimization, not a guarantee. Don't reach for it by default  measure first. Overusing it adds a comparison cost and complexity without always paying off.
+</Callout>
 
 ## startTransition
+
+`startTransition` lets you mark a state update as non-urgent, from outside of a component (e.g. from a data library, a timeout, or an event listener that isn't a Hook). Inside a component, prefer [useTransition](/docs/react/performance-hooks#usetransition), which also gives you a pending state.
+
+```tsx
+import { startTransition } from "react";
+
+function reportUserClick(nextTab) {
+  startTransition(() => {
+    setTab(nextTab);
+  });
+}
+```
+
+### Parameters
+
+- **scope**: A function that updates some state by calling one or more `set` functions. React immediately calls `scope` with no arguments and marks all state updates scheduled synchronously during that call as transitions  they'll be non-blocking and won't trigger unwanted loading indicators.
+
+Unlike `useTransition`, `startTransition` doesn't return an `isPending` flag  if you need one, use `useTransition` instead.

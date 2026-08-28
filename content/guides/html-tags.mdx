@@ -2,57 +2,148 @@
 title: HTML tags
 description: Most common html tags
 publishedAt: 2023-10-21
-tags: []
+tags: [HTML]
 ---
 
-- hr
+## Document structure & metadata
 
-- h1
+- **`<html>`** — the root element of the page; wraps everything else. Typically carries the `lang` attribute (e.g. `<html lang="en">`) so screen readers and translators know the page's language.
+- **`<head>`** — holds metadata about the page (title, meta tags, links to stylesheets/fonts, etc.). Nothing inside `<head>` renders visibly on the page.
+- **`<body>`** — contains everything that's actually rendered: text, images, buttons, and so on.
+- **`<title>`** — sets the text shown in the browser tab, and used as the default bookmark/search-result title. Goes inside `<head>`.
+- **`<meta>`** — carries metadata that doesn't fit into other HTML elements — character encoding, viewport settings, social-preview tags (Open Graph), SEO description, etc. Self-closing, always inside `<head>`.
 
-- h2
+```html
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="A short summary of the page." />
+```
 
-- h3
+- **`<link>`**
 
-- sup
+This tag can be used only inside head tag and is used for link an external stylesheet.
 
-- sub
+```html
+<link rel="stylesheet" href="/styles.css" />
+```
 
-- svg
-  style of this component doenst work well in safari and firefox
+- **`<style>`** — embeds CSS directly in the document instead of linking an external file. Usually placed in `<head>`.
+- **`<script>`** — embeds or links to JavaScript. Can go in `<head>` or `<body>`; placement and attributes (`defer`, `async`) affect when it runs relative to page parsing.
+- **`<noscript>`** — content shown only if JavaScript is disabled or unsupported — a fallback message or alternate markup.
 
-- table
+## Sectioning
 
-- thead
+- **`<header>`** — introductory content for a page or section — typically a logo, title, or navigation. A page can have more than one (e.g. one for the page, one for an `<article>`).
+- **`<nav>`** — wraps a block of navigation links (main menu, breadcrumbs, table of contents). Not every group of links needs to be a `<nav>` — just the major navigation blocks.
+- **`<main>`** — wraps the primary, unique content of the page — excludes repeated content like headers, footers, and sidebars. Should appear once per page.
+- **`<article>`** — a self-contained piece of content that would make sense distributed on its own (a blog post, a news story, a forum comment).
+- **`<section>`** — a generic thematic grouping of content, usually with its own heading. Use it when content forms a distinct block, but doesn't have the "stands alone" quality of an `<article>`.
+- **`<footer>`** — closing content for a page or section — copyright, contact info, related links. Like `<header>`, can appear more than once.
 
-- tbody
+## Headings
 
-- tfoot
+- **`<h1>`** — the top-level heading, typically used once per page for the main title.
+- **`<h2>`** — a second-level heading, for major sections under the `<h1>`.
+- **`<h3>`** — a third-level heading, for subsections under an `<h2>`.
 
-- td
+Headings should be nested in order (don't skip from `<h1>` straight to `<h3>`) — screen reader users often navigate a page by jumping between headings, and skipped levels break that navigation.
 
-- th
+## Text content
 
-- tr
+- **`<p>`** — a paragraph of text. The most basic block-level text container.
+- **`<hr>`** — a thematic break between content — rendered as a horizontal line by default, but semantically means "a shift in topic," not just "draw a line."
+- **`<pre>`** — preformatted text: preserves whitespace and line breaks exactly as written, and renders in a monospace font by default. Commonly wraps `<code>` for code blocks.
+- **`<div>`** — a generic block-level container with no semantic meaning of its own — used purely for grouping/styling when no other element fits better.
+- **`<figcaption>`** — a caption for a `<figure>` element (an image, diagram, or code snippet grouped for illustration purposes). Associates a caption with its content for assistive technology.
 
-- col
+```html
+<figure>
+  <img src="chart.png" alt="Quarterly revenue chart" />
+  <figcaption>Figure 1: Revenue by quarter</figcaption>
+</figure>
+```
 
-- colgroup
+## Lists
 
-- progress
+- **`<ul>`** — an unordered (bulleted) list.
+- **`<ol>`** — an ordered (numbered) list.
+- **`<li>`** — a single list item, used inside `<ul>` or `<ol>`.
 
-- html
+```html
+<ul>
+  <li>Coffee</li>
+  <li>Tea</li>
+</ul>
+```
 
-- head
+## Inline text semantics
 
-- body
+- **`<a>`** — a hyperlink to another page, resource, or a location on the same page (via `href="#id"`).
+- **`<span>`** — a generic inline container with no semantic meaning — the inline equivalent of `<div>`, used purely for styling/scripting hooks.
+- **`<strong>` and `<em>` tags provide semantic meaning for screen readers.**
 
-- section
+```html
+<strong>This text is important!</strong> <em>This text is italic.</em>
+```
 
-- header
+- **bold and italic tags are for visual styling.**
 
-- footer
+```html
+<i>This text is italic</i> <b>This text is bold</b>
+```
 
-- optgroup
+- **`<s>`** — represents text that's no longer accurate or relevant (e.g. a struck-through price). Different from `<del>`, which marks an edit/removal — `<s>` is for content that's simply outdated.
+- **`<mark>`** — highlights text for reference, like a search result match — rendered with a yellow background by default.
+- **`<sub>`** — subscript text, rendered smaller and lower (e.g. the "2" in H₂O).
+- **`<sup>`** — superscript text, rendered smaller and higher (e.g. footnote markers, exponents like x²).
+- **`<q>`** — a short inline quotation — browsers automatically wrap the content in quotation marks. Use `<blockquote>` instead for longer, block-level quotes.
+- **`<kbd>`** — represents keyboard input, rendered in a monospace font by default — useful for documenting shortcuts (e.g. press `<kbd>Ctrl</kbd> + <kbd>C</kbd>`).
+- **`<code>`** — represents a short fragment of computer code, rendered in a monospace font.
+
+## Table content
+
+- **`<table>`** — wraps an entire table.
+- **`<caption>`** — a title/description for the table, rendered above it by default. Must be the first child of `<table>`.
+- **`<thead>`** — groups the header row(s) of a table.
+- **`<tbody>`** — groups the main body rows of a table.
+- **`<tfoot>`** — groups footer row(s), often used for summary/total rows.
+- **`<tr>`** — a table row.
+- **`<th>`** — a header cell (bold and centered by default) — use the `scope` attribute (`col`/`row`) to help screen readers associate it with the right cells.
+- **`<td>`** — a standard data cell.
+- **`<col>` / `<colgroup>`** — define styling/attributes for entire columns at once, without repeating them on every cell in that column.
+
+```html
+<table>
+  <colgroup>
+    <col style="background-color: #f0f0f0" />
+    <col span="2" />
+  </colgroup>
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Q1</th>
+      <th scope="col">Q2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Widget</td>
+      <td>120</td>
+      <td>150</td>
+    </tr>
+  </tbody>
+</table>
+```
+
+## Forms
+
+- **`<form>`** — wraps a set of interactive controls for submitting data (to a server, or handled with JS).
+- **`<label>`** — a caption for a form control. Associating a label with its input (via `for`/`id`, or by nesting the input inside the label) lets clicking the label focus the input — important for accessibility.
+- **`<input>`** — the most common form control; the `type` attribute (`text`, `email`, `checkbox`, `radio`, `date`, `file`, etc.) determines its behavior and what UI the browser renders.
+- **`<button>`** — a clickable control. Defaults to `type="submit"` inside a `<form>` — set `type="button"` explicitly if it shouldn't submit the form.
+- **`<select>`** — a dropdown menu of options.
+- **`<option>`** — a single choice inside a `<select>` or `<datalist>`.
+- **`<optgroup>`** — groups related `<option>`s under a shared label inside a `<select>`.
 
 ```html
 <label for="dino-select">Choose a dinosaur:</label>
@@ -70,11 +161,33 @@ tags: []
 </select>
 ```
 
-- figcaption
+- **`<datalist>`** — provides a list of predefined autocomplete suggestions for an `<input>`, linked via the input's `list` attribute — unlike `<select>`, the user can still type a custom value.
+- **`<textarea>`** — a multi-line free-text input.
+- **`<fieldset>`** — groups related form controls together, usually with a `<legend>` for a group label — also lets you enable/disable a whole group of inputs at once.
+- **`<progress>`** — shows the completion progress of a task (e.g. a file upload), as a value between `min` and `max`.
 
-- code
+```html
+<progress value="70" max="100"></progress>
+```
 
-- picture
+## Interactive elements
+
+- **`<details>`** — a disclosure widget that can be toggled open/closed to show or hide content — built-in, no JS required.
+- **`<summary>`** — the always-visible heading/label for a `<details>` element; clicking it toggles the details open or closed.
+
+```html
+<details>
+  <summary>More information</summary>
+  <p>This content is hidden until the summary is clicked.</p>
+</details>
+```
+
+- **`<dialog>`** — represents a dialog box or modal — can be shown/hidden natively via its `.showModal()` / `.close()` methods, without a JS library for focus trapping/backdrop.
+
+## Media & embedded content
+
+- **`<img>`** — embeds an image. Always include a meaningful `alt` attribute for accessibility (or `alt=""` if the image is purely decorative).
+- **`<picture>`**
 
 ```html
 <picture>
@@ -84,106 +197,23 @@ tags: []
 </picture>
 ```
 
-- source
+`<picture>` wraps multiple `<source>`s plus a fallback `<img>`, letting the browser pick the best image for the current screen size, resolution, or format.
 
-- option
+- **`<source>`** — specifies one of several possible media resources for `<picture>`, `<video>`, or `<audio>` — the browser picks the first one it supports.
+- **`<audio>`** — embeds a sound player with built-in playback controls.
+- **`<video>`** — embeds a video player with built-in playback controls.
+- **`<track>`** — adds subtitles, captions, or descriptions to `<video>`/`<audio>`, sourced from a separate file (usually `.vtt`).
+- **`<canvas>`** — a blank drawing surface you control entirely via JavaScript (2D or WebGL) — used for charts, games, image manipulation.
+- **`<svg>`**
+  style of this component doenst work well in safari and firefox
 
-- strong and em tags provide semantic meaning for screen readers.
+Otherwise, `<svg>` embeds scalable vector graphics directly in the HTML — icons, illustrations, or data visualizations that stay crisp at any size.
 
-```html
-<strong>This text is important!</strong> <em>This text is italic.</em>
-```
+- **`<iframe>`** — embeds another HTML document inside the current page (a YouTube embed, a map, a third-party widget).
+- **`<embed>`** — embeds external content provided by a plugin (PDFs, Flash-era media) — largely superseded by `<iframe>`, `<img>`, and `<video>`/`<audio>` for modern use cases.
+- **`<math>`** — embeds MathML markup for rendering mathematical notation natively, without an image or a JS library.
 
-- bold and italic tags are for visual styling.
+## Web components
 
-```html
-<i>This text is italic</i> <b>This text is bold</b>
-```
-
-- select
-
-- ul
-
-- ol
-
-- li
-
-- math
-
-- textarea
-
-- link
-
-This tag can be used only inside head tag and is used for link an external stylesheet.
-
-- kbd
-
-- canvas
-
-- details
-
-- meta
-
-- p
-
-- mark
-
-- audio
-
-- video
-
-- script
-
-- noscript
-
-- button
-
-- dialog
-
-- style
-
-- main
-
-- pre
-
-- q
-
-- img
-
-- datalist
-
-- summary
-
-- title
-
-- nav
-
-- a
-
-- s
-
-- track
-
-- caption
-
-- form
-
-- fieldset
-
-- article
-
-- iframe
-
-- div
-
-- span
-
-- input
-
-- label
-
-- slot
-
-- template
-
-- embed
+- **`<template>`** — holds markup that isn't rendered on page load — its content stays inert until cloned and inserted into the DOM via JavaScript. Used for reusable chunks of markup, especially in Web Components.
+- **`<slot>`** — a placeholder inside a Web Component's Shadow DOM where consumers can project their own markup — lets a component's internal structure stay separate from the content passed into it.

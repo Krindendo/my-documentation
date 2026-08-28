@@ -1,9 +1,101 @@
 ---
 title: Interface
-description: test
+description: Interfaces describe the shape of an object  the properties and methods it must have.
 tags: [typescript]
 
-date: 2024-12-06
+date: 2026-08-27
 ---
 
-This is only test
+### Basic shape
+
+```ts
+interface User {
+  name: string;
+  age: number;
+}
+
+const user: User = {
+  name: "Ana",
+  age: 28,
+};
+```
+
+### Optional and readonly properties
+
+```ts
+interface User {
+  name: string;
+  age?: number; // optional  may be omitted
+  readonly id: string; // can only be set once, at creation
+}
+
+const user: User = { name: "Ana", id: "u1" }; // age omitted, OK
+
+user.id = "u2"; // Error: Cannot assign to 'id' because it is a read-only property.
+```
+
+### Methods
+
+```ts
+interface Greeter {
+  greet(name: string): string;
+}
+
+const greeter: Greeter = {
+  greet(name) {
+    return `Hello, ${name}!`;
+  },
+};
+```
+
+### Extending interfaces
+
+An interface can extend one or more other interfaces, inheriting their members:
+
+```ts
+interface Animal {
+  name: string;
+}
+
+interface Pet extends Animal {
+  owner: string;
+}
+
+const dog: Pet = { name: "Rex", owner: "Ana" };
+```
+
+### Index signatures
+
+Used when you don't know all the property names ahead of time, but you know the shape of the keys and values:
+
+```ts
+interface StringDictionary {
+  [key: string]: string;
+}
+
+const colors: StringDictionary = {
+  primary: "blue",
+  secondary: "green",
+};
+```
+
+### Declaration merging
+
+Unlike `type`, declaring the same interface name twice merges the declarations instead of throwing an error. This is mostly used to extend types from external libraries:
+
+```ts
+interface Window {
+  myCustomProperty: string;
+}
+// merges with the built-in global `Window` interface
+```
+
+### interface vs type
+
+Both can describe the shape of an object, and for everyday use they're mostly interchangeable. A few differences worth knowing:
+
+- `interface` can be extended and merged (multiple declarations combine); `type` cannot be redeclared.
+- `type` can describe unions, intersections, tuples, and primitives directly (e.g. `type ID = string | number`); `interface` can only describe object shapes.
+- Interfaces are generally preferred for public object/library shapes, since they merge cleanly and tend to give clearer error messages; `type` is preferred for unions, and mapped/conditional types.
+
+See [Type](/docs/ts/type) for more on type aliases.

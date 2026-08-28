@@ -3,7 +3,66 @@ title: Node.js
 description: Node.js is an open-source, cross-platform JavaScript runtime environment.
 tags: [node.js]
 
-date: 2024-12-06
+date: 2026-08-28
 ---
 
-test
+Node.js takes the V8 engine  the same JS engine that powers Chrome  and embeds it into a standalone program that can run outside the browser. That's the whole idea: the same JS you already know, but now with access to the file system, network, and operating system instead of being sandboxed inside a browser tab.
+
+**Built on V8:**
+
+V8 (written in C++) is what actually parses and executes JavaScript. Node just wraps it with additional APIs (`fs`, `http`, `process`, etc.) that make sense on a server/machine but wouldn't make sense  or would be a security risk  inside a browser.
+
+**Single threaded, but with a thread pool underneath:**
+
+Like browser JS, your actual JS code runs on a single thread with an event loop  only one operation executes at a time. But Node also runs `libuv`, a C library that maintains a small **thread pool** behind the scenes for expensive blocking operations (file system access, DNS lookups, some crypto/zlib work), so those don't block the main thread even though the underlying OS call itself is blocking.
+
+**Non-blocking I/O:**
+
+Instead of waiting for a slow operation (reading a file, querying a database, making a network request) to finish before moving on, Node kicks the operation off and continues executing other code. When the operation finishes, its callback is queued and picked up by the event loop. This is what lets a single Node process handle thousands of concurrent connections without spawning a thread per request.
+
+```javascript
+const fs = require("fs");
+
+console.log("1. Start reading file");
+fs.readFile("file.txt", "utf8", (err, data) => {
+  console.log("3. File contents:", data);
+});
+console.log("2. This runs before the file is done reading");
+
+// logs: 1, 2, 3  reading the file doesn't block the next line
+```
+
+**Cross-platform:**
+
+Node runs the same on Windows, macOS, and Linux  it abstracts away OS-specific differences (file paths, process handling, networking) so the same JS code behaves consistently across platforms.
+
+**npm ecosystem:**
+
+Node ships with `npm` (Node Package Manager), giving access to the largest software package registry in the world. Nearly every Node project has a `package.json` describing its dependencies, scripts, and metadata.
+
+**CommonJS by default, ESM supported too:**
+
+Historically, Node used **CommonJS** (`require()` / `module.exports`) as its module system  this predates the `import`/`export` syntax that later became part of the JS language itself. Modern Node fully supports ES Modules as well; which one a file uses depends on its extension (`.cjs` vs `.mjs`) or the `"type"` field in the nearest `package.json`. See [Modules](/docs/js/modules) for how the two systems differ.
+
+### Core globals
+
+A few objects are available everywhere in Node without needing to `require` or `import` them:
+
+```javascript
+// process  info and control over the current running program
+process.env.NODE_ENV; // read environment variables
+process.argv; // command-line arguments the process was started with
+process.exit(1); // terminate the process with an exit code
+
+// __dirname / __filename  absolute paths (CommonJS only, not available in ESM)
+console.log(__dirname); // e.g. "/Users/apollo/project/src"
+console.log(__filename); // e.g. "/Users/apollo/project/src/index.js"
+
+// global  the Node equivalent of `window` in the browser
+global.myValue = 42; // avoid doing this in real code  it's effectively a global variable
+
+// Buffer  a fixed-size chunk of raw binary memory, used for handling binary data (files, network streams)
+const buf = Buffer.from("hello", "utf8");
+console.log(buf); // <Buffer 68 65 6c 6c 6f>
+console.log(buf.toString()); // "hello"
+```

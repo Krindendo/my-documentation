@@ -1,9 +1,156 @@
 ---
 title: Rendering Patterns
-description: Git flow vs Github flow
-publishedAt: 2024-07-24
-tags: []
-published: false
+description: How CSR, SSR, SSG, ISR, and streaming/RSC differ, and when to reach for each one.
+publishedAt: 2026-08-28
+tags: [Rendering, React, Next.js]
+published: true
 ---
 
-https://www.patterns.dev/react/client-side-rendering
+Source: https://www.patterns.dev/react/client-side-rendering
+
+Every rendering pattern answers the same two questions differently: **where does the HTML get generated** (server or browser), and **when** (at build time, on every request, or somewhere in between). The pattern you pick changes your Time to First Byte, SEO, and how "instant" the page feels.
+
+## Client-Side Rendering (CSR)
+
+The server sends a mostly empty HTML shell plus a JS bundle. The browser downloads the bundle, runs it, fetches data, and only then renders the actual content.
+
+```html
+<!-- what the server sends -->
+<div id="root"></div>
+<script src="/bundle.js"></script>
+```
+
+**Pros:**
+
+- Cheap to host the server just serves static files, no rendering work per request.
+- Very interactive once loaded, since the whole app lives in the browser.
+
+**Cons:**
+
+- Slow first paint the user sees a blank page until JavaScript downloads, parses, and runs.
+- Poor SEO by default crawlers that don't execute JS see an empty page.
+
+**When to use it:** internal tools, admin dashboards, apps behind a login where SEO doesn't matter.
+
+## Server-Side Rendering (SSR)
+
+The server renders the full HTML for **every request**, then sends it to the browser already populated. The browser still needs to "hydrate" it (attach event listeners, etc.) before it's interactive.
+
+```tsx title="app/page.tsx"
+export default async function Page() {
+  const data = await fetch("https://api.example.com/posts").then((r) =>
+    r.json()
+  );
+  return <PostList posts={data} />; // rendered to HTML on every request
+}
+```
+
+**Pros:**
+
+- Fast first paint  HTML is already there, no waiting on JS to render content.
+- Good SEO  crawlers get real content immediately.
+- Always fresh  every request re-runs the render with the latest data.
+
+**Cons:**
+
+- Slower Time to First Byte than static  the server has to do work (render, often fetch data) before responding.
+- More server load  every single request costs compute.
+
+**When to use it:** pages with data that changes often and needs to be accurate per-request (a dashboard, a personalized feed).
+
+## Static Site Generation (SSG)
+
+Like SSR, but the HTML is rendered **once, at build time**  not per request. The server (or a CDN) just serves the pre-built file.
+
+```tsx title="app/blog/[slug]/page.tsx"
+export async function generateStaticParams() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ slug: post.slug }));
+}
+
+export default async function Page({ params }) {
+  const post = await getPost(params.slug);
+  return <Post post={post} />;
+}
+```
+
+**Pros:**
+
+- Fastest possible delivery  pages are just static files, often served straight from a CDN edge.
+- Cheapest to host and scale  zero per-request server work.
+
+**Cons:**
+
+- Content goes stale until the next build/deploy.
+- Doesn't work for pages that must reflect real-time or per-user data.
+
+**When to use it:** blogs, marketing pages, docs  content that doesn't change on every request.
+
+## Incremental Static Regeneration (ISR)
+
+A middle ground: pages are statically generated like SSG, but can be **regenerated in the background** after a set time interval, without a full rebuild/redeploy.
+
+```tsx title="app/blog/[slug]/page.tsx"
+export const revalidate = 60; // regenerate this page at most once every 60s
+```
+
+The first request after the interval still gets the (slightly stale) cached page instantly  the framework regenerates it in the background and swaps in the fresh version for the *next* request.
+
+**When to use it:** content that changes occasionally (product pages, articles) where near-real-time freshness isn't required, but a full rebuild per change would be wasteful.
+
+## Streaming SSR & React Server Components
+
+Traditional SSR waits for the **entire** page's data to be ready before sending any HTML. Streaming breaks that up: the server sends HTML in chunks as each piece becomes ready, so the user sees the fast-loading parts of the page immediately while slower parts stream in afterward.
+
+```tsx title="app/page.tsx"
+import { Suspense } from "react";
+
+export default function Page() {
+  return (
+    <>
+      <Header /> {/* sent immediately */}
+      <Suspense fallback={<Skeleton />}>
+        <SlowComments /> {/* streamed in once its data is ready */}
+      </Suspense>
+    </>
+  );
+}
+```
+
+**React Server Components (RSC)** take this further: some components render **only on the server** and never ship their JS to the browser at all  they can fetch data directly (no separate API round-trip needed), and their output streams down as part of the HTML. Client Components (marked with `"use client"`) are the ones that ship JS and become interactive on the client.
+
+**When to use it:** apps with a mix of slow, data-dependent sections and fast static sections  you don't want one slow query to block the whole page from rendering.
+
+## Hydration
+
+Whenever HTML arrives pre-rendered (SSR, SSG, ISR), it isn't interactive yet  clicking a button does nothing until React "hydrates" it: attaching event listeners and building up its internal component tree over the existing DOM, without re-rendering everything from scratch.
+
+This is why a server-rendered page can visually look "done" before it's actually clickable  that gap is sometimes called the **hydration gap**, and it's what streaming/RSC try to shrink by making hydration more incremental instead of all-at-once.
+
+## Comparison
+
+| Pattern       | Rendered                          | First paint           | Freshness                      | Hosting cost                 |
+| ------------- | ----------------------------------| ----------------------| -------------------------------| -----------------------------|
+| CSR           | Browser, after JS loads           | Slow                  | Always fresh (client-fetched)  | Cheapest                     |
+| SSR           | Server, per request               | Fast                  | Always fresh                   | Highest (compute per request)|
+| SSG           | Server, at build time             | Fastest               | Stale until rebuild            | Cheapest                     |
+| ISR           | Server, at build + on interval    | Fastest               | Fresh within revalidate window | Low                          |
+| Streaming/RSC | Server, incrementally             | Fast (progressive)    | Always fresh                   | Moderate                     |
+
+## How this maps to Next.js (App Router)
+
+Next.js's App Router defaults to **static rendering** (SSG-like) for any route that doesn't read request-specific data. Reading things like cookies, headers, or search params  or fetching with `cache: "no-store"`  automatically opts a route into **dynamic rendering** (SSR-like) instead.
+
+```tsx
+// static by default
+export default async function Page() {
+  const data = await fetch("https://api.example.com/posts"); // cached
+  return <PostList posts={data} />;
+}
+
+// forces dynamic (SSR) rendering
+export const dynamic = "force-dynamic";
+
+// or opt in to ISR
+export const revalidate = 3600; // regenerate at most once an hour
+```

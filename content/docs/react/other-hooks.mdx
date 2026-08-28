@@ -3,7 +3,7 @@ title: Other Hooks
 description: Description test
 tags: [react]
 
-date: 2024-12-06
+date: 2026-08-28
 ---
 
 - `useDebugValue` lets you customize the label React DevTools displays for your custom Hook.
@@ -12,6 +12,89 @@ date: 2024-12-06
 
 ## useDebugValue
 
+`useDebugValue` lets you add a label to a custom Hook in React DevTools  it has no effect on the component's actual behavior, it's purely a debugging aid.
+
+```tsx
+function useOnlineStatus() {
+  const isOnline = useSyncExternalStore(subscribe, () => navigator.onLine);
+  useDebugValue(isOnline ? "Online" : "Offline");
+  return isOnline;
+}
+```
+
+### Parameters
+
+- **value**: The value you want to display in DevTools. It can have any type.
+- **optional format**: A formatting function. If provided, React calls `format` with `value` as its argument, and displays the returned formatted value instead. If you skip it, the original `value` is displayed as-is. Useful for avoiding an expensive formatting calculation unless the Hook is actually being inspected in DevTools.
+
+### When to use it
+
+Mainly worth adding to Hooks that are part of a **shared library**  not every custom Hook in your app needs one. It helps other developers inspect the Hook's internal state in DevTools without reading its source.
+
 ## useId
 
+`useId` generates a unique ID string that stays stable across server and client rendering  useful for associating elements like a label and an input for accessibility, without risking mismatched IDs during hydration.
+
+```tsx
+import { useId } from "react";
+
+function PasswordField() {
+  const passwordHintId = useId();
+  return (
+    <>
+      <label>
+        Password:
+        <input type="password" aria-describedby={passwordHintId} />
+      </label>
+      <p id={passwordHintId}>
+        The password should contain at least 18 characters
+      </p>
+    </>
+  );
+}
+```
+
+### Caveats
+
+- `useId` is **not** for generating keys in a list  keys should come from your data.
+- `useId` should not be used to generate IDs for CSS selectors.
+- Every call to `useId` inside the same component returns a different ID.
+
+### Why not just use an incrementing counter?
+
+On the server, multiple requests are handled concurrently, and IDs need to be stable and unique per request so the client and server output match during hydration. A simple counter would collide across concurrent requests or across server/client renders  `useId` instead derives IDs from the calling component's position in the tree, so they stay consistent.
+
 ## useSyncExternalStore
+
+`useSyncExternalStore` lets a component subscribe to a store that lives **outside** React (a third-party state library, a browser API like `navigator.onLine`, or anything mutated outside React's normal render flow). You'll rarely call this directly  library authors use it under the hood (Zustand and Redux, for example, are built on it) so external state stays correctly synced with React's rendering, including concurrent features.
+
+```tsx
+const isOnline = useSyncExternalStore(subscribe, getSnapshot);
+```
+
+### Parameters
+
+- **subscribe**: A function that takes a single `callback` argument and subscribes it to the store. When the store changes, it should call the provided `callback`, which triggers a re-render. `subscribe` should return a cleanup function that unsubscribes.
+- **getSnapshot**: A function that returns a snapshot of the store data needed by the component. While the store hasn't changed, repeated calls must return the same value. If the store changes and the returned value differs, React re-renders the component.
+- **optional getServerSnapshot**: A function that returns the initial snapshot of the data, used during server rendering and hydration.
+
+### Example
+
+```tsx
+function subscribe(callback: () => void) {
+  window.addEventListener("online", callback);
+  window.addEventListener("offline", callback);
+  return () => {
+    window.removeEventListener("online", callback);
+    window.removeEventListener("offline", callback);
+  };
+}
+
+function useOnlineStatus() {
+  return useSyncExternalStore(
+    subscribe,
+    () => navigator.onLine, // getSnapshot on the client
+    () => true // getServerSnapshot  assume online during SSR
+  );
+}
+```

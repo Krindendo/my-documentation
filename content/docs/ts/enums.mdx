@@ -1,0 +1,79 @@
+---
+title: Enums
+description: A set of named constants, with numeric and string variants  and why many teams reach for literal unions instead.
+tags: [typescript]
+
+date: 2026-08-27
+---
+
+### Numeric enums
+
+By default, enum members are assigned increasing numbers starting at 0:
+
+```ts
+enum Direction {
+  Up, // 0
+  Down, // 1
+  Left, // 2
+  Right, // 3
+}
+
+let move: Direction = Direction.Up;
+console.log(move); // 0
+console.log(Direction[0]); // "Up"  numeric enums support reverse lookup
+```
+
+You can set a starting value, and the rest increment from there:
+
+```ts
+enum StatusCode {
+  Ok = 200,
+  NotFound = 404,
+  ServerError = 500,
+}
+```
+
+### String enums
+
+Each member must be initialized with a string literal. No auto-incrementing, and no reverse lookup  but values are more readable in logs and network requests:
+
+```ts
+enum Direction {
+  Up = "UP",
+  Down = "DOWN",
+  Left = "LEFT",
+  Right = "RIGHT",
+}
+
+console.log(Direction.Up); // "UP"
+```
+
+### const enums
+
+Fully inlined at compile time  no actual object is generated in the compiled JS, which makes them slightly more efficient, at the cost of some flexibility (they can't be used in every situation a regular enum can, like iterating over its members):
+
+```ts
+const enum Direction {
+  Up,
+  Down,
+}
+
+let move = Direction.Up; // compiles down to: let move = 0;
+```
+
+### Why many teams prefer literal unions
+
+Enums generate real runtime code and have a few quirks (numeric enums allow any number to be assigned, not just the declared members). A plain union of string literals often gives the same safety with none of the runtime cost:
+
+```ts
+type Direction = "up" | "down" | "left" | "right";
+
+function move(direction: Direction) {
+  // ...
+}
+
+move("up"); // OK
+move("north"); // Error: not assignable to type 'Direction'
+```
+
+Rule of thumb: reach for a literal union by default; reach for an enum when you specifically want a real runtime object (e.g. to iterate over all values, or because the values need to sync with a backend that already uses enums).

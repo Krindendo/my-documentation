@@ -1,0 +1,63 @@
+---
+title: Declaration Files
+description: How .d.ts files describe types for existing JavaScript, so untyped libraries can still be used safely from TypeScript.
+tags: [typescript]
+
+date: 2026-08-28
+---
+
+### What they are
+
+A `.d.ts` file contains **only type information**  no actual runtime code, no implementations. It tells TypeScript "here's the shape of this JS code" without needing to rewrite that code in TypeScript.
+
+```ts
+// math.d.ts
+export function add(a: number, b: number): number;
+export const PI: number;
+```
+
+```javascript
+// math.js  the actual implementation, plain JS
+export function add(a, b) {
+  return a + b;
+}
+export const PI = 3.14159;
+```
+
+When both files exist side by side, `import { add } from "./math"` gets full type-checking and autocomplete, even though `math.js` itself has no types.
+
+### Where they come from
+
+- **Bundled with the library**  many packages ship their own `.d.ts` files (check for a `"types"` field in the package's `package.json`).
+- **`@types/*` packages**  for libraries that don't ship their own types, the community maintains types separately via DefinitelyTyped:
+
+```bash
+npm install --save-dev @types/lodash
+```
+
+- **Auto-generated**  running `tsc --declaration` on a TypeScript project emits matching `.d.ts` files alongside the compiled JS, so other projects can consume it with full types.
+
+### Writing your own for an untyped library
+
+If a library has no types available anywhere, you can declare its shape yourself:
+
+```ts
+// custom.d.ts
+declare module "some-untyped-library" {
+  export function doSomething(input: string): number;
+}
+```
+
+Once this file is included in your project (TypeScript picks up any `.d.ts` file automatically), imports from `"some-untyped-library"` are typed accordingly.
+
+### Ambient declarations
+
+Sometimes you need to describe something that exists globally at runtime but isn't declared anywhere  e.g. a variable injected by a `<script>` tag:
+
+```ts
+// globals.d.ts
+declare const APP_VERSION: string;
+
+// now usable anywhere in the project, with no import
+console.log(APP_VERSION);
+```

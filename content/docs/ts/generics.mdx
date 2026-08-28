@@ -1,0 +1,101 @@
+---
+title: Generics
+description: Writing reusable, type-safe functions with generic type parameters, constraints, and overloads.
+tags: [typescript]
+
+date: 2026-08-27
+---
+
+### Why generics
+
+Without generics, you'd either lose type safety (`any`) or duplicate a function for every type. A generic type parameter lets a function stay reusable while TypeScript still tracks the actual type through it:
+
+```ts
+function identity<T>(value: T): T {
+  return value;
+}
+
+identity<string>("hello"); // T explicitly set to string
+identity(42); // T inferred as number  no need to specify it
+```
+
+### Multiple type parameters
+
+```ts
+function pair<T, U>(first: T, second: U): [T, U] {
+  return [first, second];
+}
+
+pair("id", 42); // [string, number]
+```
+
+### Generic constraints (`extends`)
+
+Restricts a generic to types that have certain properties, so you can safely access them inside the function:
+
+```ts
+interface HasLength {
+  length: number;
+}
+
+function longest<T extends HasLength>(a: T, b: T): T {
+  return a.length >= b.length ? a : b;
+}
+
+longest("abc", "de"); // OK  strings have .length
+longest([1, 2, 3], [1]); // OK  arrays have .length
+longest(5, 10); // Error: number doesn't have a .length property
+```
+
+### Default type parameters
+
+```ts
+interface ApiResponse<T = unknown> {
+  data: T;
+  status: number;
+}
+
+const response: ApiResponse<string> = { data: "ok", status: 200 };
+const untyped: ApiResponse = { data: "anything", status: 200 }; // T defaults to unknown
+```
+
+### `keyof` with generics
+
+A very common pattern for writing a type-safe "get a property off an object" function:
+
+```ts
+function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
+  return obj[key];
+}
+
+const user = { name: "Ana", age: 28 };
+
+getProperty(user, "name"); // string
+getProperty(user, "age"); // number
+getProperty(user, "email"); // Error: 'email' is not assignable to keyof user
+```
+
+### Function overloads
+
+Lets a function have multiple valid call signatures with different parameter/return types  useful when the return type actually depends on the input in a way generics can't cleanly express:
+
+```ts
+function makeDate(timestamp: number): Date;
+function makeDate(month: number, day: number, year: number): Date;
+function makeDate(
+  monthOrTimestamp: number,
+  day?: number,
+  year?: number,
+): Date {
+  if (day !== undefined && year !== undefined) {
+    return new Date(year, monthOrTimestamp, day);
+  }
+  return new Date(monthOrTimestamp);
+}
+
+makeDate(1706227200000); // OK  matches the first overload
+makeDate(1, 15, 2024); // OK  matches the second overload
+makeDate(1, 15); // Error  no overload expects exactly 2 arguments
+```
+
+Only the overload signatures are visible to callers  the final "implementation" signature (with the optional params) is not itself a valid call shape.

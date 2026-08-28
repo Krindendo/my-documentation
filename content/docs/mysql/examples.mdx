@@ -110,7 +110,7 @@ Creating an MD5 hash from multiple columns is a powerful tool that can be used i
 
 We explored an alternative solution to using a JSON column to store multiple flags in a single field. Using a tiny integer column to store multiple bits of information in a single field is an efficient way to save space in the database. However, it comes with some tradeoffs, including reduced readability and additional application logic overhead. Whether or not to use this approach depends on your specific use case and the tradeoffs you are willing to make!
 
-### Storing flags in a TINYINT column — a tradeoff between space and readability
+### Storing flags in a TINYINT column  a tradeoff between space and readability
 
 When designing a database, it is often necessary to store "flags," or true/false values. One way to do this is to create a separate column for each value, but as the number of flags increases, this approach becomes impractical. One solution is to use a JSON column to store all the flags in a single field. However, this approach comes at the cost of increased space usage. In this video, we explore an alternative solution that uses a tiny integer column to store multiple bits of information in a single field.
 
@@ -761,7 +761,7 @@ where
     ) <= 1609;
 ```
 
-Next, we add an index to our table to cover either latitude or longitude — which will work equally well. MySQL will use the key for the bounding box filter, and after getting a small subset of rows, it will run the expensive ST_Distance_Sphere function.
+Next, we add an index to our table to cover either latitude or longitude  which will work equally well. MySQL will use the key for the bounding box filter, and after getting a small subset of rows, it will run the expensive ST_Distance_Sphere function.
 
 ```sql
 ALTER TABLE addresses ADD INDEX idx_latitude (latitude);

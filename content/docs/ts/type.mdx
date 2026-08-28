@@ -1,9 +1,125 @@
 ---
 title: Type
-description: test
+description: Type aliases give a name to any type  object shapes, unions, intersections, primitives, and more complex computed types.
 tags: [typescript]
 
-date: 2024-12-06
+date: 2026-08-27
 ---
 
-This is only test
+### Basic alias
+
+```ts
+type ID = string | number;
+
+type User = {
+  name: string;
+  id: ID;
+};
+```
+
+### Union types
+
+A value can be one of several types. Use a type guard (see [Basics](/docs/ts/basics)) to narrow it before relying on type-specific behavior:
+
+```ts
+type Status = "loading" | "success" | "error";
+
+function handle(status: Status) {
+  if (status === "error") {
+    // ...
+  }
+}
+```
+
+### Intersection types
+
+Combines multiple types into one that must satisfy all of them:
+
+```ts
+type Named = { name: string };
+type Aged = { age: number };
+
+type Person = Named & Aged;
+
+const person: Person = { name: "Ana", age: 28 };
+```
+
+### Literal types
+
+Restrict a value to one or more exact values, rather than a general type:
+
+```ts
+type Direction = "up" | "down" | "left" | "right";
+type DiceRoll = 1 | 2 | 3 | 4 | 5 | 6;
+```
+
+### Tuple types
+
+Fixed-length arrays where each position has its own type:
+
+```ts
+type Coordinates = [number, number];
+type NamedCoordinate = [x: number, y: number, label: string];
+
+const point: Coordinates = [10, 20];
+```
+
+### Generic type aliases
+
+```ts
+type Pair<T, U> = {
+  first: T;
+  second: U;
+};
+
+const pair: Pair<string, number> = { first: "a", second: 1 };
+```
+
+### Mapped types
+
+Build a new type by transforming each property of an existing type:
+
+```ts
+type Optional<T> = {
+  [K in keyof T]?: T[K];
+};
+
+type User = { name: string; age: number };
+type OptionalUser = Optional<User>;
+// { name?: string; age?: number }
+```
+
+### Conditional types
+
+Choose a type based on a condition, evaluated at the type level:
+
+```ts
+type IsString<T> = T extends string ? true : false;
+
+type A = IsString<"hello">; // true
+type B = IsString<42>; // false
+```
+
+### Built-in utility types
+
+TypeScript ships several generic utility types built from mapped/conditional types, so you rarely need to write your own:
+
+- `Partial<T>`  makes all properties optional
+- `Required<T>`  makes all properties required
+- `Readonly<T>`  makes all properties readonly
+- `Pick<T, K>`  keeps only the given keys
+- `Omit<T, K>`  removes the given keys
+- `Record<K, V>`  builds an object type with keys `K` and values `V`
+
+```ts
+type User = { name: string; age: number; email: string };
+
+type UserPreview = Pick<User, "name" | "email">;
+type UserWithoutEmail = Omit<User, "email">;
+type PartialUser = Partial<User>;
+type UserMap = Record<string, User>;
+```
+
+### type vs interface
+
+See [Interface](/docs/ts/interface) for the comparison.

@@ -1,0 +1,67 @@
+---
+title: Type Assertions
+description: Telling the compiler what you know that it doesn't  `as`, the non-null assertion, and the safer `satisfies` operator.
+tags: [typescript]
+
+date: 2026-08-28
+---
+
+### `as` (type assertion)
+
+Tells the compiler "trust me, treat this value as this type"  it does **not** perform any runtime check or conversion, it just changes what the compiler believes:
+
+```ts
+const input = document.getElementById("email") as HTMLInputElement;
+input.value = "test@example.com"; // .value only exists on HTMLInputElement, not the general HTMLElement type
+```
+
+Assertions bypass type-checking, so a wrong assertion won't be caught until the code actually runs:
+
+```ts
+const value = "hello" as unknown as number; // compiles fine, but is a lie
+value.toFixed(2); // runtime error  strings don't have .toFixed
+```
+
+Use assertions sparingly  only when you genuinely know more than the compiler can infer (e.g. after a runtime check the compiler can't see, or working with DOM APIs).
+
+### Non-null assertion (`!`)
+
+A special case of assertion: tells the compiler a value is definitely not `null`/`undefined`, even though its type says it might be:
+
+```ts
+function findUser(id: number): User | undefined {
+  /* ... */
+}
+
+const user = findUser(1)!; // "I know this exists, stop warning me"
+console.log(user.name);
+```
+
+This is also just a compile-time promise  if you're wrong, it still throws at runtime. Prefer an actual check (`if (user) { ... }`) or optional chaining (`user?.name`) when you're not fully certain.
+
+### `satisfies`
+
+A newer operator that validates a value against a type **without** widening or changing the value's own inferred type  giving you both compile-time checking *and* the most specific inferred type, which plain annotations or `as` can't do together.
+
+```ts
+type Color = "red" | "green" | "blue";
+
+// with a plain annotation, the value's type widens to Record<string, Color>,
+// and each individual property loses its specific literal type
+const palette1: Record<string, Color> = {
+  primary: "blue",
+  secondary: "green",
+};
+palette1.primary.toUpperCase(); // OK, but TS only knows `primary` is `string`-ish Color, not narrowed further
+
+// with `satisfies`, TS checks the shape against Record<string, Color>,
+// but keeps each property's own literal type
+const palette2 = {
+  primary: "blue",
+  secondary: "green",
+} satisfies Record<string, Color>;
+
+palette2.primary; // type is "blue" specifically, not just Color
+```
+
+`satisfies` is especially useful for config objects: you get an error if a value doesn't match the expected shape, while keeping the most precise possible type for later use.
