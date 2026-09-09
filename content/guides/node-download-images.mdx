@@ -1,0 +1,90 @@
+---
+title: Node download images
+description: node script
+publishedAt: 2026-09-09
+tags: [node]
+published: true
+---
+
+Script in node for downloading images.
+
+It takes json and it can download multiple images.
+
+```js
+import fs from "fs/promises";
+import { createWriteStream } from "fs";
+import path from "path";
+import { pipeline } from "stream/promises";
+import { Readable } from "stream";
+
+// CONFIGURATION
+const INPUT_JSON_FILE = "./data-reposnse.json";
+const OUTPUT_DIR = "./downloaded_images";
+
+async function downloadFile(url, outputFilePath) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  // Stream response body directly to disk to keep RAM usage minimal
+  const destination = createWriteStream(outputFilePath);
+  await pipeline(Readable.fromWeb(response.body), destination);
+}
+
+async function main() {
+  try {
+    // 1. Ensure output folder exists
+    await fs.mkdir(OUTPUT_DIR, { recursive: true });
+
+    // 2. Read and parse the JSON file
+    const rawData = await fs.readFile(INPUT_JSON_FILE, "utf8");
+    const items = JSON.parse(rawData);
+
+    console.log(`Found ${items.length} items to process.`);
+
+    // 3. Process each item sequentially
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      var url = "";
+      var filename = "data.json";
+      try {
+        url = item.response.image_url;
+        const fileType = path
+          .basename(url)
+          .split("?")[0]
+          .split("/")
+          .pop()
+          .split(".")[1];
+        filename = item.response.id;
+        filename = `${filename}_presentation.jpg`;
+      } catch (error) {
+        console.error("error", item);
+      }
+
+      if (!url) {
+        console.warn(`[${i + 1}/${items.length}] Skipping item: No URL found.`);
+        continue;
+      }
+
+      // Generate a clean filename based on URL or index
+      const sanitizedFilename = `${filename}`;
+      const targetPath = path.join(OUTPUT_DIR, sanitizedFilename);
+
+      console.log(`[${i + 1}/${items.length}] Downloading: ${url}`);
+
+      try {
+        await downloadFile(url, targetPath);
+      } catch (err) {
+        console.error(`Failed to download ${url}: ${err.message}`);
+      }
+    }
+
+    console.log("\nAll downloads completed successfully!");
+  } catch (error) {
+    console.error("Fatal error in main process:", error.message);
+  }
+}
+
+main();
+```
