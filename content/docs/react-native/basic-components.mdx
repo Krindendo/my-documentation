@@ -1,9 +1,127 @@
 ---
 title: Basic components
-description: test
-tags: [react nativ]
+description: The core, cross-platform building blocks every React Native screen is made of.
+tags: [react-native]
 
-date: 2024-12-06
+date: 2026-09-17
 ---
 
-something
+React Native ships a small set of built-in **Core Components** that each map to a real native view on iOS and Android. They're the React Native equivalent of HTML elements — you compose them together (and with your own components) to build a screen.
+
+## View
+
+The most fundamental component. `View` is a container that supports layout with Flexbox, styling, and touch handling. Think of it as the React Native version of a `<div>`.
+
+```tsx
+import { View } from "react-native";
+
+function Box() {
+  return <View style={{ padding: 16, backgroundColor: "#eee" }} />;
+}
+```
+
+## Text
+
+`Text` displays, styles, and nests strings of text. All text in React Native must be wrapped in a `Text` component — unlike the web, you can't put a raw string directly inside a `View`.
+
+```tsx
+import { Text } from "react-native";
+
+function Greeting() {
+  return <Text style={{ fontSize: 18 }}>Hello, world!</Text>;
+}
+```
+
+## Image
+
+`Image` displays images from the local filesystem, a bundled asset, or a remote URL. Unlike the web, an `Image` needs an explicit `width` and `height` (or `flex`) in its style — it won't size itself to its content.
+
+```tsx
+import { Image } from "react-native";
+
+// remote
+<Image
+  source={{ uri: "https://reactnative.dev/img/tiny_logo.png" }}
+  style={{ width: 64, height: 64 }}
+/>;
+
+// bundled asset
+<Image source={require("./logo.png")} style={{ width: 64, height: 64 }} />;
+```
+
+## TextInput
+
+`TextInput` is the basic component for text input. It fires an `onChangeText` event with the new text on every keystroke, so it's normally paired with a state variable to make it a controlled input.
+
+```tsx
+import { useState } from "react";
+import { TextInput } from "react-native";
+
+function EmailField() {
+  const [email, setEmail] = useState("");
+
+  return (
+    <TextInput
+      value={email}
+      onChangeText={setEmail}
+      placeholder="Email"
+      keyboardType="email-address"
+    />
+  );
+}
+```
+
+## ScrollView
+
+`ScrollView` is a generic scrolling container that renders all of its children up front. It's fine for a small, fixed amount of content, but for long or dynamic lists prefer `FlatList`, which only renders what's currently on screen.
+
+```tsx
+import { ScrollView, Text } from "react-native";
+
+function Terms() {
+  return (
+    <ScrollView>
+      <Text>Long content here...</Text>
+    </ScrollView>
+  );
+}
+```
+
+## FlatList
+
+`FlatList` renders a scrollable list of data and only mounts the items currently visible on screen, which makes it far more efficient than `ScrollView` for long lists.
+
+```tsx
+import { FlatList, Text } from "react-native";
+
+const DATA = [
+  { id: "1", title: "First" },
+  { id: "2", title: "Second" },
+];
+
+function List() {
+  return (
+    <FlatList
+      data={DATA}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => <Text>{item.title}</Text>}
+    />
+  );
+}
+```
+
+## Pressable
+
+`Pressable` wraps any content and reports press interactions (`onPress`, `onPressIn`, `onPressOut`, `onLongPress`), letting you build custom buttons and touchable areas. It's the modern replacement for the older `TouchableOpacity` / `TouchableHighlight` components.
+
+```tsx
+import { Pressable, Text } from "react-native";
+
+function LikeButton() {
+  return (
+    <Pressable onPress={() => console.log("Liked!")}>
+      <Text>Like</Text>
+    </Pressable>
+  );
+}
+```

@@ -1,9 +1,9 @@
 ---
 title: React Native
 description: Framework for developing Android and IOS applications
-tags: [react nativ]
+tags: [react-native]
 
-date: 2024-12-06
+date: 2026-09-17
 ---
 
 React Native is a framework for developing native Android and iOS applications using JavaScript and React.
@@ -14,6 +14,24 @@ Using React Native allows us to bring all the familiar features of React such as
 
 On top of that, we can utilize many familiar libraries in the React ecosystem such as React Redux, Apollo, React Router and many more.
 
+---
+
+**How React Native differs from React**
+
+- React renders to the DOM (`<div>`, `<span>`, ...). React Native renders to native platform views — there is no DOM or HTML. Instead of `<div>` and `<span>` you use components like `View` and `Text`.
+- Styling is done with `StyleSheet` and a Flexbox-based layout system instead of CSS.
+- Instead of a browser runtime, your JS code runs on a JavaScript engine embedded in the native app and talks to native modules through a bridge (or JSI in the New Architecture), rather than through browser APIs.
+
 ### Components
 
+React Native ships a set of built-in, cross-platform [Core Components](/docs/react-native/basic-components) such as `View`, `Text`, `Image`, `ScrollView`, `TextInput` and `Pressable`. Each one maps to a real native view on iOS and Android behind the scenes. You compose them together — and with your own components — the same way you would with regular React.
+
 ### APIs
+
+Besides components, React Native provides a set of built-in APIs for things a browser would normally give you for free — see [User interface](/docs/react-native/user-interface) for how they're used in practice. The most common ones are:
+
+- `StyleSheet` — define and validate styles.
+- `Platform` — branch logic or styles based on iOS vs Android.
+- `Dimensions` — read the screen width/height.
+- `Alert` — show a native alert dialog.
+- `Animated` — drive simple animations.

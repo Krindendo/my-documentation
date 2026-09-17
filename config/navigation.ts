@@ -70,7 +70,14 @@ const sideNavigationDocs: NavigationEntry[] = [
   },
   {
     label: "React Native",
-    items: [{ label: "Introduction", link: "/docs/react-native" }],
+    items: [
+      { label: "Introduction", link: "/docs/react-native" },
+      {
+        label: "Basic components",
+        link: "/docs/react-native/basic-components",
+      },
+      { label: "User interface", link: "/docs/react-native/user-interface" },
+    ],
   },
   {
     label: "Next.js",
